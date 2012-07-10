@@ -1,0 +1,72 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FarmMonitor", "FarmMonitor.vcproj", "{6609D72E-4FDE-403D-A286-004013C03E67}"
+	ProjectSection(ProjectDependencies) = postProject
+		{6497EA41-2782-4A79-8840-6854E22EC4F4} = {6497EA41-2782-4A79-8840-6854E22EC4F4}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Core", "..\Lib\Core\Core.vcproj", "{790BC113-52FB-4565-8968-79B8B011C520}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Wcl", "..\Lib\WCL\Wcl.vcproj", "{9B0335B6-93BE-4604-8497-27431874D758}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WMI", "..\Lib\WMI\WMI.vcproj", "{6497EA41-2782-4A79-8840-6854E22EC4F4}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(DPCodeReviewSolutionGUID) = preSolution
+		DPCodeReviewSolutionGUID = {00000000-0000-0000-0000-000000000000}
+	EndGlobalSection
+	GlobalSection(SourceCodeControl) = preSolution
+		SccNumberOfProjects = 5
+		SccLocalPath0 = .
+		CanCheckoutShared = true
+		SolutionUniqueID = {E04E2CAF-5DEB-4B06-B567-A790D9389CBC}
+		SccProjectUniqueName1 = FarmMonitor.vcproj
+		SccLocalPath1 = .
+		CanCheckoutShared = true
+		SccProjectUniqueName2 = ..\\Lib\\Core\\Core.vcproj
+		SccProjectName2 = \u0022$/Win32/Lib/Core\u0022,\u0020QWDAAAAA
+		SccLocalPath2 = ..\\Lib\\Core
+		CanCheckoutShared = true
+		SccProjectUniqueName3 = ..\\Lib\\WCL\\Wcl.vcproj
+		SccProjectName3 = \u0022$/Win32/Lib/WCL\u0022,\u0020HPAAAAAA
+		SccLocalPath3 = ..\\Lib\\WCL
+		CanCheckoutShared = true
+		SccProjectUniqueName4 = ..\\Lib\\WMI\\WMI.vcproj
+		SccProjectName4 = \u0022$/Win32/Lib/WMI\u0022,\u0020HBFAAAAA
+		SccLocalPath4 = ..\\Lib\\WMI
+		CanCheckoutShared = true
+	EndGlobalSection
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectDependencies) = postSolution
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{6609D72E-4FDE-403D-A286-004013C03E67}.Debug.ActiveCfg = Debug|Win32
+		{6609D72E-4FDE-403D-A286-004013C03E67}.Debug.Build.0 = Debug|Win32
+		{6609D72E-4FDE-403D-A286-004013C03E67}.Release.ActiveCfg = Release|Win32
+		{6609D72E-4FDE-403D-A286-004013C03E67}.Release.Build.0 = Release|Win32
+		{790BC113-52FB-4565-8968-79B8B011C520}.Debug.ActiveCfg = Debug|Win32
+		{790BC113-52FB-4565-8968-79B8B011C520}.Debug.Build.0 = Debug|Win32
+		{790BC113-52FB-4565-8968-79B8B011C520}.Release.ActiveCfg = Release|Win32
+		{790BC113-52FB-4565-8968-79B8B011C520}.Release.Build.0 = Release|Win32
+		{9B0335B6-93BE-4604-8497-27431874D758}.Debug.ActiveCfg = Debug|Win32
+		{9B0335B6-93BE-4604-8497-27431874D758}.Debug.Build.0 = Debug|Win32
+		{9B0335B6-93BE-4604-8497-27431874D758}.Release.ActiveCfg = Release|Win32
+		{9B0335B6-93BE-4604-8497-27431874D758}.Release.Build.0 = Release|Win32
+		{6497EA41-2782-4A79-8840-6854E22EC4F4}.Debug.ActiveCfg = Debug|Win32
+		{6497EA41-2782-4A79-8840-6854E22EC4F4}.Debug.Build.0 = Debug|Win32
+		{6497EA41-2782-4A79-8840-6854E22EC4F4}.Release.ActiveCfg = Release|Win32
+		{6497EA41-2782-4A79-8840-6854E22EC4F4}.Release.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal
