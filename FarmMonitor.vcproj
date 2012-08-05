@@ -139,6 +139,9 @@
 				RelativePath=".\AboutDlg.cpp">
 			</File>
 			<File
+				RelativePath=".\AddHostDlg.cpp">
+			</File>
+			<File
 				RelativePath=".\AppCmds.cpp">
 			</File>
 			<File
@@ -152,6 +155,9 @@
 			</File>
 			<File
 				RelativePath=".\FarmMonitor.cpp">
+			</File>
+			<File
+				RelativePath=".\Hosts.cpp">
 			</File>
 			<File
 				RelativePath=".\pch.cpp">
@@ -177,6 +183,9 @@
 				RelativePath=".\AboutDlg.hpp">
 			</File>
 			<File
+				RelativePath=".\AddHostDlg.hpp">
+			</File>
+			<File
 				RelativePath=".\AppCmds.hpp">
 			</File>
 			<File
@@ -193,6 +202,9 @@
 			</File>
 			<File
 				RelativePath=".\FarmMonitor.hpp">
+			</File>
+			<File
+				RelativePath=".\Hosts.hpp">
 			</File>
 		</Filter>
 		<Filter
@@ -215,6 +227,16 @@
 				RelativePath=".\Toolbar.bmp">
 			</File>
 		</Filter>
+		<Filter
+			Name="HelpFile"
+			Filter="">
+			<File
+				RelativePath=".\HelpFile\FarmMonitor.html">
+			</File>
+		</Filter>
+		<File
+			RelativePath=".\TODO.txt">
+		</File>
 	</Files>
 	<Globals>
 	</Globals>
