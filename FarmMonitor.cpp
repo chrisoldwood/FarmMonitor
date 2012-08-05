@@ -29,10 +29,11 @@ const tchar* CONFIG_VERSION = TXT("0.1");
 
 FarmMonitor::FarmMonitor()
 	: CApp(m_appWnd, m_appCmds)
-	, m_hostList()
-	, m_autoCom()
+	, m_hosts(new Hosts)
+	, m_appWnd(m_MainThread, m_appCmds, m_hosts)
+	, m_appCmds(m_appWnd, m_appWnd.m_mainDlg)
 {
-
+	m_strTitle = TXT("Farm Monitor");
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -40,7 +41,6 @@ FarmMonitor::FarmMonitor()
 
 FarmMonitor::~FarmMonitor()
 {
-
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -48,38 +48,15 @@ FarmMonitor::~FarmMonitor()
 
 bool FarmMonitor::OnOpen()
 {
-	// Initialise COM.
 	m_autoCom.Initialise(COINIT_APARTMENTTHREADED);
 
-	// Set the app title.
-	m_strTitle = TXT("Farm Monitor");
-
-	try
-	{
-		// Load settings.
-		loadConfig();
-	}
-	catch (const Core::Exception& e)
-	{
-		FatalMsg(TXT("Failed to configure the application:-\n\n%s"), e.twhat());
+	if (!loadConfig())
 		return false;
-	}
 	
-	// Load the toolbar bitmap.
-	m_rCmdControl.CmdBitmap().LoadRsc(IDR_APPTOOLBAR);
-
-	// Create the main window.
-	if (!m_appWnd.Create())
+	if (!m_appWnd.Open(m_iCmdShow, ShowNormal(), m_startPosition))
 		return false;
 
-	// Show it.
-	if (ShowNormal() && !m_lastWndPos.Empty())
-		m_appWnd.Move(m_lastWndPos);
-
-	m_appWnd.Show(m_iCmdShow);
-
-	// Update UI.
-	m_appCmds.UpdateUI();
+	m_appCmds.InitialiseUI();
 
 	return true;
 }
@@ -89,18 +66,8 @@ bool FarmMonitor::OnOpen()
 
 bool FarmMonitor::OnClose()
 {
-	try
-	{
-		// Save settings.
-		saveConfig();
-	}
-	catch (const Core::Exception& e)
-	{
-		FatalMsg(TXT("Failed to save the application configuration:-\n\n%s"), e.twhat());
-		return false;
-	}
+	saveConfig();
 
-	// Uninitialise COM.
 	m_autoCom.Uninitialise();
 
 	return true;
@@ -109,20 +76,28 @@ bool FarmMonitor::OnClose()
 ////////////////////////////////////////////////////////////////////////////////
 //! Load the application settings.
 
-void FarmMonitor::loadConfig()
+bool FarmMonitor::loadConfig()
 {
-	WCL::AppConfig appConfig(PUBLISHER, APPLICATION);
+	try
+	{
+		WCL::AppConfig appConfig(PUBLISHER, APPLICATION);
 
-	// Read the config data version.
-	tstring version = appConfig.readString(appConfig.DEFAULT_SECTION, TXT("Version"), CONFIG_VERSION);
+		tstring version = appConfig.readString(appConfig.DEFAULT_SECTION, TXT("Version"), CONFIG_VERSION);
 
-	if (version != CONFIG_VERSION)
-		throw Core::ConfigurationException(Core::fmt(TXT("The configuration data is incompatible - '%s'"), version.c_str()));
+		if (version != CONFIG_VERSION)
+			throw Core::ConfigurationException(Core::fmt(TXT("The configuration data is incompatible - '%s'"), version.c_str()));
 
-	// Read the UI settings.
-	m_lastWndPos = appConfig.readValue<CRect>(TXT("UI"), TXT("MainWindow"), m_lastWndPos);
+		m_startPosition = appConfig.readValue<CRect>(TXT("UI"), TXT("MainWindow"), m_startPosition);
 
-	m_hostList.push_back(TXT("localhost"));
+		m_hosts->load(appConfig);
+	}
+	catch (const Core::Exception& e)
+	{
+		FatalMsg(TXT("Failed to loadthe application configuration:-\n\n%s"), e.twhat());
+		return false;
+	}
+
+	return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -130,11 +105,18 @@ void FarmMonitor::loadConfig()
 
 void FarmMonitor::saveConfig()
 {
-	WCL::AppConfig appConfig(PUBLISHER, APPLICATION);
+	try
+	{
+		WCL::AppConfig appConfig(PUBLISHER, APPLICATION);
 
-	// Write the config data version.
-	appConfig.writeString(appConfig.DEFAULT_SECTION, TXT("Version"), CONFIG_VERSION);
+		appConfig.writeString(appConfig.DEFAULT_SECTION, TXT("Version"), CONFIG_VERSION);
 
-	// Write the UI settings.
-	appConfig.writeValue<CRect>(TXT("UI"), TXT("MainWindow"), m_lastWndPos);
+		appConfig.writeValue<CRect>(TXT("UI"), TXT("MainWindow"), m_appWnd.FinalPlacement());
+
+		m_hosts->save(appConfig);
+	}
+	catch (const Core::Exception& e)
+	{
+		FatalMsg(TXT("Failed to save the application configuration:-\n\n%s"), e.twhat());
+	}
 }

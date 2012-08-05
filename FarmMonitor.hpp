@@ -23,9 +23,6 @@
 class FarmMonitor : public CApp
 {
 public:
-	typedef std::vector<tstring> HostList;
-
-public:
 	//! Constructor.
 	FarmMonitor();
 
@@ -35,18 +32,17 @@ public:
 	//
 	// Public members.
 	//
+	HostsPtr	m_hosts;		//!< The hosts being monitored.
+
 	AppWnd		m_appWnd;		//!< The main window.
 	AppCmds		m_appCmds;		//!< The command handler.
-
-	CRect		m_lastWndPos;	//!< Main window previous position.
-
-	HostList	m_hostList;		//!< The list of hosts to monitor.
 
 private:
 	//
 	// Private members.
 	//
-	WCL::AutoCom	m_autoCom;	//!< The COM initialiser.
+	WCL::AutoCom	m_autoCom;			//!< The COM initialiser.
+	CRect			m_startPosition;	//!< The main window start position.
 
 	//
 	// CApp overriden methods.
@@ -63,7 +59,7 @@ private:
 	//
 
 	//! Load the application settings.
-	void loadConfig();
+	bool loadConfig();
 
 	//! Save the application settings.
 	void saveConfig();
