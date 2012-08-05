@@ -10,8 +10,10 @@
 ////////////////////////////////////////////////////////////////////////////////
 //! Constructor.
 
-AppWnd::AppWnd()
+AppWnd::AppWnd(WCL::IMsgThread& thread, WCL::ICmdController& controller, HostsPtr hosts)
 	: CDlgFrame(IDR_APPICON, m_mainDlg, false)
+	, m_mainDlg(hosts)
+	, m_toolbar(thread, controller)
 {
 }
 
@@ -47,13 +49,4 @@ void AppWnd::OnCreate(const CRect& clientRect)
 
 	// Call base class.
 	CDlgFrame::OnCreate(clientRect);
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//! Handle the window closing.
-
-void AppWnd::OnClose()
-{
-	// Fetch windows final placement.
-	g_app.m_lastWndPos = Placement();
 }

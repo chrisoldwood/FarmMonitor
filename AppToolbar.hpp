@@ -21,7 +21,7 @@ class AppToolbar : public CToolBar
 {
 public:
 	//! Constructor.
-	AppToolbar();
+	AppToolbar(WCL::IMsgThread& thread, WCL::ICmdController& controller);
 
 	//! Destructor.
 	virtual ~AppToolbar();

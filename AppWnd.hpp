@@ -25,7 +25,7 @@ class AppWnd : public CDlgFrame
 {
 public:
 	//! Constructor.
-	AppWnd();
+	AppWnd(WCL::IMsgThread& thread, WCL::ICmdController& controller, HostsPtr hosts);
 
 	//! Destructor.
 	virtual ~AppWnd();
@@ -35,7 +35,7 @@ public:
 	//
 	AppDlg		m_mainDlg;		//!< The main dialog.
 	CFrameMenu	m_menu;			//!< The main menu.
-//	AppToolbar	m_toolbar;		//!< The toolbar.
+	AppToolbar	m_toolbar;		//!< The toolbar.
 	CStatusBar	m_statusbar;	//!< The status bar.
 
 private:
@@ -57,9 +57,6 @@ private:
 
 	//! Handle window creation.
 	virtual void OnCreate(const CRect& clientRect);
-
-	//! Handle the window closing.
-	virtual void OnClose();
 };
 
 #endif // APP_APPWND_HPP

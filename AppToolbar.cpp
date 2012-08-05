@@ -9,7 +9,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 //! Constructor.
 
-AppToolbar::AppToolbar()
+AppToolbar::AppToolbar(WCL::IMsgThread& thread, WCL::ICmdController& controller)
+	: CToolBar(thread, controller)
 {
 	// Define the toolbar.
 	DEFINE_TOOLBAR
