@@ -1,0 +1,5 @@
+- Validate hostname option.
+
+- Allow duplicate hostnames?
+
+- Icons for host status.
