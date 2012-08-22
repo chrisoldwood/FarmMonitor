@@ -12,6 +12,7 @@
 #include <WMI/Win32_OperatingSystem.hpp>
 #include <WMI/Win32_LogicalDisk.hpp>
 #include <WCL/BusyCursor.hpp>
+#include <WCL/ContextMenu.hpp>
 
 ////////////////////////////////////////////////////////////////////////////////
 //! Constructor.
@@ -30,6 +31,7 @@ AppDlg::AppDlg(HostsPtr hosts)
 
 	DEFINE_CTRLMSG_TABLE
 		NFY_CTRLMSG(IDC_HOSTS, LVN_ITEMCHANGED, &AppDlg::onHostSelectionChanged)
+		NFY_CTRLMSG(IDC_HOSTS, NM_RCLICK,       &AppDlg::onRightClick)
 	END_CTRLMSG_TABLE
 }
 
@@ -102,6 +104,22 @@ LRESULT AppDlg::onHostSelectionChanged(NMHDR& header)
 
 	if (message.uChanged & LVIF_STATE)
 		g_app.m_appCmds.UpdateUI();
+
+	return 0;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! Handle a right-click on the hosts view.
+
+LRESULT AppDlg::onRightClick(NMHDR& /*header*/)
+{
+	WCL::ContextMenu menu(IDR_CONTEXT);
+
+	bool isSelection = m_hostView.IsSelection();	
+
+	menu.EnableCmd(ID_HOST_REMOVEHOST, isSelection);
+
+	menu.display(g_app.m_appWnd);
 
 	return 0;
 }

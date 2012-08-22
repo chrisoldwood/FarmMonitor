@@ -58,6 +58,9 @@ private:
 	//! Handle change in host selection.
 	LRESULT onHostSelectionChanged(NMHDR& header);
 
+	//! Handle a right-click on the hosts view.
+	LRESULT onRightClick(NMHDR& header);
+
 	//
 	// Internal methods.
 	//
