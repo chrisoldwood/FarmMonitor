@@ -52,11 +52,12 @@ bool FarmMonitor::OnOpen()
 
 	if (!loadConfig())
 		return false;
-	
-	if (!m_appWnd.Open(m_iCmdShow, ShowNormal(), m_startPosition))
+
+	if (!m_appWnd.Open(m_iCmdShow, m_startPosition))
 		return false;
 
-	m_appCmds.InitialiseUI();
+//	m_appCmds.InitialiseUI();
+	m_appCmds.UpdateUI();
 
 	return true;
 }
