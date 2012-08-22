@@ -180,7 +180,13 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}">
 			<File
+				RelativePath=".\AboutAppCmd.hpp">
+			</File>
+			<File
 				RelativePath=".\AboutDlg.hpp">
+			</File>
+			<File
+				RelativePath=".\AddHostCmd.hpp">
 			</File>
 			<File
 				RelativePath=".\AddHostDlg.hpp">
@@ -201,10 +207,19 @@
 				RelativePath=".\Common.hpp">
 			</File>
 			<File
+				RelativePath=".\ExitAppCmd.hpp">
+			</File>
+			<File
 				RelativePath=".\FarmMonitor.hpp">
 			</File>
 			<File
 				RelativePath=".\Hosts.hpp">
+			</File>
+			<File
+				RelativePath=".\RemoveHostCmd.hpp">
+			</File>
+			<File
+				RelativePath=".\ShowManualCmd.hpp">
 			</File>
 		</Filter>
 		<Filter
