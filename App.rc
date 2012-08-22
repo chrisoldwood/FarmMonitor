@@ -65,19 +65,32 @@ IDR_APPMENU MENU
 BEGIN
     POPUP "&File"
     BEGIN
-        MENUITEM SEPARATOR
         MENUITEM "E&xit\tAlt+F4",               ID_FILE_EXIT
     END
-    POPUP "&Edit"
+    POPUP "&Host"
     BEGIN
-        MENUITEM "&Add Host...",                ID_EDIT_ADDHOST
-        MENUITEM "&Remove Host",                ID_EDIT_REMOVEHOST
+        MENUITEM "&Add Host...",                ID_HOST_ADDHOST
+        MENUITEM "&Remove Host",                ID_HOST_REMOVEHOST
+        MENUITEM SEPARATOR
+    END
+    POPUP "&Tools"
+    BEGIN
+        MENUITEM "&Host Tools...",              301
     END
     POPUP "&Help"
     BEGIN
         MENUITEM "Contents\tF1",                901
         MENUITEM SEPARATOR
         MENUITEM "&About Farm Monitor",         ID_HELP_ABOUT
+    END
+END
+
+IDR_CONTEXT MENU 
+BEGIN
+    POPUP "Context Menu"
+    BEGIN
+        MENUITEM "&Add Host...",                201
+        MENUITEM "&Remove Host",                202
     END
 END
 
@@ -225,9 +238,15 @@ END
 
 STRINGTABLE 
 BEGIN
-    ID_EDIT_POPUP           "Edit options"
-    ID_EDIT_ADDHOST         "Add a new host\nAdd Host"
-    ID_EDIT_REMOVEHOST      "Remove the selected host\nRemove Host"
+    ID_HOST_POPUP           "Host options"
+    ID_HOST_ADDHOST         "Add a new host\nAdd Host"
+    ID_HOST_REMOVEHOST      "Remove the selected host\nRemove Host"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_TOOLS_POPUP          "Tools"
+    ID_TOOLS_HOSTTOOLS      "Configure the host related tools"
 END
 
 #endif    // English (U.K.) resources
