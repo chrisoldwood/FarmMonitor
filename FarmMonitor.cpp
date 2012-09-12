@@ -29,9 +29,10 @@ const tchar* CONFIG_VERSION = TXT("0.1");
 
 FarmMonitor::FarmMonitor()
 	: CApp(m_appWnd, m_appCmds)
-	, m_hosts(new Hosts)
-	, m_appWnd(m_MainThread, m_appCmds, m_hosts)
-	, m_appCmds(m_appWnd, m_appWnd.m_mainDlg)
+	, m_hosts()
+	, m_tools()
+	, m_appWnd(m_MainThread, m_appCmds, m_hosts, m_tools)
+	, m_appCmds(m_appWnd, m_appWnd.m_mainDlg, m_tools)
 {
 	m_strTitle = TXT("Farm Monitor");
 }
@@ -83,18 +84,19 @@ bool FarmMonitor::loadConfig()
 	{
 		WCL::AppConfig appConfig(PUBLISHER, APPLICATION);
 
-		tstring version = appConfig.readString(appConfig.DEFAULT_SECTION, TXT("Version"), CONFIG_VERSION);
+		const tstring version = appConfig.readString(appConfig.DEFAULT_SECTION, TXT("Version"), CONFIG_VERSION);
 
 		if (version != CONFIG_VERSION)
 			throw Core::ConfigurationException(Core::fmt(TXT("The configuration data is incompatible - '%s'"), version.c_str()));
 
 		m_startPosition = appConfig.readValue<CRect>(TXT("UI"), TXT("MainWindow"), m_startPosition);
 
-		m_hosts->load(appConfig);
+		m_hosts.load(appConfig);
+		m_tools.load(appConfig);
 	}
 	catch (const Core::Exception& e)
 	{
-		FatalMsg(TXT("Failed to loadthe application configuration:-\n\n%s"), e.twhat());
+		FatalMsg(TXT("Failed to load the application configuration:-\n\n%s"), e.twhat());
 		return false;
 	}
 
@@ -114,7 +116,8 @@ void FarmMonitor::saveConfig()
 
 		appConfig.writeValue<CRect>(TXT("UI"), TXT("MainWindow"), m_appWnd.FinalPlacement());
 
-		m_hosts->save(appConfig);
+		m_hosts.save(appConfig);
+		m_tools.save(appConfig);
 	}
 	catch (const Core::Exception& e)
 	{

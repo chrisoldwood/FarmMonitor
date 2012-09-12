@@ -14,6 +14,8 @@
 #include <WCL/App.hpp>
 #include "AppWnd.hpp"
 #include "AppCmds.hpp"
+#include "Hosts.hpp"
+#include "Tools.hpp"
 #include <Core/UniquePtr.hpp>
 #include <WCL/AutoCom.hpp>
 
@@ -32,7 +34,8 @@ public:
 	//
 	// Public members.
 	//
-	HostsPtr	m_hosts;		//!< The hosts being monitored.
+	Hosts		m_hosts;		//!< The hosts being monitored.
+	Tools		m_tools;		//!< The external tools to invoke.
 
 	AppWnd		m_appWnd;		//!< The main window.
 	AppCmds		m_appCmds;		//!< The command handler.
