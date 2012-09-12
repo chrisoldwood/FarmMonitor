@@ -5,14 +5,15 @@
 
 #include "Common.hpp"
 #include "Hosts.hpp"
-#include <WCL/AppConfig.hpp>
+#include <WCL/IAppConfigReader.hpp>
+#include <WCL/IAppConfigWriter.hpp>
 
 ////////////////////////////////////////////////////////////////////////////////
 //! Default constructor.
 
 Hosts::Hosts()
 	: m_modified(false)
-	, m_hostList()
+	, m_hosts()
 {
 }
 
@@ -24,59 +25,89 @@ Hosts::~Hosts()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//! Load the list of hosts.
+//! Get the number of hosts.
 
-void Hosts::load(WCL::AppConfig& config)
+size_t Hosts::size() const
+{
+	return m_hosts.size();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! Get the name of the host at a given position.
+
+const tstring& Hosts::name(size_t index) const
+{
+	ASSERT(index < m_hosts.size());
+
+	return m_hosts[index];
+}
+	
+////////////////////////////////////////////////////////////////////////////////
+//! Has the collection of names been modified?
+
+bool Hosts::isModified() const
+{
+	return m_modified;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! Load the set of hosts.
+
+void Hosts::load(WCL::IAppConfigReader& config)
 {
 	Hosts::Names hosts;
 
-	size_t count = config.readValue<size_t>(TXT("Hosts"), TXT("Count"), 0);
+	const size_t count = config.readValue<size_t>(TXT("Hosts"), TXT("Count"), 0);
 
 	for (size_t i = 0; i != count; ++i)
 	{
-		tstring entry = Core::fmt(TXT("Host[%u]"), i);
-		tstring host = config.readString(TXT("Hosts"), entry, TXT(""));
+		const tstring host = config.readString(TXT("Hosts"), Core::fmt(TXT("Host[%u]"), i), TXT(""));
 
 		if (!host.empty())
 			hosts.push_back(host);
 	}
 
-	std::copy(hosts.begin(), hosts.end(), std::back_insert_iterator<Names>(m_hostList));
+	std::swap(m_hosts, hosts);
+	m_modified = false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//! Save the list of hosts.
+//! Save the set of hosts.
 
-void Hosts::save(WCL::AppConfig& config)
+void Hosts::save(WCL::IAppConfigWriter& config)
 {
-	config.writeValue<size_t>(TXT("Hosts"), TXT("Count"), m_hostList.size());
+	if (!m_modified)
+		return;
 
-	for (size_t i = 0; i != m_hostList.size(); ++i)
+	config.deleteSection(TXT("Hosts"));
+	config.writeValue<size_t>(TXT("Hosts"), TXT("Count"), m_hosts.size());
+
+	for (size_t i = 0; i != m_hosts.size(); ++i)
 	{
-		tstring entry = Core::fmt(TXT("Host[%u]"), i);
-
-		config.writeString(TXT("Hosts"), entry, m_hostList[i]);
+		config.writeString(TXT("Hosts"), Core::fmt(TXT("Host[%u]"), i), m_hosts[i]);
 	}
+
+	m_modified = false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 //! Add a new host. This returns the position it was inserted.
 
-size_t Hosts::addHost(const tstring& hostname)
+size_t Hosts::add(const tstring& hostname)
 {
-	m_hostList.push_back(hostname);
+	m_hosts.push_back(hostname);
 	m_modified = true;
 
-	return m_hostList.size()-1;
+	return m_hosts.size()-1;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 //! Remove a host by position.
 
-void Hosts::removeHost(size_t index)
+void Hosts::remove(size_t index)
 {
-	ASSERT(index >= 0 && index < m_hostList.size());
+	ASSERT(index < m_hosts.size());
 
-	m_hostList.erase(m_hostList.begin() + index);
+	m_hosts.erase(m_hosts.begin() + index);
 	m_modified = true;
 }

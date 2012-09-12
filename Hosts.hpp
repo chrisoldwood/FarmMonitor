@@ -11,17 +11,17 @@
 #pragma once
 #endif
 
-#include <Core/SharedPtr.hpp>
-
+// Forward declarations.
 namespace WCL
 {
-class AppConfig;
+class IAppConfigReader;
+class IAppConfigWriter;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 //! The container of hosts being monitored.
 
-class Hosts
+class Hosts : private Core::NotCopyable
 {
 public:
 	//! The type used to store the collection of host names.
@@ -51,53 +51,24 @@ public:
 	// Methods.
 	//
 
-	//! Load the list of hosts.
-	void load(WCL::AppConfig& config);
+	//! Load the set of hosts.
+	void load(WCL::IAppConfigReader& config);
 
-	//! Save the list of hosts.
-	void save(WCL::AppConfig& config);
+	//! Save the set of hosts.
+	void save(WCL::IAppConfigWriter& config);
 
 	//! Add a new host.
-	size_t addHost(const tstring& hostname);
+	size_t add(const tstring& hostname);
 
 	//! Remove a host by position.
-	void removeHost(size_t index);
+	void remove(size_t index);
 
 private:
 	//
 	// Members.
 	//
-	bool		m_modified;		//!< Has the list of names been modified?
-	Names		m_hostList;		//!< The collection of hosts to monitor.
+	bool		m_modified;		//!< Has the collection been modified?
+	Names		m_hosts;		//!< The collection of hosts to monitor.
 };
-
-//! The Hosts default smart pointer type.
-typedef Core::SharedPtr<Hosts> HostsPtr;
-
-////////////////////////////////////////////////////////////////////////////////
-//! Get the number of hosts.
-
-inline size_t Hosts::size() const
-{
-	return m_hostList.size();
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//! Get the name of the host at a given position.
-
-inline const tstring& Hosts::name(size_t index) const
-{
-	ASSERT(index >= 0 && index < m_hostList.size());
-
-	return m_hostList[index];
-}
-	
-////////////////////////////////////////////////////////////////////////////////
-//! Has the collection of names been modified?
-
-inline bool Hosts::isModified() const
-{
-	return m_modified;
-}
 
 #endif // APP_HOSTS_HPP
