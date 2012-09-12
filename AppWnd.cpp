@@ -5,14 +5,13 @@
 
 #include "Common.hpp"
 #include "AppWnd.hpp"
-#include "FarmMonitor.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////
 //! Constructor.
 
-AppWnd::AppWnd(WCL::IMsgThread& thread, WCL::ICmdController& controller, HostsPtr hosts)
+AppWnd::AppWnd(WCL::IMsgThread& thread, WCL::ICmdController& controller, Hosts& hosts, Tools& tools)
 	: CDlgFrame(IDR_APPICON, m_mainDlg, false)
-	, m_mainDlg(hosts)
+	, m_mainDlg(*this, controller, hosts, tools)
 	, m_toolbar(thread, controller)
 {
 }

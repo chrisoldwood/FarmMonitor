@@ -25,7 +25,7 @@ class AppWnd : public CDlgFrame
 {
 public:
 	//! Constructor.
-	AppWnd(WCL::IMsgThread& thread, WCL::ICmdController& controller, HostsPtr hosts);
+	AppWnd(WCL::IMsgThread& thread, WCL::ICmdController& controller, Hosts& hosts, Tools& tools);
 
 	//! Destructor.
 	virtual ~AppWnd();
