@@ -16,12 +16,18 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WMI", "..\Lib\WMI\WMI.vcpro
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Test", "Test\Test.vcproj", "{91FBBA3F-1046-4A65-B619-94F6D7964B05}"
+	ProjectSection(ProjectDependencies) = postProject
+		{790BC113-52FB-4565-8968-79B8B011C520} = {790BC113-52FB-4565-8968-79B8B011C520}
+		{9B0335B6-93BE-4604-8497-27431874D758} = {9B0335B6-93BE-4604-8497-27431874D758}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(DPCodeReviewSolutionGUID) = preSolution
 		DPCodeReviewSolutionGUID = {00000000-0000-0000-0000-000000000000}
 	EndGlobalSection
 	GlobalSection(SourceCodeControl) = preSolution
-		SccNumberOfProjects = 5
+		SccNumberOfProjects = 6
 		SccLocalPath0 = .
 		CanCheckoutShared = true
 		SolutionUniqueID = {E04E2CAF-5DEB-4B06-B567-A790D9389CBC}
@@ -40,6 +46,10 @@ Global
 		SccProjectName4 = \u0022$/Win32/Lib/WMI\u0022,\u0020HBFAAAAA
 		SccLocalPath4 = ..\\Lib\\WMI
 		CanCheckoutShared = true
+		SccProjectUniqueName5 = Test\\Test.vcproj
+		SccLocalPath5 = .
+		CanCheckoutShared = true
+		SccProjectFilePathRelativizedFromConnection5 = Test\\
 	EndGlobalSection
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -64,6 +74,10 @@ Global
 		{6497EA41-2782-4A79-8840-6854E22EC4F4}.Debug.Build.0 = Debug|Win32
 		{6497EA41-2782-4A79-8840-6854E22EC4F4}.Release.ActiveCfg = Release|Win32
 		{6497EA41-2782-4A79-8840-6854E22EC4F4}.Release.Build.0 = Release|Win32
+		{91FBBA3F-1046-4A65-B619-94F6D7964B05}.Debug.ActiveCfg = Debug|Win32
+		{91FBBA3F-1046-4A65-B619-94F6D7964B05}.Debug.Build.0 = Debug|Win32
+		{91FBBA3F-1046-4A65-B619-94F6D7964B05}.Release.ActiveCfg = Release|Win32
+		{91FBBA3F-1046-4A65-B619-94F6D7964B05}.Release.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection
