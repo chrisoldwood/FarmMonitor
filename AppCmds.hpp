@@ -13,8 +13,10 @@
 
 #include <WCL/ExternalCmdController.hpp>
 
+// Forward declarations.
 class AppWnd;
 class AppDlg;
+class Tools;
 
 ////////////////////////////////////////////////////////////////////////////////
 //! The application command controller.
@@ -23,7 +25,7 @@ class AppCmds : public WCL::ExternalCmdController
 {
 public:
 	//! Constructor.
-	AppCmds(AppWnd& appWnd, AppDlg& appDlg);
+	AppCmds(AppWnd& appWnd, AppDlg& appDlg, Tools& tools);
 
 	//! Destructor.
 	virtual ~AppCmds();

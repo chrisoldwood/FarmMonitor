@@ -5,21 +5,26 @@
 
 #include "Common.hpp"
 #include "AppDlg.hpp"
-#include "Resource.h"
-#include "FarmMonitor.hpp"
+#include "Hosts.hpp"
+#include "Tools.hpp"
+#include "AppWnd.hpp"
 #include <WMI/Connection.hpp>
 #include <WMI/Exception.hpp>
 #include <WMI/Win32_OperatingSystem.hpp>
 #include <WMI/Win32_LogicalDisk.hpp>
 #include <WCL/BusyCursor.hpp>
 #include <WCL/ContextMenu.hpp>
+#include <WCL/ICmdController.hpp>
 
 ////////////////////////////////////////////////////////////////////////////////
 //! Constructor.
 
-AppDlg::AppDlg(HostsPtr hosts)
+AppDlg::AppDlg(AppWnd& appWnd, WCL::ICmdController& appCmds, Hosts& hosts, Tools& tools)
 	: CMainDlg(IDD_MAIN)
+	, m_appWnd(appWnd)
+	, m_appCmds(appCmds)
 	, m_hosts(hosts)
+	, m_tools(tools)
 {
 	DEFINE_CTRL_TABLE
 		CTRL(IDC_HOSTS,	&m_hostView)
@@ -51,13 +56,29 @@ bool AppDlg::isHostSelected() const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+//! Get the currently selected host, if available. If not host is selected this
+//! returns and empty string.
+
+tstring AppDlg::getSelectedHost() const
+{
+	tstring hostname;
+
+	size_t selection = m_hostView.Selection();
+
+	if (selection != Core::npos)
+		hostname = m_hostView.ItemText(selection, 0);
+
+	return hostname;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 //! Add a new host to be monitored.
 
 void AppDlg::addHost(const tstring& hostname)
 {
 	CBusyCursor busyCursor;
 
-	size_t index = m_hosts->addHost(hostname);
+	const size_t index = m_hosts.add(hostname);
 
 	addHostToView(index);
 	refreshHost(index);
@@ -75,7 +96,7 @@ void AppDlg::removeSelectedHost()
 
 	const size_t selection = m_hostView.Selection();
 
-	m_hosts->removeHost(selection);
+	m_hosts.remove(selection);
 	m_hostView.DeleteItem(selection);
 
 	if (m_hostView.ItemCount() != 0)
@@ -100,10 +121,10 @@ void AppDlg::OnInitDialog()
 
 LRESULT AppDlg::onHostSelectionChanged(NMHDR& header)
 {
-	NMLISTVIEW& message = reinterpret_cast<NMLISTVIEW&>(header);
+	const NMLISTVIEW& message = reinterpret_cast<const NMLISTVIEW&>(header);
 
 	if (message.uChanged & LVIF_STATE)
-		g_app.m_appCmds.UpdateUI();
+		m_appCmds.UpdateUI();
 
 	return 0;
 }
@@ -113,13 +134,24 @@ LRESULT AppDlg::onHostSelectionChanged(NMHDR& header)
 
 LRESULT AppDlg::onRightClick(NMHDR& /*header*/)
 {
-	WCL::ContextMenu menu(IDR_CONTEXT);
+	const bool isSelection = m_hostView.IsSelection();	
 
-	bool isSelection = m_hostView.IsSelection();	
+	WCL::ContextMenu menu(IDR_CONTEXT);
 
 	menu.EnableCmd(ID_HOST_REMOVEHOST, isSelection);
 
-	menu.display(g_app.m_appWnd);
+	uint commandId = ID_HOST_INVOKE_TOOL_1;
+
+	for (Tools::const_iterator it = m_tools.begin(); ( (it != m_tools.end()) && (commandId != ID_HOST_INVOKE_TOOL_9) );
+			++it, ++commandId)
+	{
+		const uint    ordinal = (commandId - ID_HOST_INVOKE_TOOL_1) + 1;
+		const tstring text = Core::fmt(TXT("&%u %s"), ordinal, (*it)->m_name.c_str());
+
+		menu.AppendCmd(commandId, text);
+	}
+
+	menu.display(m_appWnd);
 
 	return 0;
 }
@@ -138,7 +170,7 @@ void AppDlg::initialiseHostView()
 	m_hostView.InsertColumn(LAST_BOOTUP_TIME, TXT("Rebooted"),   m_hostView.StringWidth(20), LVCFMT_LEFT);
 	m_hostView.InsertColumn(LAST_ERROR,       TXT("Last Error"), m_hostView.StringWidth(25), LVCFMT_LEFT);
 
-	for (size_t i = 0; i != m_hosts->size(); ++i)
+	for (size_t i = 0; i != m_hosts.size(); ++i)
 		addHostToView(i);
 }
 
@@ -147,7 +179,7 @@ void AppDlg::initialiseHostView()
 
 void AppDlg::addHostToView(size_t index)
 {
-	m_hostView.InsertItem(index, m_hosts->name(index));
+	m_hostView.InsertItem(index, m_hosts.name(index));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -155,7 +187,7 @@ void AppDlg::addHostToView(size_t index)
 
 tstring FormatMemoryValue(uint64 valueInKb)
 {
-	double valueInGb = valueInKb / (1024.0 * 1024.0);
+	const double valueInGb = valueInKb / (1024.0 * 1024.0);
 
 	return Core::fmt(TXT("%.1f GB"), valueInGb);
 }
@@ -165,10 +197,10 @@ tstring FormatMemoryValue(uint64 valueInKb)
 
 tstring FormatDiskUsage(const WMI::Win32_LogicalDisk& disk)
 {
-	uint64 diskSize = disk.Size();
-	uint64 freeSpace = disk.FreeSpace();
-	uint64 spaceUsed = diskSize - freeSpace;
-	double percentUsed = (spaceUsed * 100.0) / diskSize;
+	const uint64 diskSize = disk.Size();
+	const uint64 freeSpace = disk.FreeSpace();
+	const uint64 spaceUsed = diskSize - freeSpace;
+	const double percentUsed = (spaceUsed * 100.0) / diskSize;
 
 	return Core::fmt(TXT("%.f %%"), percentUsed);
 }
@@ -178,7 +210,7 @@ tstring FormatDiskUsage(const WMI::Win32_LogicalDisk& disk)
 
 void AppDlg::refreshView()
 {
-	for (size_t i = 0; i != m_hosts->size(); ++i)
+	for (size_t i = 0; i != m_hosts.size(); ++i)
 		refreshHost(i);
 }
 
@@ -189,13 +221,13 @@ void AppDlg::refreshHost(size_t index)
 {
 	clearHost(index);
 
-	const tstring& host = m_hosts->name(index);
+	const tstring& host = m_hosts.name(index);
 
 	try
 	{
 		WMI::Connection connection(host);
 
-		WMI::Win32_OperatingSystem::Iterator osIter = WMI::Win32_OperatingSystem::select(connection);
+		const WMI::Win32_OperatingSystem::Iterator osIter = WMI::Win32_OperatingSystem::select(connection);
 
 		m_hostView.ItemText(index, TOTAL_MEMORY,     FormatMemoryValue(osIter->TotalVirtualMemorySize()));
 		m_hostView.ItemText(index, FREE_MEMORY,      FormatMemoryValue(osIter->FreeVirtualMemory()));

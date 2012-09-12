@@ -1,0 +1,173 @@
+////////////////////////////////////////////////////////////////////////////////
+//! \file   HostToolsDialog.cpp
+//! \brief  The HostToolsDialog class definition.
+//! \author Chris Oldwood
+
+#include "Common.hpp"
+#include "HostToolsDialog.hpp"
+#include "HostToolDialog.hpp"
+
+////////////////////////////////////////////////////////////////////////////////
+//! Default constructor.
+
+HostToolsDialog::HostToolsDialog()
+	: CDialog(IDD_HOST_TOOLS)
+{
+	DEFINE_CTRL_TABLE
+		CTRL(IDC_TOOLS, &m_view)
+	END_CTRL_TABLE
+
+	DEFINE_CTRLMSG_TABLE
+		CMD_CTRLMSG(IDC_ADD,    BN_CLICKED,      &HostToolsDialog::onAddTool)
+		CMD_CTRLMSG(IDC_EDIT,   BN_CLICKED,      &HostToolsDialog::onEditTool)
+		CMD_CTRLMSG(IDC_DELETE, BN_CLICKED,      &HostToolsDialog::onDeleteTool)
+		NFY_CTRLMSG(IDC_TOOLS,  LVN_ITEMCHANGED, &HostToolsDialog::onToolSelected)
+		NFY_CTRLMSG(IDC_TOOLS,  NM_DBLCLK,       &HostToolsDialog::onToolDoubleClicked)
+	END_CTRLMSG_TABLE
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! Dialog initialisation handler.
+
+void HostToolsDialog::OnInitDialog()
+{
+	m_view.InsertColumn(TOOL_NAME,    TXT("Tool"),         m_view.StringWidth(25));
+	m_view.InsertColumn(COMMAND_LINE, TXT("Command Line"), m_view.StringWidth(45));
+
+	for (Tools::const_iterator it = m_tools.begin(); it != m_tools.end(); ++it)
+		addItemToView(*it, (it == m_tools.begin()));
+
+	updateUi();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! OK button handler.
+
+bool HostToolsDialog::OnOk()
+{
+	return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! Database view selection change handler.
+
+LRESULT HostToolsDialog::onToolSelected(NMHDR& header)
+{
+	const NMLISTVIEW& message = reinterpret_cast<const NMLISTVIEW&>(header);
+
+	if (message.uChanged & LVIF_STATE)
+		updateUi();
+
+	return 0;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! Double-clicked database.
+
+LRESULT HostToolsDialog::onToolDoubleClicked(NMHDR& /*header*/)
+{
+	if (m_view.IsSelection())
+		onEditTool();
+
+	return 0;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! Add button handler.
+
+void HostToolsDialog::onAddTool()
+{
+	HostToolDialog dialog;
+
+	for (Tools::const_iterator it = m_tools.begin(); it != m_tools.end(); ++it)
+		dialog.m_usedNames.insert((*it)->m_name);
+
+	if (dialog.RunModal(*this) == IDOK)
+	{
+		ToolPtr tool(new Tool(dialog.m_tool));
+
+		m_tools.append(tool);
+
+		addItemToView(tool, true);
+		updateUi();
+	}
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! Edit button handler.
+
+void HostToolsDialog::onEditTool()
+{
+	ASSERT(m_view.IsSelection());
+
+	const size_t       selection = m_view.Selection();
+	const ConstToolPtr original = m_tools.tool(selection);
+
+	HostToolDialog dialog;
+
+	dialog.m_tool = *original;
+
+	for (Tools::const_iterator it = m_tools.begin(); it != m_tools.end(); ++it)
+	{
+		if ((*it)->m_name != original->m_name)
+			dialog.m_usedNames.insert((*it)->m_name);
+	}
+
+	if (dialog.RunModal(*this) == IDOK)
+	{
+		const ConstToolPtr edited = ConstToolPtr(new Tool(dialog.m_tool));
+
+		m_tools.replace(selection, edited);
+
+		updateViewItem(selection, edited);
+		updateUi();
+	}
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! Delete button handler.
+
+void HostToolsDialog::onDeleteTool()
+{
+	ASSERT(m_view.IsSelection());
+
+	const size_t selection = m_view.Selection();
+
+	m_view.DeleteItem(selection, true);
+	m_tools.remove(selection);
+
+	updateUi();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! Update the state of the UI.
+
+void HostToolsDialog::updateUi()
+{
+	const bool isSelection = m_view.IsSelection();
+
+	Control(IDC_EDIT).Enable(isSelection);
+	Control(IDC_DELETE).Enable(isSelection);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! Add an item to the view.
+
+void HostToolsDialog::addItemToView(ConstToolPtr tool, bool select)
+{
+	const size_t row = m_view.AppendItem(tool->m_name);
+
+	m_view.ItemText(row, COMMAND_LINE, tool->m_commandLine);
+
+	if (select)
+		m_view.Select(row);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! Update an item in the view.
+
+void HostToolsDialog::updateViewItem(size_t row, ConstToolPtr tool)
+{
+	m_view.ItemText(row, TOOL_NAME,    tool->m_name);
+	m_view.ItemText(row, COMMAND_LINE, tool->m_commandLine);
+}

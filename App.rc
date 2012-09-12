@@ -91,6 +91,7 @@ BEGIN
     BEGIN
         MENUITEM "&Add Host...",                201
         MENUITEM "&Remove Host",                202
+        MENUITEM SEPARATOR
     END
 END
 
@@ -140,6 +141,37 @@ BEGIN
     PUSHBUTTON      "Cancel",IDCANCEL,110,45,50,14
 END
 
+IDD_HOST_TOOLS DIALOGEX 0, 0, 312, 130
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | 
+    WS_SYSMENU
+CAPTION "Host Tools"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    CONTROL         "",IDC_TOOLS,"SysListView32",LVS_REPORT | LVS_SINGLESEL | 
+                    LVS_SHOWSELALWAYS | LVS_ALIGNLEFT | LVS_NOSORTHEADER | 
+                    WS_BORDER | WS_TABSTOP,5,5,300,100,WS_EX_CLIENTEDGE
+    PUSHBUTTON      "&Add...",IDC_ADD,5,110,50,14
+    PUSHBUTTON      "&Edit...",IDC_EDIT,60,110,50,14
+    PUSHBUTTON      "&Delete...",IDC_DELETE,115,110,50,14
+    DEFPUSHBUTTON   "OK",IDOK,200,110,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,255,110,50,14
+END
+
+IDD_HOST_TOOL DIALOGEX 0, 0, 222, 106
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | 
+    WS_SYSMENU
+CAPTION "Host Tool"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    LTEXT           "&Title:",IDC_STATIC,10,10,100,8
+    EDITTEXT        IDC_NAME,10,20,100,14,ES_AUTOHSCROLL
+    LTEXT           "Command &line:",IDC_STATIC,10,45,200,8
+    COMBOBOX        IDC_CMD_LINE,10,55,200,50,CBS_DROPDOWN | CBS_SORT | 
+                    WS_VSCROLL | WS_TABSTOP
+    DEFPUSHBUTTON   "OK",IDOK,105,80,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,161,80,50,14
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -178,6 +210,22 @@ BEGIN
         RIGHTMARGIN, 165
         TOPMARGIN, 7
         BOTTOMMARGIN, 64
+    END
+
+    IDD_HOST_TOOLS, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 305
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 123
+    END
+
+    IDD_HOST_TOOL, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 215
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 99
     END
 END
 #endif    // APSTUDIO_INVOKED
@@ -247,6 +295,19 @@ STRINGTABLE
 BEGIN
     ID_TOOLS_POPUP          "Tools"
     ID_TOOLS_HOSTTOOLS      "Configure the host related tools"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_HOST_INVOKE_TOOL_1   "Invoke the tool for the selected host"
+    ID_HOST_INVOKE_TOOL_2   "Invoke the tool for the selected host"
+    ID_HOST_INVOKE_TOOL_3   "Invoke the tool for the selected host"
+    ID_HOST_INVOKE_TOOL_4   "Invoke the tool for the selected host"
+    ID_HOST_INVOKE_TOOL_5   "Invoke the tool for the selected host"
+    ID_HOST_INVOKE_TOOL_6   "Invoke the tool for the selected host"
+    ID_HOST_INVOKE_TOOL_7   "Invoke the tool for the selected host"
+    ID_HOST_INVOKE_TOOL_8   "Invoke the tool for the selected host"
+    ID_HOST_INVOKE_TOOL_9   "Invoke the tool for the selected host"
 END
 
 #endif    // English (U.K.) resources

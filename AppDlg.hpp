@@ -13,7 +13,15 @@
 
 #include <WCL/MainDlg.hpp>
 #include <WCL/ListView.hpp>
-#include "Hosts.hpp"
+
+// Forward declarations.
+namespace WCL
+{
+class ICmdController;
+}
+class AppWnd;
+class Hosts;
+class Tools;
 
 ////////////////////////////////////////////////////////////////////////////////
 //! The application main dialog. This is the dialog that sits in the centre of
@@ -23,13 +31,16 @@ class AppDlg : public CMainDlg
 {
 public:
 	//! Constructor.
-	AppDlg(HostsPtr hosts);
+	AppDlg(AppWnd& appWnd, WCL::ICmdController& appCmds, Hosts& hosts, Tools& tools);
 
 	//! Destructor.
 	virtual ~AppDlg();
 
 	//! Is a host currently selected?
 	bool isHostSelected() const;
+
+	//! Get the currently selected host, if available.
+	tstring getSelectedHost() const;
 
 	//! Add a new host to be monitored.
 	void addHost(const tstring& hostname);
@@ -41,7 +52,10 @@ private:
 	//
 	// Members.
 	//
-	HostsPtr	m_hosts;		//!< The hosts being monitored.
+	AppWnd&					m_appWnd;		//!< The main window.
+	WCL::ICmdController&	m_appCmds;		//!< The command controller.
+	Hosts&					m_hosts;		//!< The hosts being monitored.
+	Tools&					m_tools;		//!< The set of external tools.
 
 	//
 	// Controls.
