@@ -22,7 +22,7 @@
 class ShowManualCmd : public WCL::UiCommandBase
 {
 public:
-	//! Construction with the app window.
+	//! Constructor.
 	ShowManualCmd(AppWnd& appWnd);
 
 	//

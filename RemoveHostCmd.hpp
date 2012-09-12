@@ -13,7 +13,6 @@
 
 #include <WCL/UiCommandBase.hpp>
 #include "AppWnd.hpp"
-#include "Resource.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 //! The command to remove the currently selected host from monitoring.
@@ -21,7 +20,7 @@
 class RemoveHostCmd : public WCL::UiCommandBase
 {
 public:
-	//! Construction with main views.
+	//! Constructor.
 	RemoveHostCmd(AppWnd& appWnd, AppDlg& appDlg, WCL::ICmdController& controller);
 
 	//
@@ -44,7 +43,7 @@ private:
 };
 
 ////////////////////////////////////////////////////////////////////////////////
-//! Construction with main views.
+//! Constructor.
 
 inline RemoveHostCmd::RemoveHostCmd(AppWnd& appWnd, AppDlg& appDlg, WCL::ICmdController& controller)
 	: WCL::UiCommandBase(ID_HOST_REMOVEHOST)

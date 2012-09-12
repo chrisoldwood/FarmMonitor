@@ -14,7 +14,6 @@
 #include <WCL/UiCommandBase.hpp>
 #include "AddHostDlg.hpp"
 #include "AppWnd.hpp"
-#include "Resource.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 //! The command to add a new host to monitor.

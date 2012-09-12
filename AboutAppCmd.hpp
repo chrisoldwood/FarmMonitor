@@ -13,7 +13,6 @@
 
 #include <WCL/UiCommandBase.hpp>
 #include "AppWnd.hpp"
-#include "Resource.h"
 #include "AboutDlg.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -22,7 +21,7 @@
 class AboutAppCmd : public WCL::UiCommandBase
 {
 public:
-	//! Construction with the app window.
+	//! Constructor.
 	AboutAppCmd(AppWnd& appWnd);
 
 	//
@@ -40,7 +39,7 @@ private:
 };
 
 ////////////////////////////////////////////////////////////////////////////////
-//! Construction with the app window.
+//! Constructor.
 
 inline AboutAppCmd::AboutAppCmd(AppWnd& appWnd)
 	: WCL::UiCommandBase(ID_HELP_ABOUT)

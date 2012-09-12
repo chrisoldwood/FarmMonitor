@@ -13,7 +13,6 @@
 
 #include <WCL/UiCommandBase.hpp>
 #include "AppWnd.hpp"
-#include "Resource.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 //! The command to exit the application.
@@ -21,7 +20,7 @@
 class ExitAppCmd : public WCL::UiCommandBase
 {
 public:
-	//! Construction with the app window.
+	//! Constructor.
 	ExitAppCmd(AppWnd& appWnd);
 
 	//
@@ -39,7 +38,7 @@ private:
 };
 
 ////////////////////////////////////////////////////////////////////////////////
-//! Construction with the app window.
+//! Constructor.
 
 inline ExitAppCmd::ExitAppCmd(AppWnd& appWnd)
 	: WCL::UiCommandBase(ID_FILE_EXIT)
