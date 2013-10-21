@@ -60,6 +60,9 @@ private:
 	//! Add button handler.
 	void onAddTool();
 
+	//! Copy button handler.
+	void onCopyTool();
+
 	//! Edit button handler.
 	void onEditTool();
 

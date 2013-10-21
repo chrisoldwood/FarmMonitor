@@ -7,6 +7,9 @@
 #include "HostToolsDialog.hpp"
 #include "HostToolDialog.hpp"
 
+//! The maximum number of tool definitions supported.
+const size_t MAX_TOOLS = ID_HOST_INVOKE_TOOL_9 - ID_HOST_INVOKE_TOOL_1 + 1;
+
 ////////////////////////////////////////////////////////////////////////////////
 //! Default constructor.
 
@@ -19,6 +22,7 @@ HostToolsDialog::HostToolsDialog()
 
 	DEFINE_CTRLMSG_TABLE
 		CMD_CTRLMSG(IDC_ADD,    BN_CLICKED,      &HostToolsDialog::onAddTool)
+		CMD_CTRLMSG(IDC_COPY,   BN_CLICKED,      &HostToolsDialog::onCopyTool)
 		CMD_CTRLMSG(IDC_EDIT,   BN_CLICKED,      &HostToolsDialog::onEditTool)
 		CMD_CTRLMSG(IDC_DELETE, BN_CLICKED,      &HostToolsDialog::onDeleteTool)
 		NFY_CTRLMSG(IDC_TOOLS,  LVN_ITEMCHANGED, &HostToolsDialog::onToolSelected)
@@ -94,6 +98,34 @@ void HostToolsDialog::onAddTool()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+//! Copy button handler.
+
+void HostToolsDialog::onCopyTool()
+{
+	ASSERT(m_view.IsSelection());
+
+	const size_t       selection = m_view.Selection();
+	const ConstToolPtr source = m_tools.tool(selection);
+
+	HostToolDialog dialog;
+
+	dialog.m_tool = *source;
+
+	for (Tools::const_iterator it = m_tools.begin(); it != m_tools.end(); ++it)
+		dialog.m_usedNames.insert((*it)->m_name);
+
+	if (dialog.RunModal(*this) == IDOK)
+	{
+		ToolPtr tool(new Tool(dialog.m_tool));
+
+		m_tools.append(tool);
+
+		addItemToView(tool, true);
+		updateUi();
+	}
+}
+
+////////////////////////////////////////////////////////////////////////////////
 //! Edit button handler.
 
 void HostToolsDialog::onEditTool()
@@ -145,7 +177,10 @@ void HostToolsDialog::onDeleteTool()
 void HostToolsDialog::updateUi()
 {
 	const bool isSelection = m_view.IsSelection();
+	const bool maxDefined = (m_view.ItemCount() == MAX_TOOLS);
 
+	Control(IDC_ADD).Enable(!maxDefined);
+	Control(IDC_COPY).Enable(!maxDefined && isSelection);
 	Control(IDC_EDIT).Enable(isSelection);
 	Control(IDC_DELETE).Enable(isSelection);
 }
