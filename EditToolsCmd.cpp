@@ -30,6 +30,10 @@ void EditToolsCmd::execute()
 	if (dialog.RunModal(m_appWnd) == IDOK)
 	{
 		if (dialog.m_tools.isModified())
+		{
 			m_tools.replaceAll(dialog.m_tools);
+
+			m_appWnd.rebuildToolsMenu();
+		}
 	}
 }

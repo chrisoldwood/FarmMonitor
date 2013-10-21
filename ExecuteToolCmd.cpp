@@ -6,6 +6,7 @@
 #include "Common.hpp"
 #include "ExecuteToolCmd.hpp"
 #include "Tools.hpp"
+#include "AppWnd.hpp"
 #include "AppDlg.hpp"
 #include "FarmMonitor.hpp"
 #include <Core/AnsiWide.hpp>
@@ -17,10 +18,11 @@ static const tstring HOSTNAME = TXT("${HostName}");
 ////////////////////////////////////////////////////////////////////////////////
 //! Constructor.
 
-ExecuteToolCmd::ExecuteToolCmd(Tools& tools, uint index, AppDlg& appDlg)
+ExecuteToolCmd::ExecuteToolCmd(Tools& tools, uint index, AppWnd& appWnd, AppDlg& appDlg)
 	: WCL::UiCommandBase(ID_HOST_INVOKE_TOOL_1+index)
 	, m_tools(tools)
 	, m_index(index)
+	, m_appWnd(appWnd)
 	, m_appDlg(appDlg)
 {
 }
@@ -47,6 +49,16 @@ void ExecuteToolCmd::execute()
 
 		g_app.FatalMsg(TXT("%s"), message.c_str());
 	}
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! Refresh the UI for the command.
+
+void ExecuteToolCmd::updateUi()
+{
+	bool hostSelected = m_appDlg.isHostSelected();
+
+	m_appWnd.Menu()->EnableCmd(id(), hostSelected);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

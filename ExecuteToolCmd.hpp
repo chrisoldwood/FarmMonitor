@@ -15,6 +15,7 @@
 
 // Forward declarations.
 class Tools;
+class AppWnd;
 class AppDlg;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -24,7 +25,7 @@ class ExecuteToolCmd : public WCL::UiCommandBase
 {
 public:
 	//! Constructor.
-	ExecuteToolCmd(Tools& tools, uint index, AppDlg& appDlg);
+	ExecuteToolCmd(Tools& tools, uint index, AppWnd& appWnd, AppDlg& appDlg);
 
 	//
 	// IUiCommand methods.
@@ -33,12 +34,16 @@ public:
 	//! Execute the command.
 	virtual void execute();
 
+	//! Refresh the UI for the command.
+	virtual void updateUi();
+
 private:
 	//
 	// Members.
 	//
 	Tools&	m_tools;	//!< The set of external tools.
 	size_t	m_index;	//!< The index of the tool to invoke.
+	AppWnd&	m_appWnd;	//!< The app frame window.
 	AppDlg& m_appDlg;	//!< The main view.
 
 	//! Convert a ShellExecute error code to a string.

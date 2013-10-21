@@ -135,14 +135,16 @@ LRESULT AppDlg::onHostSelectionChanged(NMHDR& header)
 LRESULT AppDlg::onRightClick(NMHDR& /*header*/)
 {
 	const bool isSelection = m_hostView.IsSelection();	
+	const uint beginCommandId = ID_HOST_INVOKE_TOOL_1;
+	const uint endCommandId = ID_HOST_INVOKE_TOOL_9 + 1;
 
 	WCL::ContextMenu menu(IDR_CONTEXT);
 
 	menu.EnableCmd(ID_HOST_REMOVEHOST, isSelection);
 
-	uint commandId = ID_HOST_INVOKE_TOOL_1;
+	uint commandId = beginCommandId;
 
-	for (Tools::const_iterator it = m_tools.begin(); ( (it != m_tools.end()) && (commandId != ID_HOST_INVOKE_TOOL_9) );
+	for (Tools::const_iterator it = m_tools.begin(); ( (it != m_tools.end()) && (commandId != endCommandId) );
 			++it, ++commandId)
 	{
 		const uint    ordinal = (commandId - ID_HOST_INVOKE_TOOL_1) + 1;

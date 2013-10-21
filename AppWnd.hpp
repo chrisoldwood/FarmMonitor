@@ -30,6 +30,9 @@ public:
 	//! Destructor.
 	virtual ~AppWnd();
 
+	//! Rebuild the custom tools menu.
+	void rebuildToolsMenu();
+
 	//
 	// Public Members.
 	//
@@ -43,6 +46,7 @@ private:
 	// Internal members.
 	//
 	CAccel		m_accelerators;	//!< The accelerator table.
+	Tools&		m_tools;		//!< The set of external tools.
 
 	// Child window IDs.
 	enum
