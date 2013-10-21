@@ -8,6 +8,7 @@
 #include "ExitAppCmd.hpp"
 #include "AddHostCmd.hpp"
 #include "RemoveHostCmd.hpp"
+#include "CopyHostCmd.hpp"
 #include "EditToolsCmd.hpp"
 #include "ShowManualCmd.hpp"
 #include "AboutAppCmd.hpp"
@@ -25,15 +26,16 @@ AppCmds::AppCmds(AppWnd& appWnd, AppDlg& appDlg, Tools& tools)
 		// Host menu
 		WCL_EXTCMD_ENTRY(new AddHostCmd(appWnd, appDlg, *this))
 		WCL_EXTCMD_ENTRY(new RemoveHostCmd(appWnd, appDlg, *this))
-		WCL_EXTCMD_ENTRY(new ExecuteToolCmd(tools, 0, appDlg))
-		WCL_EXTCMD_ENTRY(new ExecuteToolCmd(tools, 1, appDlg))
-		WCL_EXTCMD_ENTRY(new ExecuteToolCmd(tools, 2, appDlg))
-		WCL_EXTCMD_ENTRY(new ExecuteToolCmd(tools, 3, appDlg))
-		WCL_EXTCMD_ENTRY(new ExecuteToolCmd(tools, 4, appDlg))
-		WCL_EXTCMD_ENTRY(new ExecuteToolCmd(tools, 5, appDlg))
-		WCL_EXTCMD_ENTRY(new ExecuteToolCmd(tools, 6, appDlg))
-		WCL_EXTCMD_ENTRY(new ExecuteToolCmd(tools, 7, appDlg))
-		WCL_EXTCMD_ENTRY(new ExecuteToolCmd(tools, 8, appDlg))
+		WCL_EXTCMD_ENTRY(new CopyHostCmd(appWnd, appDlg, *this))
+		WCL_EXTCMD_ENTRY(new ExecuteToolCmd(tools, 0, appWnd, appDlg))
+		WCL_EXTCMD_ENTRY(new ExecuteToolCmd(tools, 1, appWnd, appDlg))
+		WCL_EXTCMD_ENTRY(new ExecuteToolCmd(tools, 2, appWnd, appDlg))
+		WCL_EXTCMD_ENTRY(new ExecuteToolCmd(tools, 3, appWnd, appDlg))
+		WCL_EXTCMD_ENTRY(new ExecuteToolCmd(tools, 4, appWnd, appDlg))
+		WCL_EXTCMD_ENTRY(new ExecuteToolCmd(tools, 5, appWnd, appDlg))
+		WCL_EXTCMD_ENTRY(new ExecuteToolCmd(tools, 6, appWnd, appDlg))
+		WCL_EXTCMD_ENTRY(new ExecuteToolCmd(tools, 7, appWnd, appDlg))
+		WCL_EXTCMD_ENTRY(new ExecuteToolCmd(tools, 8, appWnd, appDlg))
 		// Tools menu.
 		WCL_EXTCMD_ENTRY(new EditToolsCmd(appWnd, tools))
 		// Help menu.

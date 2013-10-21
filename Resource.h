@@ -15,6 +15,7 @@
 #define ID_HOST_POPUP                   200
 #define ID_HOST_ADDHOST                 201
 #define ID_HOST_REMOVEHOST              202
+#define ID_HOST_COPYHOST                203
 #define ID_HOST_INVOKE_TOOL_1           211
 #define ID_HOST_INVOKE_TOOL_2           212
 #define ID_HOST_INVOKE_TOOL_3           213
@@ -42,6 +43,8 @@
 #define IDC_DELETE                      1094
 #define IDC_COMBO1                      1095
 #define IDC_CMD_LINE                    1095
+#define IDC_ADD2                        1095
+#define IDC_COPY                        1095
 #define IDD_MAIN                        5000
 #define IDD_ABOUT                       5001
 #define IDC_STATIC                      -1
@@ -52,7 +55,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        135
-#define _APS_NEXT_COMMAND_VALUE         165
+#define _APS_NEXT_COMMAND_VALUE         167
 #define _APS_NEXT_CONTROL_VALUE         1096
 #define _APS_NEXT_SYMED_VALUE           104
 #endif

@@ -71,15 +71,16 @@ BEGIN
     BEGIN
         MENUITEM "&Add Host...",                ID_HOST_ADDHOST
         MENUITEM "&Remove Host",                ID_HOST_REMOVEHOST
+        MENUITEM "Copy Host",                   ID_HOST_COPYHOST
         MENUITEM SEPARATOR
     END
     POPUP "&Tools"
     BEGIN
-        MENUITEM "&Host Tools...",              301
+        MENUITEM "&Host Tools...",              ID_TOOLS_HOSTTOOLS
     END
     POPUP "&Help"
     BEGIN
-        MENUITEM "Contents\tF1",                901
+        MENUITEM "Contents\tF1",                ID_HELP_CONTENTS
         MENUITEM SEPARATOR
         MENUITEM "&About Farm Monitor",         ID_HELP_ABOUT
     END
@@ -89,8 +90,9 @@ IDR_CONTEXT MENU
 BEGIN
     POPUP "Context Menu"
     BEGIN
-        MENUITEM "&Add Host...",                201
-        MENUITEM "&Remove Host",                202
+        MENUITEM "&Add Host...",                ID_HOST_ADDHOST
+        MENUITEM "&Remove Host",                ID_HOST_REMOVEHOST
+        MENUITEM "Copy Host",                   ID_HOST_COPYHOST
         MENUITEM SEPARATOR
     END
 END
@@ -141,7 +143,7 @@ BEGIN
     PUSHBUTTON      "Cancel",IDCANCEL,110,45,50,14
 END
 
-IDD_HOST_TOOLS DIALOGEX 0, 0, 312, 130
+IDD_HOST_TOOLS DIALOGEX 0, 0, 412, 130
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | 
     WS_SYSMENU
 CAPTION "Host Tools"
@@ -149,15 +151,16 @@ FONT 8, "MS Shell Dlg", 400, 0, 0x1
 BEGIN
     CONTROL         "",IDC_TOOLS,"SysListView32",LVS_REPORT | LVS_SINGLESEL | 
                     LVS_SHOWSELALWAYS | LVS_ALIGNLEFT | LVS_NOSORTHEADER | 
-                    WS_BORDER | WS_TABSTOP,5,5,300,100,WS_EX_CLIENTEDGE
+                    WS_BORDER | WS_TABSTOP,5,5,400,100,WS_EX_CLIENTEDGE
     PUSHBUTTON      "&Add...",IDC_ADD,5,110,50,14
-    PUSHBUTTON      "&Edit...",IDC_EDIT,60,110,50,14
-    PUSHBUTTON      "&Delete...",IDC_DELETE,115,110,50,14
-    DEFPUSHBUTTON   "OK",IDOK,200,110,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,255,110,50,14
+    PUSHBUTTON      "&Copy...",IDC_COPY,60,110,50,14
+    PUSHBUTTON      "&Edit...",IDC_EDIT,115,110,50,14
+    PUSHBUTTON      "&Delete...",IDC_DELETE,171,110,50,14
+    DEFPUSHBUTTON   "OK",IDOK,300,110,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,355,110,50,14
 END
 
-IDD_HOST_TOOL DIALOGEX 0, 0, 222, 106
+IDD_HOST_TOOL DIALOGEX 0, 0, 267, 106
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | 
     WS_SYSMENU
 CAPTION "Host Tool"
@@ -166,10 +169,10 @@ BEGIN
     LTEXT           "&Title:",IDC_STATIC,10,10,100,8
     EDITTEXT        IDC_NAME,10,20,100,14,ES_AUTOHSCROLL
     LTEXT           "Command &line:",IDC_STATIC,10,45,200,8
-    COMBOBOX        IDC_CMD_LINE,10,55,200,50,CBS_DROPDOWN | CBS_SORT | 
-                    WS_VSCROLL | WS_TABSTOP
-    DEFPUSHBUTTON   "OK",IDOK,105,80,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,161,80,50,14
+    COMBOBOX        IDC_CMD_LINE,10,55,250,50,CBS_DROPDOWN | CBS_AUTOHSCROLL | 
+                    CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    DEFPUSHBUTTON   "OK",IDOK,150,80,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,206,80,50,14
 END
 
 
@@ -215,7 +218,7 @@ BEGIN
     IDD_HOST_TOOLS, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 305
+        RIGHTMARGIN, 405
         TOPMARGIN, 7
         BOTTOMMARGIN, 123
     END
@@ -223,7 +226,7 @@ BEGIN
     IDD_HOST_TOOL, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 215
+        RIGHTMARGIN, 260
         TOPMARGIN, 7
         BOTTOMMARGIN, 99
     END
@@ -289,6 +292,7 @@ BEGIN
     ID_HOST_POPUP           "Host options"
     ID_HOST_ADDHOST         "Add a new host\nAdd Host"
     ID_HOST_REMOVEHOST      "Remove the selected host\nRemove Host"
+    ID_HOST_COPYHOST        "Copy the host name to the clipboard"
 END
 
 STRINGTABLE 
