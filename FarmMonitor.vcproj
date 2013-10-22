@@ -4,10 +4,6 @@
 	Version="7.10"
 	Name="FarmMonitor"
 	ProjectGUID="{6609D72E-4FDE-403D-A286-004013C03E67}"
-	SccProjectName="SAK"
-	SccAuxPath="SAK"
-	SccLocalPath="SAK"
-	SccProvider="SAK"
 	Keyword="Win32Proj">
 	<Platforms>
 		<Platform

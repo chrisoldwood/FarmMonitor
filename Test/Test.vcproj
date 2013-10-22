@@ -4,10 +4,10 @@
 	Version="7.10"
 	Name="Test"
 	ProjectGUID="{91FBBA3F-1046-4A65-B619-94F6D7964B05}"
-	SccProjectName="&quot;$/Win32/FarmMonitor&quot;, YUFAAAAA"
+	SccProjectName=""
 	SccAuxPath=""
-	SccLocalPath=".."
-	SccProvider="MSSCCI:Microsoft Visual SourceSafe"
+	SccLocalPath=""
+	SccProvider=""
 	Keyword="Win32Proj">
 	<Platforms>
 		<Platform
