@@ -4,6 +4,11 @@ Farm Monitor v0.1
 Introduction
 ------------
 
+The is a simple, GUI based monitoring tool for Windows servers. It uses WMI to
+query servers for various metrics to show their status. It is also possible to
+define custom tools (aka command lines) that can be invoked for the selected
+server, e.g. to open an RDP connection to it.
+
 Documentation
 -------------
 
