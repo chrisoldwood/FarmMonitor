@@ -12,6 +12,8 @@ None yet.
 Development
 -----------
 
+See DevNotes.txt
+
 Contact Details
 ---------------
 
@@ -19,4 +21,4 @@ Email: gort@cix.co.uk
 Web:   http://www.chrisoldwood.com
 
 Chris Oldwood
-20th July 2012
+22nd October 2013
