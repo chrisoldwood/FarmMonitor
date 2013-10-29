@@ -48,6 +48,9 @@ public:
 	//! Remove the currently selected host.
 	void removeSelectedHost();
 	
+	//! Refresh the hosts view.
+	void refreshView();
+
 private:
 	//
 	// Members.
@@ -75,6 +78,9 @@ private:
 	//! Handle a right-click on the hosts view.
 	LRESULT onRightClick(NMHDR& header);
 
+	//! Handle the refresh button being clicked.
+	void onRefreshClicked();
+
 	//
 	// Internal methods.
 	//
@@ -84,9 +90,6 @@ private:
 
 	//! Add a host to the view.
 	void addHostToView(size_t index);
-
-	//! Refresh the hosts view.
-	void refreshView();
 
 	//! Refresh the view for a single host.
 	void refreshHost(size_t index);

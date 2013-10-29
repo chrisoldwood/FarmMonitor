@@ -13,6 +13,7 @@
 #include "ShowManualCmd.hpp"
 #include "AboutAppCmd.hpp"
 #include "ExecuteToolCmd.hpp"
+#include "RefreshViewCmd.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////
 //! Constructor.
@@ -36,6 +37,8 @@ AppCmds::AppCmds(AppWnd& appWnd, AppDlg& appDlg, Tools& tools)
 		WCL_EXTCMD_ENTRY(new ExecuteToolCmd(tools, 6, appWnd, appDlg))
 		WCL_EXTCMD_ENTRY(new ExecuteToolCmd(tools, 7, appWnd, appDlg))
 		WCL_EXTCMD_ENTRY(new ExecuteToolCmd(tools, 8, appWnd, appDlg))
+		// View menu.
+		WCL_EXTCMD_ENTRY(new RefreshViewCmd(appWnd))
 		// Tools menu.
 		WCL_EXTCMD_ENTRY(new EditToolsCmd(appWnd, tools))
 		// Help menu.

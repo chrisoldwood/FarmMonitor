@@ -15,6 +15,7 @@
 #include <WCL/BusyCursor.hpp>
 #include <WCL/ContextMenu.hpp>
 #include <WCL/ICmdController.hpp>
+#include <WCL/BusyCursor.hpp>
 
 ////////////////////////////////////////////////////////////////////////////////
 //! Constructor.
@@ -31,12 +32,14 @@ AppDlg::AppDlg(AppWnd& appWnd, WCL::ICmdController& appCmds, Hosts& hosts, Tools
 	END_CTRL_TABLE
 
 	DEFINE_GRAVITY_TABLE
-		CTRLGRAV(IDC_HOSTS, LEFT_EDGE, TOP_EDGE, RIGHT_EDGE, BOTTOM_EDGE)
+		CTRLGRAV(IDC_HOSTS,   LEFT_EDGE, TOP_EDGE,    RIGHT_EDGE, BOTTOM_EDGE)
+		CTRLGRAV(IDC_REFRESH, LEFT_EDGE, BOTTOM_EDGE, LEFT_EDGE,  BOTTOM_EDGE)
 	END_GRAVITY_TABLE
 
 	DEFINE_CTRLMSG_TABLE
-		NFY_CTRLMSG(IDC_HOSTS, LVN_ITEMCHANGED, &AppDlg::onHostSelectionChanged)
-		NFY_CTRLMSG(IDC_HOSTS, NM_RCLICK,       &AppDlg::onRightClick)
+		NFY_CTRLMSG(IDC_HOSTS,   LVN_ITEMCHANGED, &AppDlg::onHostSelectionChanged)
+		NFY_CTRLMSG(IDC_HOSTS,   NM_RCLICK,       &AppDlg::onRightClick)
+		CMD_CTRLMSG(IDC_REFRESH, BN_CLICKED,      &AppDlg::onRefreshClicked)
 	END_CTRLMSG_TABLE
 }
 
@@ -113,7 +116,6 @@ void AppDlg::removeSelectedHost()
 void AppDlg::OnInitDialog()
 {
 	initialiseHostView();
-	refreshView();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -156,6 +158,14 @@ LRESULT AppDlg::onRightClick(NMHDR& /*header*/)
 	menu.display(m_appWnd);
 
 	return 0;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! Handle the refresh button being clicked.
+
+void AppDlg::onRefreshClicked()
+{
+	m_appCmds.Execute(ID_VIEW_REFRESH);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -212,6 +222,8 @@ tstring FormatDiskUsage(const WMI::Win32_LogicalDisk& disk)
 
 void AppDlg::refreshView()
 {
+	CBusyCursor waitCursor;
+
 	for (size_t i = 0; i != m_hosts.size(); ++i)
 		refreshHost(i);
 }

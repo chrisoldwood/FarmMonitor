@@ -6,8 +6,4 @@
 
 - Re-order tools menu.
 
-- Clone existing tool.
-
 - Save column positions.
-
-- Don't automatically refresh.
