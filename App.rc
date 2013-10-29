@@ -187,6 +187,7 @@ END
 //
 
 IDR_APPTOOLBAR          BITMAP                  "Toolbar.bmp"
+IDB_HOST_ICONS          BITMAP                  "HostIcons.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //

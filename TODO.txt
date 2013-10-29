@@ -2,8 +2,6 @@
 
 - Allow duplicate hostnames?
 
-- Icons for host status.
-
 - Re-order tools menu.
 
 - Save column positions.

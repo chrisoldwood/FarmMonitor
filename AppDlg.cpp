@@ -173,6 +173,7 @@ void AppDlg::onRefreshClicked()
 
 void AppDlg::initialiseHostView()
 {
+	m_hostView.ImageList(LVSIL_SMALL, IDB_HOST_ICONS, 16, RGB(255, 0, 255));
 	m_hostView.FullRowSelect(true);
 
 	m_hostView.InsertColumn(HOST_NAME,        TXT("Host"),       m_hostView.StringWidth(20), LVCFMT_LEFT);
@@ -191,7 +192,7 @@ void AppDlg::initialiseHostView()
 
 void AppDlg::addHostToView(size_t index)
 {
-	m_hostView.InsertItem(index, m_hosts.name(index));
+	m_hostView.InsertItem(index, m_hosts.name(index), STATUS_UNKNOWN);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -257,10 +258,13 @@ void AppDlg::refreshHost(size_t index)
 				m_hostView.ItemText(index, DISK_USAGE, FormatDiskUsage(*diskIter));
 			}
 		}
+
+		m_hostView.ItemImage(index, STATUS_GOOD);
 	}
 	catch (WMI::Exception& e)
 	{
 		m_hostView.ItemText(index, LAST_ERROR, e.twhat());
+		m_hostView.ItemImage(index, STATUS_BAD);
 	}
 }
 
@@ -274,4 +278,5 @@ void AppDlg::clearHost(size_t index)
 	m_hostView.ItemText(index, DISK_USAGE,       TXT(""));
 	m_hostView.ItemText(index, LAST_BOOTUP_TIME, TXT(""));
 	m_hostView.ItemText(index, LAST_ERROR,       TXT(""));
+	m_hostView.ItemImage(index, STATUS_UNKNOWN);
 }

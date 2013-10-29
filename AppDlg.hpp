@@ -109,6 +109,14 @@ private:
 
 		NUM_COLUMNS,
 	};
+
+	//! The host status.
+	enum HostStatus
+	{
+		STATUS_UNKNOWN	= 0,
+		STATUS_BAD		= 1,
+		STATUS_GOOD		= 2,
+	};
 };
 
 #endif // APP_APPDLG_HPP

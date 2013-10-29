@@ -141,6 +141,9 @@
 				RelativePath=".\App.rcv">
 			</File>
 			<File
+				RelativePath=".\HostIcons.bmp">
+			</File>
+			<File
 				RelativePath=".\Resource.h">
 			</File>
 			<File

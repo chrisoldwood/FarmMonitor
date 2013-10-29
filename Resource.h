@@ -7,6 +7,7 @@
 #define IDR_APPACCEL                    4
 #define IDR_APPTOOLBAR                  5
 #define IDR_CONTEXT                     6
+#define IDB_HOST_ICONS                  7
 #define ID_FILE_POPUP                   100
 #define ID_FILE_EXIT                    109
 #define ID_HOST_POPUP                   200
@@ -55,8 +56,8 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
-#define _APS_NEXT_RESOURCE_VALUE        135
-#define _APS_NEXT_COMMAND_VALUE         168
+#define _APS_NEXT_RESOURCE_VALUE        136
+#define _APS_NEXT_COMMAND_VALUE         170
 #define _APS_NEXT_CONTROL_VALUE         1097
 #define _APS_NEXT_SYMED_VALUE           104
 #endif
