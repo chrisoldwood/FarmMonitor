@@ -75,6 +75,27 @@ tstring AppDlg::getSelectedHost() const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+//! Get the final widths of the main view columns.
+
+const AppDlg::ColumnWidths& AppDlg::getFinalColumnWidths() const
+{
+	ASSERT(m_hWnd == NULL);
+
+	return m_finalWidths;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! Set the widths of the main view columns.
+
+void AppDlg::setColumnWidths(const ColumnWidths& widths)
+{
+	ASSERT(widths.size() == m_hostView.NumColumns());
+
+	for (size_t i = 0; i != m_hostView.NumColumns(); ++i)
+		m_hostView.ColumnWidth(i, widths[i]);
+}
+
+////////////////////////////////////////////////////////////////////////////////
 //! Add a new host to be monitored.
 
 void AppDlg::addHost(const tstring& hostname)
@@ -116,6 +137,19 @@ void AppDlg::removeSelectedHost()
 void AppDlg::OnInitDialog()
 {
 	initialiseHostView();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! Handle the dialog being destroyed.
+
+void AppDlg::OnDestroy()
+{
+	ASSERT(m_finalWidths.size() == 0);
+
+	for (size_t i = 0; i != m_hostView.NumColumns(); ++i)
+		m_finalWidths.push_back(m_hostView.ColumnWidth(i));
+
+	CMainDlg::OnDestroy();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

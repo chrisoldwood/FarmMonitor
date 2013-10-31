@@ -25,7 +25,7 @@ public:
 		return defaultValue;
 	}
 
-	virtual void readList(const tstring& /*sectionName*/, const tstring& /*keyName*/, const tstring& /*defaultValue*/, StringArray& /*list*/) const
+	virtual void readStringList(const tstring& /*sectionName*/, const tstring& /*keyName*/, const tstring& /*defaultValue*/, StringArray& /*list*/) const
 	{
 	}
 
@@ -42,7 +42,7 @@ public:
 		m_values.push_back(value);
 	}
 
-	virtual void writeList(const tstring& /*sectionName*/, const tstring& /*keyName*/, const StringArray& /*list*/)
+	virtual void writeStringList(const tstring& /*sectionName*/, const tstring& /*keyName*/, const StringArray& /*list*/)
 	{
 	}
 

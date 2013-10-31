@@ -3,5 +3,3 @@
 - Allow duplicate hostnames?
 
 - Re-order tools menu.
-
-- Save column positions.

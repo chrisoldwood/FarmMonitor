@@ -57,6 +57,9 @@ bool FarmMonitor::OnOpen()
 	if (!m_appWnd.Open(m_iCmdShow, m_startPosition))
 		return false;
 
+	if (!m_startWidths.empty())
+		m_appWnd.m_mainDlg.setColumnWidths(m_startWidths);
+
 //	m_appCmds.InitialiseUI();
 	m_appCmds.UpdateUI();
 
@@ -90,6 +93,7 @@ bool FarmMonitor::loadConfig()
 			throw Core::ConfigurationException(Core::fmt(TXT("The configuration data is incompatible - '%s'"), version.c_str()));
 
 		m_startPosition = appConfig.readValue<CRect>(TXT("UI"), TXT("MainWindow"), m_startPosition);
+		appConfig.readList<size_t>(TXT("UI"), TXT("ColumnWidths"), m_startWidths, m_startWidths);
 
 		m_hosts.load(appConfig);
 		m_tools.load(appConfig);
@@ -115,6 +119,7 @@ void FarmMonitor::saveConfig()
 		appConfig.writeString(appConfig.DEFAULT_SECTION, TXT("Version"), CONFIG_VERSION);
 
 		appConfig.writeValue<CRect>(TXT("UI"), TXT("MainWindow"), m_appWnd.FinalPlacement());
+		appConfig.writeList<size_t>(TXT("UI"), TXT("ColumnWidths"), m_appWnd.m_mainDlg.getFinalColumnWidths());
 
 		m_hosts.save(appConfig);
 		m_tools.save(appConfig);

@@ -46,6 +46,7 @@ private:
 	//
 	WCL::AutoCom	m_autoCom;			//!< The COM initialiser.
 	CRect			m_startPosition;	//!< The main window start position.
+	AppDlg::ColumnWidths m_startWidths;	//!< The main view column widths.
 
 	//
 	// CApp overriden methods.

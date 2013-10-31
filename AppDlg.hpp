@@ -30,17 +30,35 @@ class Tools;
 class AppDlg : public CMainDlg
 {
 public:
+	//! The column width collection type.
+	typedef std::vector<size_t> ColumnWidths;
+
+public:
 	//! Constructor.
 	AppDlg(AppWnd& appWnd, WCL::ICmdController& appCmds, Hosts& hosts, Tools& tools);
 
 	//! Destructor.
 	virtual ~AppDlg();
 
+	//
+	// Properties.
+	//
+
 	//! Is a host currently selected?
 	bool isHostSelected() const;
 
 	//! Get the currently selected host, if available.
 	tstring getSelectedHost() const;
+
+	//! Get the final widths of the main view columns.
+	const ColumnWidths& getFinalColumnWidths() const;
+
+	//! Set the widths of the main view columns.
+	void setColumnWidths(const ColumnWidths& widths);
+
+	//
+	// Methods.
+	//
 
 	//! Add a new host to be monitored.
 	void addHost(const tstring& hostname);
@@ -59,6 +77,7 @@ private:
 	WCL::ICmdController&	m_appCmds;		//!< The command controller.
 	Hosts&					m_hosts;		//!< The hosts being monitored.
 	Tools&					m_tools;		//!< The set of external tools.
+	ColumnWidths			m_finalWidths;	//!< The final width for each column.
 
 	//
 	// Controls.
@@ -71,6 +90,9 @@ private:
 
 	//! Handle dialog creation.
 	virtual void OnInitDialog();
+
+	//! Handle the dialog being destroyed.
+	virtual void OnDestroy();
 
 	//! Handle change in host selection.
 	LRESULT onHostSelectionChanged(NMHDR& header);
