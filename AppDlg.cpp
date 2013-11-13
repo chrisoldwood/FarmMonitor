@@ -105,7 +105,6 @@ void AppDlg::addHost(const tstring& hostname)
 	const size_t index = m_hosts.add(hostname);
 
 	addHostToView(index);
-	refreshHost(index);
 
 	if (!m_hostView.IsSelection())
 		m_hostView.Select(0);
