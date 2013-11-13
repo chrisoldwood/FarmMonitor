@@ -177,6 +177,7 @@ LRESULT AppDlg::onRightClick(NMHDR& /*header*/)
 	WCL::ContextMenu menu(IDR_CONTEXT);
 
 	menu.EnableCmd(ID_HOST_REMOVEHOST, isSelection);
+	menu.EnableCmd(ID_HOST_COPYHOST, isSelection);
 
 	uint commandId = beginCommandId;
 
@@ -187,6 +188,7 @@ LRESULT AppDlg::onRightClick(NMHDR& /*header*/)
 		const tstring text = Core::fmt(TXT("&%u %s"), ordinal, (*it)->m_name.c_str());
 
 		menu.AppendCmd(commandId, text);
+		menu.EnableCmd(commandId, isSelection);
 	}
 
 	menu.display(m_appWnd);
