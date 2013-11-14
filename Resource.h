@@ -12,8 +12,9 @@
 #define ID_FILE_EXIT                    109
 #define ID_HOST_POPUP                   200
 #define ID_HOST_ADDHOST                 201
-#define ID_HOST_REMOVEHOST              202
-#define ID_HOST_COPYHOST                203
+#define ID_HOST_EDITHOST                202
+#define ID_HOST_REMOVEHOST              203
+#define ID_HOST_COPYHOST                204
 #define ID_HOST_INVOKE_TOOL_1           211
 #define ID_HOST_INVOKE_TOOL_2           212
 #define ID_HOST_INVOKE_TOOL_3           213
@@ -46,7 +47,7 @@
 #define IDC_REFRESH                     1096
 #define IDD_MAIN                        5000
 #define IDD_ABOUT                       5001
-#define IDD_ADD_HOST                    5002
+#define IDD_ADDEDIT_HOST                5002
 #define IDD_HOST_TOOLS                  5003
 #define IDD_HOST_TOOL                   5004
 #define IDC_STATIC                      -1
@@ -57,7 +58,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        136
-#define _APS_NEXT_COMMAND_VALUE         170
+#define _APS_NEXT_COMMAND_VALUE         172
 #define _APS_NEXT_CONTROL_VALUE         1097
 #define _APS_NEXT_SYMED_VALUE           104
 #endif

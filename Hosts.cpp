@@ -102,6 +102,17 @@ size_t Hosts::add(const tstring& hostname)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+//! Rename a host by position.
+
+void Hosts::rename(size_t index, const tstring& hostname)
+{
+	ASSERT(index < m_hosts.size());
+
+	m_hosts[index] = hostname;
+	m_modified = true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 //! Remove a host by position.
 
 void Hosts::remove(size_t index)

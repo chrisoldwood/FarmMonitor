@@ -1,11 +1,11 @@
 ////////////////////////////////////////////////////////////////////////////////
-//! \file   AddHostDlg.hpp
-//! \brief  The AddHostDlg class declaration.
+//! \file   AddEditHostDlg.hpp
+//! \brief  The AddEditHostDlg class declaration.
 //! \author Chris Oldwood
 
 // Check for previous inclusion
-#ifndef ADDHOSTDLG_HPP
-#define ADDHOSTDLG_HPP
+#ifndef ADDEDITHOSTDLG_HPP
+#define ADDEDITHOSTDLG_HPP
 
 #if _MSC_VER > 1000
 #pragma once
@@ -14,22 +14,34 @@
 #include <WCL/CommonUI.hpp>
 
 ////////////////////////////////////////////////////////////////////////////////
-//!
+//! The dialog to create and edit a hostname.
 
-class AddHostDlg : public CDialog
+class AddEditHostDlg : public CDialog
 {
 public:
-	//! Default constructor.
-	AddHostDlg();
+	// Dialog mode
+	enum Mode
+	{
+		ADD_HOST,
+		EDIT_HOST,
+	};
+
+	//! Constructor.
+	AddEditHostDlg(Mode mode);
 	
 	//
 	// Members.
 	//
 
-	//! The hostname to add.
+	//! The hostname to add/edit.
 	tstring m_hostname;
 
 private:
+	//
+	// Members.
+	//
+	Mode		m_mode;				//!< Dialog configuration.
+
 	//
 	// Controls.
 	//
@@ -46,4 +58,4 @@ private:
 	virtual bool OnOk();
 };
 
-#endif // ADDHOSTDLG_HPP
+#endif // ADDEDITHOSTDLG_HPP

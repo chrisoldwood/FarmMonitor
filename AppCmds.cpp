@@ -7,6 +7,7 @@
 #include "AppCmds.hpp"
 #include "ExitAppCmd.hpp"
 #include "AddHostCmd.hpp"
+#include "EditHostCmd.hpp"
 #include "RemoveHostCmd.hpp"
 #include "CopyHostCmd.hpp"
 #include "EditToolsCmd.hpp"
@@ -26,6 +27,7 @@ AppCmds::AppCmds(AppWnd& appWnd, AppDlg& appDlg, Tools& tools)
 		WCL_EXTCMD_ENTRY(new ExitAppCmd(appWnd))
 		// Host menu
 		WCL_EXTCMD_ENTRY(new AddHostCmd(appWnd, appDlg, *this))
+		WCL_EXTCMD_ENTRY(new EditHostCmd(appWnd, appDlg, *this))
 		WCL_EXTCMD_ENTRY(new RemoveHostCmd(appWnd, appDlg, *this))
 		WCL_EXTCMD_ENTRY(new CopyHostCmd(appWnd, appDlg, *this))
 		WCL_EXTCMD_ENTRY(new ExecuteToolCmd(tools, 0, appWnd, appDlg))

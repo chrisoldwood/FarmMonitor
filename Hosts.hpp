@@ -60,6 +60,9 @@ public:
 	//! Add a new host.
 	size_t add(const tstring& hostname);
 
+	//! Rename a host by position.
+	void rename(size_t index, const tstring& hostname);
+
 	//! Remove a host by position.
 	void remove(size_t index);
 

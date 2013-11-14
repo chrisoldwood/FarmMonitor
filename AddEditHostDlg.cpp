@@ -1,16 +1,17 @@
 ////////////////////////////////////////////////////////////////////////////////
-//! \file   AddHostDlg.cpp
-//! \brief  The AddHostDlg class definition.
+//! \file   AddEditHostDlg.cpp
+//! \brief  The AddEditHostDlg class definition.
 //! \author Chris Oldwood
 
 #include "Common.hpp"
-#include "AddHostDlg.hpp"
+#include "AddEditHostDlg.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////
-//! Default constructor.
+//! Constructor.
 
-AddHostDlg::AddHostDlg()
-	: CDialog(IDD_ADD_HOST)
+AddEditHostDlg::AddEditHostDlg(Mode mode)
+	: CDialog(IDD_ADDEDIT_HOST)
+	, m_mode(mode)
 {
 	DEFINE_CTRL_TABLE
 		CTRL(IDC_HOST_NAME, &m_hostnameEditor)
@@ -23,14 +24,17 @@ AddHostDlg::AddHostDlg()
 ////////////////////////////////////////////////////////////////////////////////
 //! Dialog initialisation handler.
 
-void AddHostDlg::OnInitDialog()
+void AddEditHostDlg::OnInitDialog()
 {
+	Title((m_mode == ADD_HOST) ? TXT("Add Host") : TXT("Edit Host"));
+
+	m_hostnameEditor.Text(m_hostname);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 //! OK button handler.
 
-bool AddHostDlg::OnOk()
+bool AddEditHostDlg::OnOk()
 {
 	if (m_hostnameEditor.TextLength() == 0)
 	{

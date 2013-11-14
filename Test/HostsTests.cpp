@@ -149,5 +149,21 @@ TEST_CASE("Removing a host decreses the size and marks the container as modified
 }
 TEST_CASE_END
 
+TEST_CASE("Renaming a host replaces the item and marks the container as modified")
+{
+	const tstring RENAMED_HOST = TXT("renamed host");
+
+	FakeAppConfigReader reader;
+	Hosts               hosts;
+
+	hosts.load(reader);
+	hosts.rename(0, RENAMED_HOST);
+
+	TEST_TRUE(hosts.size() == 1);
+	TEST_TRUE(hosts.name(0) == RENAMED_HOST);
+	TEST_TRUE(hosts.isModified());
+}
+TEST_CASE_END
+
 }
 TEST_SET_END

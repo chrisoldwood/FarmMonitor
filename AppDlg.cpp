@@ -100,8 +100,6 @@ void AppDlg::setColumnWidths(const ColumnWidths& widths)
 
 void AppDlg::addHost(const tstring& hostname)
 {
-	CBusyCursor busyCursor;
-
 	const size_t index = m_hosts.add(hostname);
 
 	addHostToView(index);
@@ -110,6 +108,20 @@ void AppDlg::addHost(const tstring& hostname)
 		m_hostView.Select(0);
 }
 	
+////////////////////////////////////////////////////////////////////////////////
+//! Rename the currently selected host.
+
+void AppDlg::renameHost(const tstring& hostname)
+{
+	ASSERT(m_hostView.IsSelection());
+
+	const size_t selection = m_hostView.Selection();
+
+	m_hosts.rename(selection, hostname);
+	m_hostView.ItemText(selection, HOST_NAME, hostname);
+	clearHost(selection);
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 //! Remove the currently selected host.
 
@@ -175,6 +187,7 @@ LRESULT AppDlg::onRightClick(NMHDR& /*header*/)
 
 	WCL::ContextMenu menu(IDR_CONTEXT);
 
+	menu.EnableCmd(ID_HOST_EDITHOST, isSelection);
 	menu.EnableCmd(ID_HOST_REMOVEHOST, isSelection);
 	menu.EnableCmd(ID_HOST_COPYHOST, isSelection);
 

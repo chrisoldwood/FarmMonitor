@@ -70,6 +70,7 @@ BEGIN
     POPUP "&Host"
     BEGIN
         MENUITEM "&Add Host...",                ID_HOST_ADDHOST
+        MENUITEM "&Edit Host...",               ID_HOST_EDITHOST
         MENUITEM "&Remove Host",                ID_HOST_REMOVEHOST
         MENUITEM "&Copy Host to Clipboard",     ID_HOST_COPYHOST
         MENUITEM SEPARATOR
@@ -95,6 +96,7 @@ BEGIN
     POPUP "Context Menu"
     BEGIN
         MENUITEM "&Add Host...",                ID_HOST_ADDHOST
+        MENUITEM "&Edit Host...",               ID_HOST_EDITHOST
         MENUITEM "&Remove Host",                ID_HOST_REMOVEHOST
         MENUITEM "&Copy Host to Clipboard",     ID_HOST_COPYHOST
         MENUITEM SEPARATOR
@@ -136,10 +138,10 @@ BEGIN
     DEFPUSHBUTTON   "OK",IDOK,35,100,50,15
 END
 
-IDD_ADD_HOST DIALOGEX 0, 0, 172, 71
+IDD_ADDEDIT_HOST DIALOGEX 0, 0, 172, 71
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | 
     WS_SYSMENU
-CAPTION "Add Host"
+CAPTION "Add/Edit Host"
 FONT 8, "MS Shell Dlg", 400, 0, 0x1
 BEGIN
     LTEXT           "&Host name:",IDC_STATIC,10,10,150,8
@@ -203,46 +205,6 @@ END
 
 /////////////////////////////////////////////////////////////////////////////
 //
-// DESIGNINFO
-//
-
-#ifdef APSTUDIO_INVOKED
-GUIDELINES DESIGNINFO 
-BEGIN
-    IDD_ABOUT, DIALOG
-    BEGIN
-        BOTTOMMARGIN, 106
-    END
-
-    IDD_ADD_HOST, DIALOG
-    BEGIN
-        LEFTMARGIN, 7
-        RIGHTMARGIN, 165
-        TOPMARGIN, 7
-        BOTTOMMARGIN, 64
-    END
-
-    IDD_HOST_TOOLS, DIALOG
-    BEGIN
-        LEFTMARGIN, 7
-        RIGHTMARGIN, 405
-        TOPMARGIN, 7
-        BOTTOMMARGIN, 123
-    END
-
-    IDD_HOST_TOOL, DIALOG
-    BEGIN
-        LEFTMARGIN, 7
-        RIGHTMARGIN, 260
-        TOPMARGIN, 7
-        BOTTOMMARGIN, 99
-    END
-END
-#endif    // APSTUDIO_INVOKED
-
-
-/////////////////////////////////////////////////////////////////////////////
-//
 // String Table
 //
 
@@ -298,6 +260,7 @@ STRINGTABLE
 BEGIN
     ID_HOST_POPUP           "Host options"
     ID_HOST_ADDHOST         "Add a new host\nAdd Host"
+    ID_HOST_EDITHOST        "Edit the name of the selected host\nEdit Host"
     ID_HOST_REMOVEHOST      "Remove the selected host\nRemove Host"
     ID_HOST_COPYHOST        "Copy the host name to the clipboard"
 END

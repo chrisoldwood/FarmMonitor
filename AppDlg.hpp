@@ -63,6 +63,9 @@ public:
 	//! Add a new host to be monitored.
 	void addHost(const tstring& hostname);
 	
+	//! Rename the currently selected host.
+	void renameHost(const tstring& hostname);
+	
 	//! Remove the currently selected host.
 	void removeSelectedHost();
 	

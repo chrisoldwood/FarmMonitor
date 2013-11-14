@@ -176,6 +176,9 @@
 				RelativePath=".\CopyHostCmd.hpp">
 			</File>
 			<File
+				RelativePath=".\EditHostCmd.hpp">
+			</File>
+			<File
 				RelativePath=".\EditToolsCmd.cpp">
 			</File>
 			<File
@@ -210,10 +213,10 @@
 				RelativePath=".\AboutDlg.hpp">
 			</File>
 			<File
-				RelativePath=".\AddHostDlg.cpp">
+				RelativePath=".\AddEditHostDlg.cpp">
 			</File>
 			<File
-				RelativePath=".\AddHostDlg.hpp">
+				RelativePath=".\AddEditHostDlg.hpp">
 			</File>
 			<File
 				RelativePath=".\AppDlg.cpp">

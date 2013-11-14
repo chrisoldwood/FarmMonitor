@@ -1,28 +1,26 @@
 ////////////////////////////////////////////////////////////////////////////////
-//! \file   AddHostCmd.hpp
-//! \brief  The AddHostCmd class declaration.
+//! \file   EditHostCmd.hpp
+//! \brief  The EditHostCmd class declaration.
 //! \author Chris Oldwood
 
 // Check for previous inclusion
-#ifndef APP_ADDHOSTCMD_HPP
-#define APP_ADDHOSTCMD_HPP
+#ifndef APP_EDITHOSTCMD_HPP
+#define APP_EDITHOSTCMD_HPP
 
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
 #include <WCL/UiCommandBase.hpp>
-#include "AddEditHostDlg.hpp"
-#include "AppWnd.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////
-//! The command to add a new host to monitor.
+//! Edit the name of the selected host.
 
-class AddHostCmd : public WCL::UiCommandBase
+class EditHostCmd : public WCL::UiCommandBase
 {
 public:
 	//! Constructor.
-	AddHostCmd(AppWnd& appWnd, AppDlg& appDlg, WCL::ICmdController& controller);
+	EditHostCmd(AppWnd& appWnd, AppDlg& appDlg, WCL::ICmdController& controller);
 
 	//
 	// IUiCommand methods.
@@ -30,6 +28,9 @@ public:
 
 	//! Execute the command.
 	virtual void execute();
+
+	//! Refresh the UI for the command.
+	virtual void updateUi();
 
 private:
 	//
@@ -43,8 +44,8 @@ private:
 ////////////////////////////////////////////////////////////////////////////////
 //! Constructor.
 
-inline AddHostCmd::AddHostCmd(AppWnd& appWnd, AppDlg& appDlg, WCL::ICmdController& controller)
-	: WCL::UiCommandBase(ID_HOST_ADDHOST)
+inline EditHostCmd::EditHostCmd(AppWnd& appWnd, AppDlg& appDlg, WCL::ICmdController& controller)
+	: WCL::UiCommandBase(ID_HOST_EDITHOST)
 	, m_appWnd(appWnd)
 	, m_appDlg(appDlg)
 	, m_controller(controller)
@@ -54,16 +55,28 @@ inline AddHostCmd::AddHostCmd(AppWnd& appWnd, AppDlg& appDlg, WCL::ICmdControlle
 ////////////////////////////////////////////////////////////////////////////////
 //! Execute the command.
 
-inline void AddHostCmd::execute()
+inline void EditHostCmd::execute()
 {
-	AddEditHostDlg dlg(AddEditHostDlg::ADD_HOST);
+	AddEditHostDlg dlg(AddEditHostDlg::EDIT_HOST);
+
+	dlg.m_hostname = m_appDlg.getSelectedHost();
 
 	if (dlg.RunModal(m_appWnd) == IDOK)
 	{
-		m_appDlg.addHost(dlg.m_hostname);
+		m_appDlg.renameHost(dlg.m_hostname);
 
 		m_controller.UpdateUI();
 	}
 }
 
-#endif // APP_ADDHOSTCMD_HPP
+////////////////////////////////////////////////////////////////////////////////
+//! Refresh the UI for the command.
+
+inline void EditHostCmd::updateUi()
+{
+	bool hostSelected = m_appDlg.isHostSelected();
+
+	m_appWnd.m_menu.EnableCmd(id(), hostSelected);
+}
+
+#endif // APP_EDITHOSTCMD_HPP
