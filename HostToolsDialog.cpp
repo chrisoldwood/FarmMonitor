@@ -8,7 +8,7 @@
 #include "HostToolDialog.hpp"
 
 //! The maximum number of tool definitions supported.
-const size_t MAX_TOOLS = ID_HOST_INVOKE_TOOL_9 - ID_HOST_INVOKE_TOOL_1 + 1;
+const size_t MAX_TOOLS = ID_HOST_INVOKE_TOOL_19 - ID_HOST_INVOKE_TOOL_1 + 1;
 
 ////////////////////////////////////////////////////////////////////////////////
 //! Default constructor.

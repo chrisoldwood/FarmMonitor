@@ -183,7 +183,7 @@ LRESULT AppDlg::onRightClick(NMHDR& /*header*/)
 {
 	const bool isSelection = m_hostView.IsSelection();	
 	const uint beginCommandId = ID_HOST_INVOKE_TOOL_1;
-	const uint endCommandId = ID_HOST_INVOKE_TOOL_9 + 1;
+	const uint endCommandId = ID_HOST_INVOKE_TOOL_19 + 1;
 
 	WCL::ContextMenu menu(IDR_CONTEXT);
 
@@ -197,7 +197,8 @@ LRESULT AppDlg::onRightClick(NMHDR& /*header*/)
 			++it, ++commandId)
 	{
 		const uint    ordinal = (commandId - ID_HOST_INVOKE_TOOL_1) + 1;
-		const tstring text = Core::fmt(TXT("&%u %s"), ordinal, (*it)->m_name.c_str());
+		const tchar*  format = (ordinal < 10) ? TXT("&%u %s") : TXT("%u %s");
+		const tstring text = Core::fmt(format, ordinal, (*it)->m_name.c_str());
 
 		menu.AppendCmd(commandId, text);
 		menu.EnableCmd(commandId, isSelection);

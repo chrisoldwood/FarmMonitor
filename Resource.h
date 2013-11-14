@@ -24,6 +24,7 @@
 #define ID_HOST_INVOKE_TOOL_7           217
 #define ID_HOST_INVOKE_TOOL_8           218
 #define ID_HOST_INVOKE_TOOL_9           219
+#define ID_HOST_INVOKE_TOOL_19          229
 #define ID_VIEW_POPUP                   300
 #define ID_VIEW_REFRESH                 301
 #define ID_TOOLS_POPUP                  400

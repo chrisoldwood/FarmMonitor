@@ -30,15 +30,12 @@ AppCmds::AppCmds(AppWnd& appWnd, AppDlg& appDlg, Tools& tools)
 		WCL_EXTCMD_ENTRY(new EditHostCmd(appWnd, appDlg, *this))
 		WCL_EXTCMD_ENTRY(new RemoveHostCmd(appWnd, appDlg, *this))
 		WCL_EXTCMD_ENTRY(new CopyHostCmd(appWnd, appDlg, *this))
-		WCL_EXTCMD_ENTRY(new ExecuteToolCmd(tools, 0, appWnd, appDlg))
-		WCL_EXTCMD_ENTRY(new ExecuteToolCmd(tools, 1, appWnd, appDlg))
-		WCL_EXTCMD_ENTRY(new ExecuteToolCmd(tools, 2, appWnd, appDlg))
-		WCL_EXTCMD_ENTRY(new ExecuteToolCmd(tools, 3, appWnd, appDlg))
-		WCL_EXTCMD_ENTRY(new ExecuteToolCmd(tools, 4, appWnd, appDlg))
-		WCL_EXTCMD_ENTRY(new ExecuteToolCmd(tools, 5, appWnd, appDlg))
-		WCL_EXTCMD_ENTRY(new ExecuteToolCmd(tools, 6, appWnd, appDlg))
-		WCL_EXTCMD_ENTRY(new ExecuteToolCmd(tools, 7, appWnd, appDlg))
-		WCL_EXTCMD_ENTRY(new ExecuteToolCmd(tools, 8, appWnd, appDlg))
+
+		for (size_t i = 0, end = ID_HOST_INVOKE_TOOL_19-ID_HOST_INVOKE_TOOL_1+1; i != end; ++i)
+		{
+			WCL_EXTCMD_ENTRY(new ExecuteToolCmd(tools, i, appWnd, appDlg))
+		}
+
 		// View menu.
 		WCL_EXTCMD_ENTRY(new RefreshViewCmd(appWnd))
 		// Tools menu.

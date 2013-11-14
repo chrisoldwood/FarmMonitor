@@ -3,3 +3,5 @@
 - Allow duplicate hostnames?
 
 - Re-order tools menu.
+
+- Refactor App/Context menu building code into ExecuteToolCmd.
