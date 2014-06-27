@@ -7,9 +7,10 @@ this:-
 +-FarmMonitor
 | +-Test
 +-Lib
-  +-Core
-  +-WCL
-  +-WMI
+| +-Core
+| +-WCL
+| +-WMI
++-Scripts
 
 The following commands will create that structure by cloning the various
 application and library repositories:-
