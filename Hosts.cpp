@@ -7,6 +7,7 @@
 #include "Hosts.hpp"
 #include <WCL/IAppConfigReader.hpp>
 #include <WCL/IAppConfigWriter.hpp>
+#include <XML/XPathIterator.hpp>
 
 ////////////////////////////////////////////////////////////////////////////////
 //! Default constructor.
@@ -51,7 +52,7 @@ bool Hosts::isModified() const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//! Load the set of hosts.
+//! Load the set of hosts from the application config.
 
 void Hosts::load(WCL::IAppConfigReader& config)
 {
@@ -72,7 +73,7 @@ void Hosts::load(WCL::IAppConfigReader& config)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//! Save the set of hosts.
+//! Save the set of hosts to the application config.
 
 void Hosts::save(WCL::IAppConfigWriter& config)
 {
@@ -85,6 +86,53 @@ void Hosts::save(WCL::IAppConfigWriter& config)
 	for (size_t i = 0; i != m_hosts.size(); ++i)
 	{
 		config.writeString(TXT("Hosts"), Core::fmt(TXT("Host[%u]"), i), m_hosts[i]);
+	}
+
+	m_modified = false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! Load the set of hosts from the XML document.
+
+void Hosts::load(const XML::DocumentPtr config)
+{
+	ASSERT(config->hasRootElement());
+
+	Hosts::Names hosts;
+
+	XML::XPathIterator it(TXT("/FarmMonitor/Hosts/Host"), config->getRootElement());
+	XML::XPathIterator end;
+
+	for(; it != end; ++it)
+	{
+		XML::ElementNodePtr node = Core::dynamic_ptr_cast<XML::ElementNode>(*it);
+		tstring             host = node->getAttributes().get(TXT("Name"))->value();
+		
+		if (!host.empty())
+			hosts.push_back(host);
+	}
+
+	std::swap(m_hosts, hosts);
+	m_modified = false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! Save the set of hosts to the XML document.
+
+void Hosts::save(XML::DocumentPtr config)
+{
+	if (!m_modified)
+		return;
+
+	XML::XPathIterator  it(TXT("/FarmMonitor/Hosts"), config->getRootElement());
+	XML::ElementNodePtr hosts(Core::dynamic_ptr_cast<XML::ElementNode>(*it));
+
+	for (size_t i = 0; i != m_hosts.size(); ++i)
+	{
+		XML::AttributePtr	attribute = XML::makeAttribute(TXT("Name"), m_hosts[i]);
+		XML::ElementNodePtr	host = XML::makeElement(TXT("Host"), attribute);
+
+		hosts->appendChild(host);
 	}
 
 	m_modified = false;

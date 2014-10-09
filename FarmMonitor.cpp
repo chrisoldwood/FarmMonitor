@@ -7,6 +7,11 @@
 #include "FarmMonitor.hpp"
 #include <WCL/AppConfig.hpp>
 #include <Core/ConfigurationException.hpp>
+#include <WCL/Path.hpp>
+#include <shfolder.h>
+#include <XML/Reader.hpp>
+#include <XML/Writer.hpp>
+#include <WCL/File.hpp>
 
 ////////////////////////////////////////////////////////////////////////////////
 // Global variables.
@@ -23,6 +28,10 @@ const tchar* PUBLISHER = TXT("Chris Oldwood");
 const tchar* APPLICATION = TXT("Farm Monitor");
 //! The configuration data format version.
 const tchar* CONFIG_VERSION = TXT("0.1");
+//! The default config file folder.
+const tchar* DEFAULT_CONFIG_FOLDER = TXT("FarmMonitor");
+//! The default config file name.
+const tchar* DEFAULT_CONFIG_FILE = TXT("FarmMonitor.xml");
 
 ////////////////////////////////////////////////////////////////////////////////
 //! Constructor.
@@ -51,7 +60,7 @@ bool FarmMonitor::OnOpen()
 {
 	m_autoCom.Initialise(COINIT_APARTMENTTHREADED);
 
-	if (!loadConfig())
+	if (!loadConfigFromAppConfig())
 		return false;
 
 	if (!m_appWnd.Open(m_iCmdShow, m_startPosition))
@@ -71,7 +80,7 @@ bool FarmMonitor::OnOpen()
 
 bool FarmMonitor::OnClose()
 {
-	saveConfig();
+	saveConfigToAppConfig();
 
 	m_autoCom.Uninitialise();
 
@@ -79,9 +88,9 @@ bool FarmMonitor::OnClose()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//! Load the application settings.
+//! Load the application settings from the app config store.
 
-bool FarmMonitor::loadConfig()
+bool FarmMonitor::loadConfigFromAppConfig()
 {
 	try
 	{
@@ -108,9 +117,9 @@ bool FarmMonitor::loadConfig()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//! Save the application settings.
+//! Save the application settings to the app config store.
 
-void FarmMonitor::saveConfig()
+void FarmMonitor::saveConfigToAppConfig()
 {
 	try
 	{
@@ -123,6 +132,56 @@ void FarmMonitor::saveConfig()
 
 		m_hosts.save(appConfig);
 		m_tools.save(appConfig);
+	}
+	catch (const Core::Exception& e)
+	{
+		FatalMsg(TXT("Failed to save the application configuration:-\n\n%s"), e.twhat());
+	}
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+//! Load the application settings from the default XML file.
+
+bool FarmMonitor::loadConfigFromXmlFile()
+{
+	try
+	{
+		const CPath            configFile = CPath::SpecialDir(CSIDL_APPDATA) / DEFAULT_CONFIG_FOLDER / DEFAULT_CONFIG_FILE;
+		const tstring          content = CFile::ReadTextFile(configFile);
+		const XML::DocumentPtr appConfig = XML::Reader::readDocument(content);
+
+		m_hosts.load(appConfig);
+	}
+	catch (const Core::Exception& e)
+	{
+		FatalMsg(TXT("Failed to load the application configuration:-\n\n%s"), e.twhat());
+		return false;
+	}
+
+	return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! Save the application settings to the default XML file.
+
+void FarmMonitor::saveConfigToXmlFile()
+{
+	try
+	{
+		const CPath      configFile = CPath::SpecialDir(CSIDL_APPDATA) / DEFAULT_CONFIG_FOLDER / DEFAULT_CONFIG_FILE;
+		XML::DocumentPtr appConfig = XML::makeDocument(XML::makeElement
+		(
+			TXT("FarmMonitor"), XML::makeElement
+			(
+				TXT("Hosts")
+			)
+		));
+
+		m_hosts.save(appConfig);
+
+		const tstring content = XML::Writer::writeDocument(appConfig);
+		CFile::WriteTextFile(configFile, content.c_str(), ANSI_TEXT); 
 	}
 	catch (const Core::Exception& e)
 	{

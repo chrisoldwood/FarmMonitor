@@ -1,7 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 8.00
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FarmMonitor", "FarmMonitor.vcproj", "{6609D72E-4FDE-403D-A286-004013C03E67}"
 	ProjectSection(ProjectDependencies) = postProject
-		{6497EA41-2782-4A79-8840-6854E22EC4F4} = {6497EA41-2782-4A79-8840-6854E22EC4F4}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Core", "..\Lib\Core\Core.vcproj", "{790BC113-52FB-4565-8968-79B8B011C520}"
@@ -18,8 +17,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WMI", "..\Lib\WMI\WMI.vcpro
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Test", "Test\Test.vcproj", "{91FBBA3F-1046-4A65-B619-94F6D7964B05}"
 	ProjectSection(ProjectDependencies) = postProject
-		{790BC113-52FB-4565-8968-79B8B011C520} = {790BC113-52FB-4565-8968-79B8B011C520}
-		{9B0335B6-93BE-4604-8497-27431874D758} = {9B0335B6-93BE-4604-8497-27431874D758}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XML", "..\Lib\XML\XML.vcproj", "{2BF56C15-FDAD-480B-9C25-951E43773ED6}"
+	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
 Global
@@ -53,6 +54,10 @@ Global
 		{91FBBA3F-1046-4A65-B619-94F6D7964B05}.Debug.Build.0 = Debug|Win32
 		{91FBBA3F-1046-4A65-B619-94F6D7964B05}.Release.ActiveCfg = Release|Win32
 		{91FBBA3F-1046-4A65-B619-94F6D7964B05}.Release.Build.0 = Release|Win32
+		{2BF56C15-FDAD-480B-9C25-951E43773ED6}.Debug.ActiveCfg = Debug|Win32
+		{2BF56C15-FDAD-480B-9C25-951E43773ED6}.Debug.Build.0 = Debug|Win32
+		{2BF56C15-FDAD-480B-9C25-951E43773ED6}.Release.ActiveCfg = Release|Win32
+		{2BF56C15-FDAD-480B-9C25-951E43773ED6}.Release.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection

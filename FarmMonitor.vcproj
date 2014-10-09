@@ -125,6 +125,12 @@
 		<ProjectReference
 			ReferencedProjectIdentifier="{9B0335B6-93BE-4604-8497-27431874D758}"
 			Name="Wcl"/>
+		<ProjectReference
+			ReferencedProjectIdentifier="{6497EA41-2782-4A79-8840-6854E22EC4F4}"
+			Name="WMI"/>
+		<ProjectReference
+			ReferencedProjectIdentifier="{2BF56C15-FDAD-480B-9C25-951E43773ED6}"
+			Name="XML"/>
 	</References>
 	<Files>
 		<Filter

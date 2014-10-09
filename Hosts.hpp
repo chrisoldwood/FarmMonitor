@@ -11,6 +11,8 @@
 #pragma once
 #endif
 
+#include <XML/Document.hpp>
+
 // Forward declarations.
 namespace WCL
 {
@@ -51,11 +53,17 @@ public:
 	// Methods.
 	//
 
-	//! Load the set of hosts.
+	//! Load the set of hosts from the application config.
 	void load(WCL::IAppConfigReader& config);
 
-	//! Save the set of hosts.
+	//! Save the set of hosts to the application config.
 	void save(WCL::IAppConfigWriter& config);
+
+	//! Load the set of hosts from the XML document.
+	void load(const XML::DocumentPtr config);
+
+	//! Save the set of hosts to the XML document.
+	void save(XML::DocumentPtr config);
 
 	//! Add a new host.
 	size_t add(const tstring& hostname);
