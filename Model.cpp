@@ -11,7 +11,7 @@
 #include <XML/Reader.hpp>
 #include <XML/Writer.hpp>
 #include <WCL/File.hpp>
-#include <Core/ConfigurationException.hpp>
+#include <Core/FileSystemException.hpp>
 
 ////////////////////////////////////////////////////////////////////////////////
 // Constants.
@@ -77,7 +77,7 @@ void Model::saveConfig()
 
 		if (!userDataFolder.Exists())
 		{
-			throw Core::ConfigurationException(Core::fmt(TXT("The Application Data folder is invalid - '%s'"), userDataFolder.c_str()));
+			throw Core::FileSystemException(Core::fmt(TXT("The Application Data folder is invalid - '%s'"), userDataFolder.c_str()));
 		}
 
 		const CPath dataFolder = userDataFolder / DEFAULT_CONFIG_FOLDER;
@@ -86,7 +86,7 @@ void Model::saveConfig()
 		{
 			if (!CFile::CreateFolder(dataFolder))
 			{
-				throw Core::ConfigurationException(Core::fmt(TXT("Failed to create the folder - '%s'"), dataFolder.c_str()));
+				throw Core::FileSystemException(Core::fmt(TXT("Failed to create the folder - '%s'"), dataFolder.c_str()));
 			}
 		}
 
@@ -148,6 +148,44 @@ void Model::saveConfigToXmlFile(const CPath& configFile)
 	m_hosts.save(appConfig);
 	m_tools.save(appConfig);
 
+	const CPath backupFile = configFile.PathWithoutExt() + TXT(".bak");
+	const CPath tempFile = configFile.PathWithoutExt() + TXT(".$$$");
+
+	if (tempFile.Exists())
+	{
+		if (!CFile::Delete(tempFile))
+		{
+			throw Core::FileSystemException(Core::fmt(TXT("Failed to delete previous temporary file:\n\n%s"),
+															tempFile.c_str()));
+		}
+	}
+
 	const tstring content = XML::Writer::writeDocument(appConfig);
-	CFile::WriteTextFile(configFile, content.c_str(), ANSI_TEXT); 
+	CFile::WriteTextFile(tempFile, content.c_str(), ANSI_TEXT); 
+
+	if (backupFile.Exists())
+	{
+		if (!CFile::Delete(backupFile))
+		{
+			throw Core::FileSystemException(Core::fmt(TXT("Failed to delete backup file:\n\n%s"),
+															backupFile.c_str()));
+		}
+	}
+
+	if (configFile.Exists())
+	{
+		if (!CFile::Move(configFile, backupFile))
+		{
+			throw Core::FileSystemException(Core::fmt(TXT("Failed to rename file:\n\n%s\n\nto\n\n%s"),
+															configFile.c_str(), backupFile.c_str()));
+		}
+	}
+	
+	if (!CFile::Move(tempFile, configFile))
+	{
+		CFile::Move(backupFile, configFile);
+
+		throw Core::FileSystemException(Core::fmt(TXT("Failed to rename file:\n\n%s\n\nto\n\n%s"),
+														tempFile.c_str(), configFile.c_str()));
+	}
 }

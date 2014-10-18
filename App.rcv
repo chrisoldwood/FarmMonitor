@@ -25,7 +25,7 @@ BEGIN
 			VALUE "FileDescription",  "Farm Monitor\0"
 			VALUE "FileVersion",      "0.1\0"
 			VALUE "InternalName",     "FarmMonitor.exe\0"
-			VALUE "LegalCopyright",   "(C) Chris Oldwood 2012-2013\0"
+			VALUE "LegalCopyright",   "(C) Chris Oldwood 2012-2014\0"
 			VALUE "OriginalFilename", "FarmMonitor.exe\0"
 			VALUE "ProductName",      "Farm Monitor\0"
 			VALUE "ProductVersion",   "0.1\0"

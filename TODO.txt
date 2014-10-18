@@ -6,4 +6,4 @@
 
 - Refactor App/Context menu building code into ExecuteToolCmd.
 
-- Use write + rename for data file.
+- Switch to XML elements instead of attributes
