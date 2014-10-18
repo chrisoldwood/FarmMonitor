@@ -151,6 +151,9 @@
 					RelativePath="..\Hosts.cpp">
 				</File>
 				<File
+					RelativePath="..\Model.cpp">
+				</File>
+				<File
 					RelativePath="..\Tool.cpp">
 				</File>
 				<File

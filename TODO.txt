@@ -5,3 +5,5 @@
 - Re-order tools menu.
 
 - Refactor App/Context menu building code into ExecuteToolCmd.
+
+- Use write + rename for data file.

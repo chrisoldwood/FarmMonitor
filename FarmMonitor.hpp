@@ -14,8 +14,7 @@
 #include <WCL/App.hpp>
 #include "AppWnd.hpp"
 #include "AppCmds.hpp"
-#include "Hosts.hpp"
-#include "Tools.hpp"
+#include "Model.hpp"
 #include <Core/UniquePtr.hpp>
 #include <WCL/AutoCom.hpp>
 
@@ -34,8 +33,7 @@ public:
 	//
 	// Public members.
 	//
-	Hosts		m_hosts;		//!< The hosts being monitored.
-	Tools		m_tools;		//!< The external tools to invoke.
+	Model		m_model;		//!< The data model.
 
 	AppWnd		m_appWnd;		//!< The main window.
 	AppCmds		m_appCmds;		//!< The command handler.
@@ -62,17 +60,11 @@ private:
 	// Internal methods.
 	//
 
-	//! Load the application settings from the app config store.
-	bool loadConfigFromAppConfig();
+	//! Load the application settings.
+	bool loadConfig();
 
-	//! Save the application settings to the app config store.
-	void saveConfigToAppConfig();
-
-	//! Load the application settings from the default XML file.
-	bool loadConfigFromXmlFile();
-
-	//! Save the application settings to the default XML file.
-	void saveConfigToXmlFile();
+	//! Save the application settings.
+	void saveConfig();
 };
 
 //! The application singleton instance.

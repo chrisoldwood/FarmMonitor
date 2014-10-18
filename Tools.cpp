@@ -6,6 +6,7 @@
 #include "Common.hpp"
 #include "Tools.hpp"
 #include <WCL/AppConfig.hpp>
+#include <XML/XPathIterator.hpp>
 
 ////////////////////////////////////////////////////////////////////////////////
 //! Default constructor.
@@ -120,21 +121,60 @@ void Tools::load(WCL::IAppConfigReader& config)
 
 ////////////////////////////////////////////////////////////////////////////////
 //! Save the set of tools.
+//! Note: This is purely for backwards compatibility as settings were originally
+//! stored in the registry.
 
 void Tools::save(WCL::IAppConfigWriter& config)
 {
-	if (!m_modified)
-		return;
-
 	config.deleteSection(TXT("Tools"));
-	config.writeValue<size_t>(TXT("Tools"), TXT("Count"), m_tools.size());
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! Load the set of tools from the XML document.
+
+void Tools::load(const XML::DocumentPtr config)
+{
+	ASSERT(config->hasRootElement());
+
+	Collection tools;
+
+	XML::XPathIterator it(TXT("/FarmMonitor/Tools/Tool"), config->getRootElement());
+	XML::XPathIterator end;
+
+	for(; it != end; ++it)
+	{
+		XML::ElementNodePtr node = Core::dynamic_ptr_cast<XML::ElementNode>(*it);
+		XML::Attributes&    attributes = node->getAttributes();
+		tstring             toolName = attributes.get(TXT("Name"))->value();
+		tstring				cmdLine = attributes.get(TXT("CommandLine"))->value();
+		
+		if (!toolName.empty() && !cmdLine.empty())
+			tools.push_back(ToolPtr(new Tool(toolName, cmdLine)));
+	}
+
+	std::swap(m_tools, tools);
+	m_modified = false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! Save the set of tools to the XML document.
+
+void Tools::save(XML::DocumentPtr config)
+{
+	XML::XPathIterator  it(TXT("/FarmMonitor/Tools"), config->getRootElement());
+	XML::ElementNodePtr tools(Core::dynamic_ptr_cast<XML::ElementNode>(*it));
 
 	for (size_t i = 0; i != m_tools.size(); ++i)
 	{
-		const ConstToolPtr tool = m_tools[i];
+		XML::AttributePtr name = XML::makeAttribute(TXT("Name"), m_tools[i]->m_name);
+		XML::AttributePtr cmdLine = XML::makeAttribute(TXT("CommandLine"), m_tools[i]->m_commandLine);
+		XML::Attributes   attributes;
 
-		config.writeString(TXT("Tools"), Core::fmt(TXT("ToolName[%u]"), i), tool->m_name);
-		config.writeString(TXT("Tools"), Core::fmt(TXT("CmdLine[%u]"),  i), tool->m_commandLine);
+		attributes.setAttribute(name);
+		attributes.setAttribute(cmdLine);
+		XML::ElementNodePtr	tool = XML::makeElement(TXT("Tool"), attributes);
+
+		tools->appendChild(tool);
 	}
 
 	m_modified = false;

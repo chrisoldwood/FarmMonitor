@@ -13,6 +13,7 @@
 
 #include "Tool.hpp"
 #include <Core/SharedPtr.hpp>
+#include <XML/Document.hpp>
 
 // Forward declarations.
 namespace WCL
@@ -72,11 +73,17 @@ public:
 	//! Remove a tool from the collection.
 	void remove(size_t index);
 
-	//! Load the set of tools.
+	//! Load the set of tools from the application config.
 	void load(WCL::IAppConfigReader& config);
 
-	//! Save the set of tools.
+	//! Save the set of tools to the application config.
 	void save(WCL::IAppConfigWriter& config);
+
+	//! Load the set of tools from the XML document.
+	void load(const XML::DocumentPtr config);
+
+	//! Save the set of tools to the XML document.
+	void save(XML::DocumentPtr config);
 
 	//! Create a deep copy of another collection.
 	void deepCopy(const Tools& rhs);

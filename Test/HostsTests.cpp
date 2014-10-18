@@ -212,30 +212,40 @@ TEST_CASE("A set of hosts can be saved to an XML document")
 }
 TEST_CASE_END
 
-TEST_CASE("An unmodified set of hosts shouldn't write to the app config provider")
+TEST_CASE("Writing an unmodified set of hosts should still write to the app config provider")
 {
-	FakeAppConfigWriter writer;
+	FakeAppConfigReader reader;
 	Hosts               hosts;
+
+	hosts.load(reader);
+
+	TEST_FALSE(hosts.isModified());
+
+	FakeAppConfigWriter writer;
 
 	hosts.save(writer);
 
-	TEST_TRUE(writer.m_values.size() == 0);
+	TEST_FALSE(writer.m_values.size() == 0);
 	TEST_FALSE(hosts.isModified());
 }
 TEST_CASE_END
 
-TEST_CASE("An unmodified set of hosts shouldn't write to the XML document")
+TEST_CASE("Writing an unmodified set of hosts should still write to the XML document")
 {
-	XML::DocumentPtr config = createDocument();
-	Hosts            hosts;
+	Hosts hosts;
 
 	hosts.load(createDocument(SAVED_HOST));
+
+	TEST_FALSE(hosts.isModified());
+
+	XML::DocumentPtr config = createDocument();
+
 	hosts.save(config);
 
 	XML::XPathIterator it(TXT("/FarmMonitor/Hosts/Host"), config->getRootElement());
 	XML::XPathIterator end;
 
-	TEST_TRUE(it == end);
+	TEST_FALSE(it == end);
 	TEST_FALSE(hosts.isModified());
 }
 TEST_CASE_END

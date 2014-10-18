@@ -1,0 +1,153 @@
+////////////////////////////////////////////////////////////////////////////////
+//! \file   Model.cpp
+//! \brief  The Model class definition.
+//! \author Chris Oldwood
+
+#include "Common.hpp"
+#include "Model.hpp"
+#include <WCL/AppConfig.hpp>
+#include <WCL/Path.hpp>
+#include <shfolder.h>
+#include <XML/Reader.hpp>
+#include <XML/Writer.hpp>
+#include <WCL/File.hpp>
+#include <Core/ConfigurationException.hpp>
+
+////////////////////////////////////////////////////////////////////////////////
+// Constants.
+
+namespace
+{
+//! The configuration data publisher name.
+const tchar* PUBLISHER = TXT("Chris Oldwood");
+//! The configuration data application name.
+const tchar* APPLICATION = TXT("Farm Monitor");
+//! The configuration data format version.
+const tchar* CONFIG_VERSION = TXT("0.1");
+//! The default config file folder.
+const tchar* DEFAULT_CONFIG_FOLDER = TXT("FarmMonitor");
+//! The default config file name.
+const tchar* DEFAULT_CONFIG_FILE = TXT("FarmMonitor.xml");
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! Default constructor.
+
+Model::Model()
+	: m_hosts()
+	, m_tools()
+{
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! Destructor.
+
+Model::~Model()
+{
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! Load the application settings.
+
+void Model::loadConfig()
+{
+	loadConfigFromAppConfig();
+
+	if ((m_hosts.size() == 0) && (m_tools.size() == 0))
+	{
+		const CPath configFile = CPath::SpecialDir(CSIDL_APPDATA) / DEFAULT_CONFIG_FOLDER / DEFAULT_CONFIG_FILE;
+
+		if (configFile.Exists())
+		{
+			loadConfigFromXmlFile(configFile);
+		}
+	}
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! Save the application settings.
+
+void Model::saveConfig()
+{
+	if (m_hosts.isModified() || m_tools.isModified())
+	{
+		saveConfigToAppConfig();
+
+		const CPath userDataFolder = CPath::SpecialDir(CSIDL_APPDATA);
+
+		if (!userDataFolder.Exists())
+		{
+			throw Core::ConfigurationException(Core::fmt(TXT("The Application Data folder is invalid - '%s'"), userDataFolder.c_str()));
+		}
+
+		const CPath dataFolder = userDataFolder / DEFAULT_CONFIG_FOLDER;
+
+		if (!dataFolder.Exists())
+		{
+			if (!CFile::CreateFolder(dataFolder))
+			{
+				throw Core::ConfigurationException(Core::fmt(TXT("Failed to create the folder - '%s'"), dataFolder.c_str()));
+			}
+		}
+
+		const CPath configFile = dataFolder / DEFAULT_CONFIG_FILE;
+
+		saveConfigToXmlFile(configFile);
+	}
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! Load the application settings from the app config store.
+//! Note: This is purely for backwards compatibility as settings were originally
+//! stored in the registry.
+
+void Model::loadConfigFromAppConfig()
+{
+	WCL::AppConfig appConfig(PUBLISHER, APPLICATION);
+
+	m_hosts.load(appConfig);
+	m_tools.load(appConfig);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! Save the application settings to the app config store.
+
+void Model::saveConfigToAppConfig()
+{
+	WCL::AppConfig appConfig(PUBLISHER, APPLICATION);
+
+	m_hosts.save(appConfig);
+	m_tools.save(appConfig);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! Load the application settings from the default XML file.
+
+void Model::loadConfigFromXmlFile(const CPath& configFile)
+{
+	const tstring          content = CFile::ReadTextFile(configFile);
+	const XML::DocumentPtr appConfig = XML::Reader::readDocument(content);
+
+	m_hosts.load(appConfig);
+	m_tools.load(appConfig);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! Save the application settings to the default XML file.
+
+void Model::saveConfigToXmlFile(const CPath& configFile)
+{
+	XML::ElementNodePtr hostsRoot = XML::makeElement(TXT("Hosts"));
+	XML::ElementNodePtr toolsRoot = XML::makeElement(TXT("Tools"));
+	XML::ElementNodePtr root = XML::makeElement(TXT("FarmMonitor"));
+	XML::DocumentPtr appConfig = XML::makeDocument(root);
+
+	root->appendChild(hostsRoot);
+	root->appendChild(toolsRoot);
+
+	m_hosts.save(appConfig);
+	m_tools.save(appConfig);
+
+	const tstring content = XML::Writer::writeDocument(appConfig);
+	CFile::WriteTextFile(configFile, content.c_str(), ANSI_TEXT); 
+}

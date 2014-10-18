@@ -74,21 +74,12 @@ void Hosts::load(WCL::IAppConfigReader& config)
 
 ////////////////////////////////////////////////////////////////////////////////
 //! Save the set of hosts to the application config.
+//! Note: This is purely for backwards compatibility as settings were originally
+//! stored in the registry.
 
 void Hosts::save(WCL::IAppConfigWriter& config)
 {
-	if (!m_modified)
-		return;
-
 	config.deleteSection(TXT("Hosts"));
-	config.writeValue<size_t>(TXT("Hosts"), TXT("Count"), m_hosts.size());
-
-	for (size_t i = 0; i != m_hosts.size(); ++i)
-	{
-		config.writeString(TXT("Hosts"), Core::fmt(TXT("Host[%u]"), i), m_hosts[i]);
-	}
-
-	m_modified = false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -121,9 +112,6 @@ void Hosts::load(const XML::DocumentPtr config)
 
 void Hosts::save(XML::DocumentPtr config)
 {
-	if (!m_modified)
-		return;
-
 	XML::XPathIterator  it(TXT("/FarmMonitor/Hosts"), config->getRootElement());
 	XML::ElementNodePtr hosts(Core::dynamic_ptr_cast<XML::ElementNode>(*it));
 
