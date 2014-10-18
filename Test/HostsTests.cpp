@@ -47,11 +47,13 @@ public:
 	{
 	}
 
-	virtual void deleteSection(const tstring& /*sectionName*/)
+	virtual void deleteSection(const tstring& sectionName)
 	{
+		m_deletions.push_back(sectionName);
 	}
 
 	std::vector<tstring>	m_values;
+	std::vector<tstring>	m_deletions;
 };
 
 XML::DocumentPtr createDocument()
@@ -172,10 +174,9 @@ TEST_CASE("A set of hosts can be saved to an app config provider")
 
 	hosts.save(writer);
 
-	TEST_FALSE(hosts.isModified());
-	TEST_TRUE(writer.m_values.size() == 2);
-	TEST_TRUE(writer.m_values[0] == TXT("1"));
-	TEST_TRUE(writer.m_values[1] == TEST_HOST);
+	TEST_TRUE(writer.m_values.size() == 0);
+	TEST_TRUE(writer.m_deletions.size() == 1);
+	TEST_TRUE(writer.m_deletions[0] == TXT("Hosts"));
 }
 TEST_CASE_END
 
@@ -225,8 +226,8 @@ TEST_CASE("Writing an unmodified set of hosts should still write to the app conf
 
 	hosts.save(writer);
 
-	TEST_FALSE(writer.m_values.size() == 0);
-	TEST_FALSE(hosts.isModified());
+	TEST_TRUE(writer.m_values.size() == 0);
+	TEST_TRUE(writer.m_deletions.size() == 1);
 }
 TEST_CASE_END
 

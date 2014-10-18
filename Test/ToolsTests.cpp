@@ -49,11 +49,13 @@ public:
 	{
 	}
 
-	virtual void deleteSection(const tstring& /*sectionName*/)
+	virtual void deleteSection(const tstring& sectionName)
 	{
+		m_deletions.push_back(sectionName);
 	}
 
 	std::vector<tstring>	m_values;
+	std::vector<tstring>	m_deletions;
 };
 
 XML::DocumentPtr createDocument()
@@ -173,11 +175,9 @@ TEST_CASE("A set of tools can be saved to an app config provider")
 
 	tools.save(writer);
 
-	TEST_FALSE(tools.isModified());
-	TEST_TRUE(writer.m_values.size() == 3);
-	TEST_TRUE(writer.m_values[0] == TXT("1"));
-	TEST_TRUE(writer.m_values[1] == TEST_TOOL_NAME);
-	TEST_TRUE(writer.m_values[2] == TEST_CMD_LINE);
+	TEST_TRUE(writer.m_values.size() == 0);
+	TEST_TRUE(writer.m_deletions.size() == 1);
+	TEST_TRUE(writer.m_deletions[0] == TXT("Tools"));
 }
 TEST_CASE_END
 
@@ -222,8 +222,8 @@ TEST_CASE("Writing an unmodified set of tools should still write to the app conf
 
 	tools.save(writer);
 
-	TEST_FALSE(writer.m_values.size() == 0);
-	TEST_FALSE(tools.isModified());
+	TEST_TRUE(writer.m_values.size() == 0);
+	TEST_TRUE(writer.m_deletions.size() == 1);
 }
 TEST_CASE_END
 
