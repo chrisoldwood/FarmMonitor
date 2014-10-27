@@ -8,6 +8,7 @@
 #include "Tools.hpp"
 #include <WCL/AppConfig.hpp>
 #include <XML/XPathIterator.hpp>
+#include <XML/TextNode.hpp>
 
 namespace
 {
@@ -71,19 +72,18 @@ XML::DocumentPtr createDocument()
 
 XML::DocumentPtr createDocument(const tstring& name, const tstring& commandLine)
 {
-	XML::Attributes attributes;
+	XML::ElementNodePtr nameNode = XML::makeElement(TXT("Name"), XML::makeText(name));
+	XML::ElementNodePtr cmdLineNode = XML::makeElement(TXT("CommandLine"), XML::makeText(commandLine));
+	XML::ElementNodePtr tool = XML::makeElement(TXT("Tool"));
 
-	attributes.setAttribute(TXT("Name"), name);
-	attributes.setAttribute(TXT("CommandLine"), commandLine);
+	tool->appendChild(nameNode);
+	tool->appendChild(cmdLineNode);
 
 	return XML::makeDocument(XML::makeElement
 	(
 		TXT("FarmMonitor"), XML::makeElement
 		(
-			TXT("Tools"), XML::makeElement
-			(
-				TXT("Tool"), attributes
-			)
+			TXT("Tools"), tool
 		)
 	));
 }
@@ -204,8 +204,20 @@ TEST_CASE("A set of tools can be saved to an XML document")
 	XML::ElementNodePtr tool = savedTools->getChild<XML::ElementNode>(0);
 
 	TEST_TRUE(tool->name() == TXT("Tool"));
-	TEST_TRUE(tool->getAttributeValue(TXT("Name")) == TEST_TOOL_NAME);
-	TEST_TRUE(tool->getAttributeValue(TXT("CommandLine")) == TEST_CMD_LINE);
+
+	XML::ElementNodePtr property = tool->getChild<XML::ElementNode>(0);
+
+	TEST_TRUE(property->name() == TXT("Name"));
+
+	XML::TextNodePtr value = property->getChild<XML::TextNode>(0);
+
+	TEST_TRUE(value->text() == TEST_TOOL_NAME);
+
+	property = tool->getChild<XML::ElementNode>(1);
+	value = property->getChild<XML::TextNode>(0);
+
+	TEST_TRUE(property->name() == TXT("CommandLine"));
+	TEST_TRUE(value->text() == TEST_CMD_LINE);
 }
 TEST_CASE_END
 

@@ -9,6 +9,7 @@
 #include <WCL/AppConfig.hpp>
 #include <XML/Document.hpp>
 #include <XML/XPathIterator.hpp>
+#include <XML/TextNode.hpp>
 
 namespace
 {
@@ -75,7 +76,10 @@ XML::DocumentPtr createDocument(const tstring& host)
 		(
 			TXT("Hosts"), XML::makeElement
 			(
-				TXT("Host"), XML::makeAttribute(TXT("Name"), host)
+				TXT("Host"), XML::makeElement
+				(
+					TXT("Name"), XML::makeText(host)
+				)
 			)
 		)
 	));
@@ -141,21 +145,12 @@ TEST_CASE_END
 
 TEST_CASE("Loading a set of hosts from an XML document replaces the existing set")
 {
-	XML::DocumentPtr config = XML::makeDocument(XML::makeElement
-	(
-		TXT("FarmMonitor"), XML::makeElement
-		(
-			TXT("Hosts"), XML::makeElement
-			(
-				TXT("Host"), XML::makeAttribute(TXT("Name"), SAVED_HOST)
-			)
-		)
-	));
-
 	Hosts hosts;
 
 	hosts.add(TXT("host 1"));
 	hosts.add(TXT("host 2"));
+
+	XML::DocumentPtr config = createDocument(SAVED_HOST);
 
 	hosts.load(config);
 
@@ -204,12 +199,22 @@ TEST_CASE("A set of hosts can be saved to an XML document")
 	XML::ElementNodePtr host = savedHosts->getChild<XML::ElementNode>(0);
 
 	TEST_TRUE(host->name() == TXT("Host"));
-	TEST_TRUE(host->getAttributeValue(TXT("Name")) == TEST_HOST);
+
+	XML::ElementNodePtr property = host->getChild<XML::ElementNode>(0);
+
+	TEST_TRUE(property->name() == TXT("Name"));
+
+	XML::TextNodePtr value = property->getChild<XML::TextNode>(0);
+
+	TEST_TRUE(value->text() == TEST_HOST);
 
 	host = savedHosts->getChild<XML::ElementNode>(1);
+	property = host->getChild<XML::ElementNode>(0);
+	value = property->getChild<XML::TextNode>(0);
 
 	TEST_TRUE(host->name() == TXT("Host"));
-	TEST_TRUE(host->getAttributeValue(TXT("Name")) == TEST_HOST_2);
+	TEST_TRUE(property->name() == TXT("Name"));
+	TEST_TRUE(value->text() == TEST_HOST_2);
 }
 TEST_CASE_END
 

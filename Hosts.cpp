@@ -8,6 +8,7 @@
 #include <WCL/IAppConfigReader.hpp>
 #include <WCL/IAppConfigWriter.hpp>
 #include <XML/XPathIterator.hpp>
+#include <XML/TextNode.hpp>
 
 ////////////////////////////////////////////////////////////////////////////////
 //! Default constructor.
@@ -97,10 +98,11 @@ void Hosts::load(const XML::DocumentPtr config)
 	for(; it != end; ++it)
 	{
 		XML::ElementNodePtr node = Core::dynamic_ptr_cast<XML::ElementNode>(*it);
-		tstring             host = node->getAttributes().get(TXT("Name"))->value();
+		tstring             host = node->getChild<XML::ElementNode>(0)
+									   ->getChild<XML::TextNode>(0)
+									   ->text();
 		
-		if (!host.empty())
-			hosts.push_back(host);
+		hosts.push_back(host);
 	}
 
 	std::swap(m_hosts, hosts);
@@ -117,8 +119,8 @@ void Hosts::save(XML::DocumentPtr config)
 
 	for (size_t i = 0; i != m_hosts.size(); ++i)
 	{
-		XML::AttributePtr	attribute = XML::makeAttribute(TXT("Name"), m_hosts[i]);
-		XML::ElementNodePtr	host = XML::makeElement(TXT("Host"), attribute);
+		XML::ElementNodePtr	name = XML::makeElement(TXT("Name"), XML::makeText(m_hosts[i]));
+		XML::ElementNodePtr	host = XML::makeElement(TXT("Host"), name);
 
 		hosts->appendChild(host);
 	}

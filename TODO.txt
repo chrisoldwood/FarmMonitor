@@ -6,4 +6,6 @@
 
 - Refactor App/Context menu building code into ExecuteToolCmd.
 
-- Switch to XML elements instead of attributes
+- Switch to XML elements instead of attributes.
+
+- Support more host attributes, e.g. Environment, on/offline.

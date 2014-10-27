@@ -126,7 +126,7 @@ void Model::saveConfigToAppConfig()
 void Model::loadConfigFromXmlFile(const CPath& configFile)
 {
 	const tstring          content = CFile::ReadTextFile(configFile);
-	const XML::DocumentPtr appConfig = XML::Reader::readDocument(content);
+	const XML::DocumentPtr appConfig = XML::Reader::readDocument(content, XML::Reader::DISCARD_WHITESPACE);
 
 	m_hosts.load(appConfig);
 	m_tools.load(appConfig);

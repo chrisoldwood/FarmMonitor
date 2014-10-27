@@ -7,6 +7,7 @@
 #include "Tools.hpp"
 #include <WCL/AppConfig.hpp>
 #include <XML/XPathIterator.hpp>
+#include <XML/TextNode.hpp>
 
 ////////////////////////////////////////////////////////////////////////////////
 //! Default constructor.
@@ -144,12 +145,12 @@ void Tools::load(const XML::DocumentPtr config)
 	for(; it != end; ++it)
 	{
 		XML::ElementNodePtr node = Core::dynamic_ptr_cast<XML::ElementNode>(*it);
-		XML::Attributes&    attributes = node->getAttributes();
-		tstring             toolName = attributes.get(TXT("Name"))->value();
-		tstring				cmdLine = attributes.get(TXT("CommandLine"))->value();
+		tstring             name = node->getChild<XML::ElementNode>(0)
+									   ->getChild<XML::TextNode>(0)->text();
+		tstring             cmdLine = node->getChild<XML::ElementNode>(1)
+									      ->getChild<XML::TextNode>(0)->text();
 		
-		if (!toolName.empty() && !cmdLine.empty())
-			tools.push_back(ToolPtr(new Tool(toolName, cmdLine)));
+		tools.push_back(ToolPtr(new Tool(name, cmdLine)));
 	}
 
 	std::swap(m_tools, tools);
@@ -166,14 +167,12 @@ void Tools::save(XML::DocumentPtr config)
 
 	for (size_t i = 0; i != m_tools.size(); ++i)
 	{
-		XML::AttributePtr name = XML::makeAttribute(TXT("Name"), m_tools[i]->m_name);
-		XML::AttributePtr cmdLine = XML::makeAttribute(TXT("CommandLine"), m_tools[i]->m_commandLine);
-		XML::Attributes   attributes;
+		XML::ElementNodePtr	name = XML::makeElement(TXT("Name"), XML::makeText(m_tools[i]->m_name));
+		XML::ElementNodePtr	cmdLine = XML::makeElement(TXT("CommandLine"), XML::makeText(m_tools[i]->m_commandLine));
+		XML::ElementNodePtr	tool = XML::makeElement(TXT("Tool"));
 
-		attributes.setAttribute(name);
-		attributes.setAttribute(cmdLine);
-		XML::ElementNodePtr	tool = XML::makeElement(TXT("Tool"), attributes);
-
+		tool->appendChild(name);
+		tool->appendChild(cmdLine);
 		tools->appendChild(tool);
 	}
 
