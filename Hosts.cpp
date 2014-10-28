@@ -41,7 +41,7 @@ const tstring& Hosts::name(size_t index) const
 {
 	ASSERT(index < m_hosts.size());
 
-	return m_hosts[index];
+	return m_hosts[index]->m_name;
 }
 	
 ////////////////////////////////////////////////////////////////////////////////
@@ -57,7 +57,7 @@ bool Hosts::isModified() const
 
 void Hosts::load(WCL::IAppConfigReader& config)
 {
-	Hosts::Names hosts;
+	Collection hosts;
 
 	const size_t count = config.readValue<size_t>(TXT("Hosts"), TXT("Count"), 0);
 
@@ -66,7 +66,7 @@ void Hosts::load(WCL::IAppConfigReader& config)
 		const tstring host = config.readString(TXT("Hosts"), Core::fmt(TXT("Host[%u]"), i), TXT(""));
 
 		if (!host.empty())
-			hosts.push_back(host);
+			hosts.push_back(HostPtr(new Host(host)));
 	}
 
 	std::swap(m_hosts, hosts);
@@ -90,7 +90,7 @@ void Hosts::load(const XML::DocumentPtr config)
 {
 	ASSERT(config->hasRootElement());
 
-	Hosts::Names hosts;
+	Collection hosts;
 
 	XML::XPathIterator it(TXT("/FarmMonitor/Hosts/Host"), config->getRootElement());
 	XML::XPathIterator end;
@@ -98,11 +98,9 @@ void Hosts::load(const XML::DocumentPtr config)
 	for(; it != end; ++it)
 	{
 		XML::ElementNodePtr node = Core::dynamic_ptr_cast<XML::ElementNode>(*it);
-		tstring             host = node->getChild<XML::ElementNode>(0)
-									   ->getChild<XML::TextNode>(0)
-									   ->text();
+		tstring             host = node->findFirstElement(TXT("Name"))->getTextValue();
 		
-		hosts.push_back(host);
+		hosts.push_back(HostPtr(new Host(host)));
 	}
 
 	std::swap(m_hosts, hosts);
@@ -119,7 +117,7 @@ void Hosts::save(XML::DocumentPtr config)
 
 	for (size_t i = 0; i != m_hosts.size(); ++i)
 	{
-		XML::ElementNodePtr	name = XML::makeElement(TXT("Name"), XML::makeText(m_hosts[i]));
+		XML::ElementNodePtr	name = XML::makeElement(TXT("Name"), XML::makeText(m_hosts[i]->m_name));
 		XML::ElementNodePtr	host = XML::makeElement(TXT("Host"), name);
 
 		hosts->appendChild(host);
@@ -133,7 +131,7 @@ void Hosts::save(XML::DocumentPtr config)
 
 size_t Hosts::add(const tstring& hostname)
 {
-	m_hosts.push_back(hostname);
+	m_hosts.push_back(HostPtr(new Host(hostname)));
 	m_modified = true;
 
 	return m_hosts.size()-1;
@@ -146,7 +144,7 @@ void Hosts::rename(size_t index, const tstring& hostname)
 {
 	ASSERT(index < m_hosts.size());
 
-	m_hosts[index] = hostname;
+	m_hosts[index] = HostPtr(new Host(hostname));
 	m_modified = true;
 }
 

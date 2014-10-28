@@ -148,6 +148,9 @@
 				Name="Impl"
 				Filter="">
 				<File
+					RelativePath="..\Host.cpp">
+				</File>
+				<File
 					RelativePath="..\Hosts.cpp">
 				</File>
 				<File

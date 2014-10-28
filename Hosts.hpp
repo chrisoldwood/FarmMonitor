@@ -11,6 +11,8 @@
 #pragma once
 #endif
 
+#include "Host.hpp"
+#include <Core/SharedPtr.hpp>
 #include <XML/Document.hpp>
 
 // Forward declarations.
@@ -25,11 +27,14 @@ class IAppConfigWriter;
 
 class Hosts : private Core::NotCopyable
 {
-public:
-	//! The type used to store the collection of host names.
-	typedef std::vector<tstring> Names;
+private:
+	//! The type used to store the collection of hosts.
+	typedef std::vector<ConstHostPtr> Collection;
 
 public:
+	//! The const iterator type.
+	typedef Collection::const_iterator const_iterator;
+
 	//! Default constructor.
 	Hosts();
 
@@ -79,7 +84,7 @@ private:
 	// Members.
 	//
 	bool		m_modified;		//!< Has the collection been modified?
-	Names		m_hosts;		//!< The collection of hosts to monitor.
+	Collection	m_hosts;		//!< The collection of hosts to monitor.
 };
 
 #endif // APP_HOSTS_HPP
