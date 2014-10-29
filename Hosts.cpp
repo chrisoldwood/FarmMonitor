@@ -35,13 +35,13 @@ size_t Hosts::size() const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//! Get the name of the host at a given position.
+//! Get the host at a given position.
 
-const tstring& Hosts::name(size_t index) const
+const ConstHostPtr& Hosts::host(size_t index) const
 {
 	ASSERT(index < m_hosts.size());
 
-	return m_hosts[index]->m_name;
+	return m_hosts[index];
 }
 	
 ////////////////////////////////////////////////////////////////////////////////
@@ -66,7 +66,7 @@ void Hosts::load(WCL::IAppConfigReader& config)
 		const tstring host = config.readString(TXT("Hosts"), Core::fmt(TXT("Host[%u]"), i), TXT(""));
 
 		if (!host.empty())
-			hosts.push_back(HostPtr(new Host(host)));
+			hosts.push_back(makeHost(host));
 	}
 
 	std::swap(m_hosts, hosts);
@@ -100,7 +100,7 @@ void Hosts::load(const XML::DocumentPtr config)
 		XML::ElementNodePtr node = Core::dynamic_ptr_cast<XML::ElementNode>(*it);
 		tstring             host = node->findFirstElement(TXT("Name"))->getTextValue();
 		
-		hosts.push_back(HostPtr(new Host(host)));
+		hosts.push_back(makeHost(host));
 	}
 
 	std::swap(m_hosts, hosts);
@@ -129,9 +129,9 @@ void Hosts::save(XML::DocumentPtr config)
 ////////////////////////////////////////////////////////////////////////////////
 //! Add a new host. This returns the position it was inserted.
 
-size_t Hosts::add(const tstring& hostname)
+size_t Hosts::add(ConstHostPtr host)
 {
-	m_hosts.push_back(HostPtr(new Host(hostname)));
+	m_hosts.push_back(host);
 	m_modified = true;
 
 	return m_hosts.size()-1;
@@ -140,11 +140,11 @@ size_t Hosts::add(const tstring& hostname)
 ////////////////////////////////////////////////////////////////////////////////
 //! Rename a host by position.
 
-void Hosts::rename(size_t index, const tstring& hostname)
+void Hosts::rename(size_t index, ConstHostPtr host)
 {
 	ASSERT(index < m_hosts.size());
 
-	m_hosts[index] = HostPtr(new Host(hostname));
+	m_hosts[index] = host;
 	m_modified = true;
 }
 

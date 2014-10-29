@@ -48,8 +48,8 @@ public:
 	//! Get the number of hosts.
 	size_t size() const;
 	
-	//! Get the name of the host at a given position.
-	const tstring& name(size_t index) const;
+	//! Get the host at a given position.
+	const ConstHostPtr& host(size_t index) const;
 	
 	//! Has the collection of names been modified?
 	bool isModified() const;
@@ -71,10 +71,10 @@ public:
 	void save(XML::DocumentPtr config);
 
 	//! Add a new host.
-	size_t add(const tstring& hostname);
+	size_t add(ConstHostPtr host);
 
-	//! Rename a host by position.
-	void rename(size_t index, const tstring& hostname);
+	//! Replace a host by position.
+	void rename(size_t index, ConstHostPtr host);
 
 	//! Remove a host by position.
 	void remove(size_t index);

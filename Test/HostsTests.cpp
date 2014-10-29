@@ -110,7 +110,7 @@ TEST_CASE("A set of hosts can be loaded from an app config provider")
 
 	TEST_FALSE(hosts.isModified());
 	TEST_TRUE(hosts.size() == 1);
-	TEST_TRUE(hosts.name(0) == SAVED_HOST);
+	TEST_TRUE(hosts.host(0)->m_name == SAVED_HOST);
 }
 TEST_CASE_END
 
@@ -123,7 +123,7 @@ TEST_CASE("A set of hosts can be loaded from an XML document")
 
 	TEST_FALSE(hosts.isModified());
 	TEST_TRUE(hosts.size() == 1);
-	TEST_TRUE(hosts.name(0) == SAVED_HOST);
+	TEST_TRUE(hosts.host(0)->m_name == SAVED_HOST);
 }
 TEST_CASE_END
 
@@ -132,14 +132,14 @@ TEST_CASE("Loading a set of hosts replaces the existing set")
 	FakeAppConfigReader reader;
 	Hosts               hosts;
 
-	hosts.add(TXT("host 1"));
-	hosts.add(TXT("host 2"));
+	hosts.add(makeHost(TXT("host 1")));
+	hosts.add(makeHost(TXT("host 2")));
 
 	hosts.load(reader);
 
 	TEST_FALSE(hosts.isModified());
 	TEST_TRUE(hosts.size() == 1);
-	TEST_TRUE(hosts.name(0) == SAVED_HOST);
+	TEST_TRUE(hosts.host(0)->m_name == SAVED_HOST);
 }
 TEST_CASE_END
 
@@ -147,8 +147,8 @@ TEST_CASE("Loading a set of hosts from an XML document replaces the existing set
 {
 	Hosts hosts;
 
-	hosts.add(TXT("host 1"));
-	hosts.add(TXT("host 2"));
+	hosts.add(makeHost(TXT("host 1")));
+	hosts.add(makeHost(TXT("host 2")));
 
 	XML::DocumentPtr config = createDocument(SAVED_HOST);
 
@@ -156,7 +156,7 @@ TEST_CASE("Loading a set of hosts from an XML document replaces the existing set
 
 	TEST_FALSE(hosts.isModified());
 	TEST_TRUE(hosts.size() == 1);
-	TEST_TRUE(hosts.name(0) == SAVED_HOST);
+	TEST_TRUE(hosts.host(0)->m_name == SAVED_HOST);
 }
 TEST_CASE_END
 
@@ -165,7 +165,7 @@ TEST_CASE("A set of hosts can be saved to an app config provider")
 	FakeAppConfigWriter writer;
 	Hosts               hosts;
 
-	hosts.add(TEST_HOST);
+	hosts.add(makeHost(TEST_HOST));
 
 	hosts.save(writer);
 
@@ -180,8 +180,8 @@ TEST_CASE("A set of hosts can be saved to an XML document")
 	XML::DocumentPtr config = createDocument();
 	Hosts            hosts;
 
-	hosts.add(TEST_HOST);
-	hosts.add(TEST_HOST_2);
+	hosts.add(makeHost(TEST_HOST));
+	hosts.add(makeHost(TEST_HOST_2));
 
 	hosts.save(config);
 
@@ -260,7 +260,7 @@ TEST_CASE("Adding a host increases the size and marks the container as modified"
 {
 	Hosts hosts;
 
-	hosts.add(TEST_HOST);
+	hosts.add(makeHost(TEST_HOST));
 
 	TEST_TRUE(hosts.size() == 1);
 	TEST_TRUE(hosts.isModified());
@@ -288,10 +288,10 @@ TEST_CASE("Renaming a host replaces the item and marks the container as modified
 	Hosts            hosts;
 
 	hosts.load(config);
-	hosts.rename(0, RENAMED_HOST);
+	hosts.rename(0, makeHost(RENAMED_HOST));
 
 	TEST_TRUE(hosts.size() == 1);
-	TEST_TRUE(hosts.name(0) == RENAMED_HOST);
+	TEST_TRUE(hosts.host(0)->m_name == RENAMED_HOST);
 	TEST_TRUE(hosts.isModified());
 }
 TEST_CASE_END

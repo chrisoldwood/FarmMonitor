@@ -36,4 +36,20 @@ typedef Core::SharedPtr<Tool> ToolPtr;
 //! The default Tool const smart pointer type.
 typedef Core::SharedPtr<const Tool> ConstToolPtr;
 
+////////////////////////////////////////////////////////////////////////////////
+//! Create a new tool.
+
+inline ConstToolPtr makeTool(const tstring& name, const tstring& commandLine)
+{
+	return ConstToolPtr(new Tool(name, commandLine));
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! Copy an existing tool.
+
+inline ConstToolPtr copyTool(const Tool& rhs)
+{
+	return ConstToolPtr(new Tool(rhs));
+}
+
 #endif // APP_TOOL_HPP

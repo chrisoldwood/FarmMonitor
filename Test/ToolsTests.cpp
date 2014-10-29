@@ -137,8 +137,8 @@ TEST_CASE("Loading a set of tools from an app config provider replaces the exist
 	FakeAppConfigReader reader;
 	Tools               tools;
 
-	tools.append(ToolPtr(new Tool(TXT("tool 1"), TXT("cmd line 1"))));
-	tools.append(ToolPtr(new Tool(TXT("tool 2"), TXT("cmd line 2"))));
+	tools.append(makeTool(TXT("tool 1"), TXT("cmd line 1")));
+	tools.append(makeTool(TXT("tool 2"), TXT("cmd line 2")));
 
 	tools.load(reader);
 
@@ -154,8 +154,8 @@ TEST_CASE("Loading a set of tools from an XML document replaces the existing set
 	XML::DocumentPtr config = createDocument(SAVED_TOOL_NAME, SAVED_CMD_LINE);
 	Tools            tools;
 
-	tools.append(ToolPtr(new Tool(TXT("tool 1"), TXT("cmd line 1"))));
-	tools.append(ToolPtr(new Tool(TXT("tool 2"), TXT("cmd line 2"))));
+	tools.append(makeTool(TXT("tool 1"), TXT("cmd line 1")));
+	tools.append(makeTool(TXT("tool 2"), TXT("cmd line 2")));
 
 	tools.load(config);
 
@@ -171,7 +171,7 @@ TEST_CASE("A set of tools can be saved to an app config provider")
 	FakeAppConfigWriter writer;
 	Tools               tools;
 
-	tools.append(ToolPtr(new Tool(TEST_TOOL_NAME, TEST_CMD_LINE)));
+	tools.append(makeTool(TEST_TOOL_NAME, TEST_CMD_LINE));
 
 	tools.save(writer);
 
@@ -186,7 +186,7 @@ TEST_CASE("A set of tools can be saved to an XML document")
 	XML::DocumentPtr config = createDocument();
 	Tools            tools;
 
-	tools.append(ToolPtr(new Tool(TEST_TOOL_NAME, TEST_CMD_LINE)));
+	tools.append(makeTool(TEST_TOOL_NAME, TEST_CMD_LINE));
 
 	tools.save(config);
 
@@ -263,7 +263,7 @@ TEST_CASE("Appending a tool increases the size and marks the container as modifi
 {
 	Tools tools;
 
-	tools.append(ToolPtr(new Tool(TEST_TOOL_NAME, TEST_CMD_LINE)));
+	tools.append(makeTool(TEST_TOOL_NAME, TEST_CMD_LINE));
 
 	TEST_TRUE(tools.size() == 1);
 	TEST_TRUE(tools.isModified());
@@ -277,7 +277,7 @@ TEST_CASE("Replacing a tool upates the existing item and marks the container as 
 
 	tools.load(reader);
 
-	tools.replace(0, ToolPtr(new Tool(TEST_TOOL_NAME, TEST_CMD_LINE)));
+	tools.replace(0, makeTool(TEST_TOOL_NAME, TEST_CMD_LINE));
 
 	TEST_TRUE(tools.isModified());
 	TEST_TRUE(tools.size() == 1);
@@ -303,12 +303,12 @@ TEST_CASE("A deep copy of the container replaces the existing contents and becom
 {
 	Tools lhs;
 
-	lhs.append(ToolPtr(new Tool(TEST_TOOL_NAME, TEST_CMD_LINE)));
+	lhs.append(makeTool(TEST_TOOL_NAME, TEST_CMD_LINE));
 
 	Tools rhs;
 
-	rhs.append(ToolPtr(new Tool(TXT("to be replaced 1"), TXT("to be replaced 1"))));
-	rhs.append(ToolPtr(new Tool(TXT("to be replaced 2"), TXT("to be replaced 2"))));
+	rhs.append(makeTool(TXT("to be replaced 1"), TXT("to be replaced 1")));
+	rhs.append(makeTool(TXT("to be replaced 2"), TXT("to be replaced 2")));
 	rhs.deepCopy(lhs);
 
 	lhs.remove(0);
@@ -322,12 +322,12 @@ TEST_CASE("Replacing the container contents also becomes modified")
 {
 	Tools lhs;
 
-	lhs.append(ToolPtr(new Tool(TEST_TOOL_NAME, TEST_CMD_LINE)));
+	lhs.append(makeTool(TEST_TOOL_NAME, TEST_CMD_LINE));
 
 	Tools rhs;
 
-	rhs.append(ToolPtr(new Tool(TXT("to be replaced 1"), TXT("to be replaced 1"))));
-	rhs.append(ToolPtr(new Tool(TXT("to be replaced 2"), TXT("to be replaced 2"))));
+	rhs.append(makeTool(TXT("to be replaced 1"), TXT("to be replaced 1")));
+	rhs.append(makeTool(TXT("to be replaced 2"), TXT("to be replaced 2")));
 	rhs.replaceAll(lhs);
 
 	TEST_TRUE(rhs.isModified());

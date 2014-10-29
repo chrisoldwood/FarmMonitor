@@ -35,4 +35,12 @@ typedef Core::SharedPtr<Host> HostPtr;
 //! The default Host const smart pointer type.
 typedef Core::SharedPtr<const Host> ConstHostPtr;
 
+////////////////////////////////////////////////////////////////////////////////
+//! Create a new host.
+
+inline ConstHostPtr makeHost(const tstring& name)
+{
+	return ConstHostPtr(new Host(name));
+}
+
 #endif // APP_HOST_HPP

@@ -113,7 +113,7 @@ void Tools::load(WCL::IAppConfigReader& config)
 		const tstring cmdLine  = config.readString(TXT("Tools"), Core::fmt(TXT("CmdLine[%u]"),  i), TXT(""));
 
 		if (!toolName.empty() && !cmdLine.empty())
-			tools.push_back(ToolPtr(new Tool(toolName, cmdLine)));
+			tools.push_back(makeTool(toolName, cmdLine));
 	}
 
 	std::swap(m_tools, tools);
@@ -150,7 +150,7 @@ void Tools::load(const XML::DocumentPtr config)
 		tstring             cmdLine = node->getChild<XML::ElementNode>(1)
 									      ->getChild<XML::TextNode>(0)->text();
 		
-		tools.push_back(ToolPtr(new Tool(name, cmdLine)));
+		tools.push_back(makeTool(name, cmdLine));
 	}
 
 	std::swap(m_tools, tools);
@@ -203,7 +203,7 @@ void Tools::deepCopy(const Tools& rhs, bool modified)
 	Collection tools;
 
 	for (const_iterator it = rhs.begin(); it != rhs.end(); ++it)
-		tools.push_back(ToolPtr(new Tool(*(*it))));
+		tools.push_back(copyTool(*(*it)));
 
 	std::swap(m_tools, tools);
 	m_modified = modified;

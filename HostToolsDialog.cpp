@@ -88,7 +88,7 @@ void HostToolsDialog::onAddTool()
 
 	if (dialog.RunModal(*this) == IDOK)
 	{
-		ToolPtr tool(new Tool(dialog.m_tool));
+		ConstToolPtr tool = copyTool(dialog.m_tool);
 
 		m_tools.append(tool);
 
@@ -116,7 +116,7 @@ void HostToolsDialog::onCopyTool()
 
 	if (dialog.RunModal(*this) == IDOK)
 	{
-		ToolPtr tool(new Tool(dialog.m_tool));
+		ConstToolPtr tool = copyTool(dialog.m_tool);
 
 		m_tools.append(tool);
 
@@ -147,7 +147,7 @@ void HostToolsDialog::onEditTool()
 
 	if (dialog.RunModal(*this) == IDOK)
 	{
-		const ConstToolPtr edited = ConstToolPtr(new Tool(dialog.m_tool));
+		const ConstToolPtr edited = copyTool(dialog.m_tool);
 
 		m_tools.replace(selection, edited);
 
