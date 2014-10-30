@@ -23,7 +23,7 @@ const tchar* PUBLISHER = TXT("Chris Oldwood");
 //! The configuration data application name.
 const tchar* APPLICATION = TXT("Farm Monitor");
 //! The configuration data format version.
-const tchar* CONFIG_VERSION = TXT("0.1");
+const tchar* CONFIG_VERSION = TXT("1");
 //! The default config file folder.
 const tchar* DEFAULT_CONFIG_FOLDER = TXT("FarmMonitor");
 //! The default config file name.
@@ -65,6 +65,15 @@ void Model::loadConfig()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+//! Load the application settings.
+
+void Model::loadConfig(XML::DocumentPtr config)
+{
+	m_hosts.load(config);
+	m_tools.load(config);
+}
+
+////////////////////////////////////////////////////////////////////////////////
 //! Save the application settings.
 
 void Model::saveConfig()
@@ -94,6 +103,24 @@ void Model::saveConfig()
 
 		saveConfigToXmlFile(configFile);
 	}
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! Save the application settings.
+
+void Model::saveConfig(XML::DocumentPtr config)
+{
+	XML::ElementNodePtr hostsRoot = XML::makeElement(TXT("Hosts"));
+	XML::ElementNodePtr toolsRoot = XML::makeElement(TXT("Tools"));
+	XML::ElementNodePtr root = XML::makeElement(TXT("FarmMonitor"));
+
+	root->setAttribute(TXT("Version"), CONFIG_VERSION);
+	root->appendChild(hostsRoot);
+	root->appendChild(toolsRoot);
+	config->appendChild(root);
+
+	m_hosts.save(config);
+	m_tools.save(config);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -128,8 +155,7 @@ void Model::loadConfigFromXmlFile(const CPath& configFile)
 	const tstring          content = CFile::ReadTextFile(configFile);
 	const XML::DocumentPtr appConfig = XML::Reader::readDocument(content, XML::Reader::DISCARD_WHITESPACE);
 
-	m_hosts.load(appConfig);
-	m_tools.load(appConfig);
+	loadConfig(appConfig);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -137,16 +163,9 @@ void Model::loadConfigFromXmlFile(const CPath& configFile)
 
 void Model::saveConfigToXmlFile(const CPath& configFile)
 {
-	XML::ElementNodePtr hostsRoot = XML::makeElement(TXT("Hosts"));
-	XML::ElementNodePtr toolsRoot = XML::makeElement(TXT("Tools"));
-	XML::ElementNodePtr root = XML::makeElement(TXT("FarmMonitor"));
-	XML::DocumentPtr appConfig = XML::makeDocument(root);
+	XML::DocumentPtr appConfig = XML::makeDocument();
 
-	root->appendChild(hostsRoot);
-	root->appendChild(toolsRoot);
-
-	m_hosts.save(appConfig);
-	m_tools.save(appConfig);
+	saveConfig(appConfig);
 
 	const CPath backupFile = configFile.PathWithoutExt() + TXT(".bak");
 	const CPath tempFile = configFile.PathWithoutExt() + TXT(".$$$");

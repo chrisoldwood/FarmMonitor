@@ -43,8 +43,14 @@ public:
 	//! Load the application settings.
 	void loadConfig();
 
+	//! Load the application settings.
+	void loadConfig(XML::DocumentPtr config);
+
 	//! Save the application settings.
 	void saveConfig();
+
+	//! Save the application settings.
+	void saveConfig(XML::DocumentPtr config);
 
 private:
 	//

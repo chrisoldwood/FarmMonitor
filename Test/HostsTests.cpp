@@ -10,6 +10,7 @@
 #include <XML/Document.hpp>
 #include <XML/XPathIterator.hpp>
 #include <XML/TextNode.hpp>
+#include "DataDocument.hpp"
 
 namespace
 {
@@ -59,30 +60,24 @@ public:
 
 XML::DocumentPtr createDocument()
 {
-	return XML::makeDocument(XML::makeElement
-	(
-		TXT("FarmMonitor"), XML::makeElement
-		(
-			TXT("Hosts")
-		)
-	));
+	return createDocumentShell();
 }
 
 XML::DocumentPtr createDocument(const tstring& host)
 {
-	return XML::makeDocument(XML::makeElement
+	XML::DocumentPtr    document(createDocumentShell());
+	XML::XPathIterator  it(TXT("/FarmMonitor/Hosts"), document);
+	XML::ElementNodePtr hosts(Core::dynamic_ptr_cast<XML::ElementNode>(*it));
+
+	hosts->appendChild(XML::makeElement
 	(
-		TXT("FarmMonitor"), XML::makeElement
+		TXT("Host"), XML::makeElement
 		(
-			TXT("Hosts"), XML::makeElement
-			(
-				TXT("Host"), XML::makeElement
-				(
-					TXT("Name"), XML::makeText(host)
-				)
-			)
+			TXT("Name"), XML::makeText(host)
 		)
 	));
+
+	return document;
 }
 
 }

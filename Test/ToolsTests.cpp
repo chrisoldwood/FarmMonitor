@@ -9,6 +9,7 @@
 #include <WCL/AppConfig.hpp>
 #include <XML/XPathIterator.hpp>
 #include <XML/TextNode.hpp>
+#include "DataDocument.hpp"
 
 namespace
 {
@@ -61,31 +62,27 @@ public:
 
 XML::DocumentPtr createDocument()
 {
-	return XML::makeDocument(XML::makeElement
-	(
-		TXT("FarmMonitor"), XML::makeElement
-		(
-			TXT("Tools")
-		)
-	));
+	return createDocumentShell();
 }
 
 XML::DocumentPtr createDocument(const tstring& name, const tstring& commandLine)
 {
-	XML::ElementNodePtr nameNode = XML::makeElement(TXT("Name"), XML::makeText(name));
-	XML::ElementNodePtr cmdLineNode = XML::makeElement(TXT("CommandLine"), XML::makeText(commandLine));
-	XML::ElementNodePtr tool = XML::makeElement(TXT("Tool"));
+	XML::DocumentPtr    document(createDocumentShell());
+	XML::XPathIterator  it(TXT("/FarmMonitor/Tools"), document);
+	XML::ElementNodePtr tools(Core::dynamic_ptr_cast<XML::ElementNode>(*it));
 
-	tool->appendChild(nameNode);
-	tool->appendChild(cmdLineNode);
+	XML::NodePtr properties[] =
+	{
+		XML::makeElement(TXT("Name"), XML::makeText(name)),
+		XML::makeElement(TXT("CommandLine"), XML::makeText(commandLine)),
+	};
 
-	return XML::makeDocument(XML::makeElement
+	tools->appendChild(XML::makeElement
 	(
-		TXT("FarmMonitor"), XML::makeElement
-		(
-			TXT("Tools"), tool
-		)
+		TXT("Tool"), properties, properties+ARRAY_SIZE(properties)
 	));
+
+	return document;
 }
 
 }

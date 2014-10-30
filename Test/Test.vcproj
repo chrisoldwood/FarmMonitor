@@ -139,7 +139,16 @@
 			Name="Model"
 			Filter="">
 			<File
+				RelativePath=".\DataDocument.cpp">
+			</File>
+			<File
+				RelativePath=".\DataDocument.hpp">
+			</File>
+			<File
 				RelativePath=".\HostsTests.cpp">
+			</File>
+			<File
+				RelativePath=".\ModelTests.cpp">
 			</File>
 			<File
 				RelativePath=".\ToolsTests.cpp">
