@@ -61,7 +61,7 @@ inline void CopyHostCmd::execute()
 {
 	ASSERT(m_appDlg.isHostSelected());
 
-	const tstring hostname = m_appDlg.getSelectedHost();
+	const tstring hostname = m_appDlg.getSelectedHost()->m_name;
 
 	CClipboard::CopyText(m_appWnd.Handle(), hostname);
 }

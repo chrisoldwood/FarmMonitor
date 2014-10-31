@@ -8,6 +8,7 @@
 #include <WCL/AppConfig.hpp>
 #include <XML/XPathIterator.hpp>
 #include <XML/TextNode.hpp>
+#include <Core/ConfigurationException.hpp>
 
 ////////////////////////////////////////////////////////////////////////////////
 //! Default constructor.
@@ -110,10 +111,16 @@ void Tools::load(WCL::IAppConfigReader& config)
 	for (size_t i = 0; i != count; ++i)
 	{
 		const tstring toolName = config.readString(TXT("Tools"), Core::fmt(TXT("ToolName[%u]"), i), TXT(""));
+
+		if (toolName.empty())
+			throw Core::ConfigurationException(TXT("The name for a tool cannot be empty"));
+
 		const tstring cmdLine  = config.readString(TXT("Tools"), Core::fmt(TXT("CmdLine[%u]"),  i), TXT(""));
 
-		if (!toolName.empty() && !cmdLine.empty())
-			tools.push_back(makeTool(toolName, cmdLine));
+		if (cmdLine.empty())
+			throw Core::ConfigurationException(TXT("The command line for a tool cannot be empty"));
+
+		tools.push_back(makeTool(toolName, cmdLine));
 	}
 
 	std::swap(m_tools, tools);
@@ -145,11 +152,19 @@ void Tools::load(const XML::DocumentPtr config)
 	for(; it != end; ++it)
 	{
 		XML::ElementNodePtr node = Core::dynamic_ptr_cast<XML::ElementNode>(*it);
-		tstring             name = node->getChild<XML::ElementNode>(0)
-									   ->getChild<XML::TextNode>(0)->text();
-		tstring             cmdLine = node->getChild<XML::ElementNode>(1)
-									      ->getChild<XML::TextNode>(0)->text();
+
+		const tstring name = node->getChild<XML::ElementNode>(0)
+		                         ->getChild<XML::TextNode>(0)->text();
+
+		if (name.empty())
+			throw Core::ConfigurationException(TXT("The name for a tool cannot be empty"));
+
+		const tstring cmdLine = node->getChild<XML::ElementNode>(1)
+		                            ->getChild<XML::TextNode>(0)->text();
 		
+		if (cmdLine.empty())
+			throw Core::ConfigurationException(TXT("The command line for a tool cannot be empty"));
+
 		tools.push_back(makeTool(name, cmdLine));
 	}
 
@@ -203,7 +218,7 @@ void Tools::deepCopy(const Tools& rhs, bool modified)
 	Collection tools;
 
 	for (const_iterator it = rhs.begin(); it != rhs.end(); ++it)
-		tools.push_back(copyTool(*(*it)));
+		tools.push_back(makeTool(*(*it)));
 
 	std::swap(m_tools, tools);
 	m_modified = modified;

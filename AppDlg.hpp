@@ -13,6 +13,7 @@
 
 #include <WCL/MainDlg.hpp>
 #include <WCL/ListView.hpp>
+#include "Host.hpp"
 
 // Forward declarations.
 namespace WCL
@@ -48,7 +49,7 @@ public:
 	bool isHostSelected() const;
 
 	//! Get the currently selected host, if available.
-	tstring getSelectedHost() const;
+	ConstHostPtr getSelectedHost() const;
 
 	//! Get the final widths of the main view columns.
 	const ColumnWidths& getFinalColumnWidths() const;
@@ -61,10 +62,10 @@ public:
 	//
 
 	//! Add a new host to be monitored.
-	void addHost(const tstring& hostname);
+	void addHost(ConstHostPtr host);
 	
-	//! Rename the currently selected host.
-	void renameHost(const tstring& hostname);
+	//! Replace the currently selected host.
+	void replaceHost(ConstHostPtr host);
 	
 	//! Remove the currently selected host.
 	void removeSelectedHost();
@@ -126,6 +127,8 @@ private:
 	enum Column
 	{
 		HOST_NAME,
+		ENVIRONMENT,
+		DESCRIPTION,
 		TOTAL_MEMORY,
 		FREE_MEMORY,
 		DISK_USAGE,

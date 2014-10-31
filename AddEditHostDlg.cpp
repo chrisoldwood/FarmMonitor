@@ -14,7 +14,9 @@ AddEditHostDlg::AddEditHostDlg(Mode mode)
 	, m_mode(mode)
 {
 	DEFINE_CTRL_TABLE
-		CTRL(IDC_HOST_NAME, &m_hostnameEditor)
+		CTRL(IDC_HOST_NAME,   &m_hostnameEditor)
+		CTRL(IDC_ENVIRONMENT, &m_environmentEditor)
+		CTRL(IDC_DESCRIPTION, &m_descriptionEditor)
 	END_CTRL_TABLE
 
 	DEFINE_CTRLMSG_TABLE
@@ -28,7 +30,9 @@ void AddEditHostDlg::OnInitDialog()
 {
 	Title((m_mode == ADD_HOST) ? TXT("Add Host") : TXT("Edit Host"));
 
-	m_hostnameEditor.Text(m_hostname);
+	m_hostnameEditor.Text(m_host.m_name);
+	m_environmentEditor.Text(m_host.m_environment);
+	m_descriptionEditor.Text(m_host.m_description);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -42,7 +46,9 @@ bool AddEditHostDlg::OnOk()
 		return false;
 	}
 
-	m_hostname = m_hostnameEditor.Text();
+	m_host.m_name = m_hostnameEditor.Text();
+	m_host.m_environment = m_environmentEditor.Text();
+	m_host.m_description = m_descriptionEditor.Text();
 
 	return true;
 }

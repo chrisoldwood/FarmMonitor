@@ -59,19 +59,19 @@ bool AppDlg::isHostSelected() const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//! Get the currently selected host, if available. If not host is selected this
+//! Get the currently selected host, if available. If no host is selected this
 //! returns and empty string.
 
-tstring AppDlg::getSelectedHost() const
+ConstHostPtr AppDlg::getSelectedHost() const
 {
-	tstring hostname;
+	ConstHostPtr host;
 
 	size_t selection = m_hostView.Selection();
 
 	if (selection != Core::npos)
-		hostname = m_hostView.ItemText(selection, 0);
+		host = m_hosts.host(selection);
 
-	return hostname;
+	return host;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -89,18 +89,18 @@ const AppDlg::ColumnWidths& AppDlg::getFinalColumnWidths() const
 
 void AppDlg::setColumnWidths(const ColumnWidths& widths)
 {
-	ASSERT(widths.size() == m_hostView.NumColumns());
+	const size_t columns = std::min(widths.size(), m_hostView.NumColumns());
 
-	for (size_t i = 0; i != m_hostView.NumColumns(); ++i)
+	for (size_t i = 0; i != columns; ++i)
 		m_hostView.ColumnWidth(i, widths[i]);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 //! Add a new host to be monitored.
 
-void AppDlg::addHost(const tstring& hostname)
+void AppDlg::addHost(ConstHostPtr host)
 {
-	const size_t index = m_hosts.add(makeHost(hostname));
+	const size_t index = m_hosts.add(host);
 
 	addHostToView(index);
 
@@ -109,17 +109,23 @@ void AppDlg::addHost(const tstring& hostname)
 }
 	
 ////////////////////////////////////////////////////////////////////////////////
-//! Rename the currently selected host.
+//! Replace the currently selected host.
 
-void AppDlg::renameHost(const tstring& hostname)
+void AppDlg::replaceHost(ConstHostPtr host)
 {
 	ASSERT(m_hostView.IsSelection());
 
 	const size_t selection = m_hostView.Selection();
+	const bool   renamed = (m_hosts.host(selection)->m_name != host->m_name);
 
-	m_hosts.rename(selection, makeHost(hostname));
-	m_hostView.ItemText(selection, HOST_NAME, hostname);
-	clearHost(selection);
+	m_hosts.replace(selection, host);
+
+	m_hostView.ItemText(selection, HOST_NAME,   host->m_name);
+	m_hostView.ItemText(selection, ENVIRONMENT, host->m_environment);
+	m_hostView.ItemText(selection, DESCRIPTION, host->m_description);
+
+	if (renamed)
+		clearHost(selection);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -225,12 +231,14 @@ void AppDlg::initialiseHostView()
 	m_hostView.ImageList(LVSIL_SMALL, IDB_HOST_ICONS, 16, RGB(255, 0, 255));
 	m_hostView.FullRowSelect(true);
 
-	m_hostView.InsertColumn(HOST_NAME,        TXT("Host"),       m_hostView.StringWidth(20), LVCFMT_LEFT);
-	m_hostView.InsertColumn(TOTAL_MEMORY,     TXT("Total Mem"),  m_hostView.StringWidth(10), LVCFMT_LEFT);
-	m_hostView.InsertColumn(FREE_MEMORY,      TXT("Free Mem"),   m_hostView.StringWidth(10), LVCFMT_LEFT);
-	m_hostView.InsertColumn(DISK_USAGE,       TXT("C: Usage"),   m_hostView.StringWidth(10), LVCFMT_LEFT);
-	m_hostView.InsertColumn(LAST_BOOTUP_TIME, TXT("Rebooted"),   m_hostView.StringWidth(20), LVCFMT_LEFT);
-	m_hostView.InsertColumn(LAST_ERROR,       TXT("Last Error"), m_hostView.StringWidth(25), LVCFMT_LEFT);
+	m_hostView.InsertColumn(HOST_NAME,        TXT("Host"),        m_hostView.StringWidth(20), LVCFMT_LEFT);
+	m_hostView.InsertColumn(ENVIRONMENT,      TXT("Environment"), m_hostView.StringWidth(15), LVCFMT_LEFT);
+	m_hostView.InsertColumn(DESCRIPTION,      TXT("Description"), m_hostView.StringWidth(15), LVCFMT_LEFT);
+	m_hostView.InsertColumn(TOTAL_MEMORY,     TXT("Total Mem"),   m_hostView.StringWidth(10), LVCFMT_LEFT);
+	m_hostView.InsertColumn(FREE_MEMORY,      TXT("Free Mem"),    m_hostView.StringWidth(10), LVCFMT_LEFT);
+	m_hostView.InsertColumn(DISK_USAGE,       TXT("C: Usage"),	  m_hostView.StringWidth(10), LVCFMT_LEFT);
+	m_hostView.InsertColumn(LAST_BOOTUP_TIME, TXT("Rebooted"),    m_hostView.StringWidth(20), LVCFMT_LEFT);
+	m_hostView.InsertColumn(LAST_ERROR,       TXT("Last Error"),  m_hostView.StringWidth(25), LVCFMT_LEFT);
 
 	for (size_t i = 0; i != m_hosts.size(); ++i)
 		addHostToView(i);
@@ -241,7 +249,9 @@ void AppDlg::initialiseHostView()
 
 void AppDlg::addHostToView(size_t index)
 {
-	m_hostView.InsertItem(index, m_hosts.host(index)->m_name, STATUS_UNKNOWN);
+	m_hostView.InsertItem(index,              m_hosts.host(index)->m_name, STATUS_UNKNOWN);
+	m_hostView.ItemText  (index, ENVIRONMENT, m_hosts.host(index)->m_environment);
+	m_hostView.ItemText  (index, DESCRIPTION, m_hosts.host(index)->m_description);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

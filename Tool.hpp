@@ -45,9 +45,9 @@ inline ConstToolPtr makeTool(const tstring& name, const tstring& commandLine)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//! Copy an existing tool.
+//! Create a tool by copying another.
 
-inline ConstToolPtr copyTool(const Tool& rhs)
+inline ConstToolPtr makeTool(const Tool& rhs)
 {
 	return ConstToolPtr(new Tool(rhs));
 }

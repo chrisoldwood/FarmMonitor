@@ -34,7 +34,7 @@ void ExecuteToolCmd::execute()
 {
 	ASSERT(m_appDlg.isHostSelected());
 
-	const tstring hostname = m_appDlg.getSelectedHost();
+	const tstring hostname = m_appDlg.getSelectedHost()->m_name;
 	const tstring toolName = m_tools.tool(m_index)->m_name;
 	const tstring toolCommand = m_tools.tool(m_index)->m_commandLine;
 	const tstring commandLine = Core::replaceNoCase(toolCommand, HOSTNAME, hostname);

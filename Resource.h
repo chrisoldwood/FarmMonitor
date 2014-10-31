@@ -39,7 +39,9 @@
 #define IDC_HOSTS                       1086
 #define IDC_HOST_NAME                   1090
 #define IDC_TOOLS                       1091
+#define IDC_ENVIRONMENT                 1091
 #define IDC_ADD                         1092
+#define IDC_DESCRIPTION                 1092
 #define IDC_EDIT                        1093
 #define IDC_NAME                        1093
 #define IDC_DELETE                      1094

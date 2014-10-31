@@ -9,6 +9,7 @@
 #include <WCL/IAppConfigWriter.hpp>
 #include <XML/XPathIterator.hpp>
 #include <XML/TextNode.hpp>
+#include <Core/ConfigurationException.hpp>
 
 ////////////////////////////////////////////////////////////////////////////////
 //! Default constructor.
@@ -65,8 +66,10 @@ void Hosts::load(WCL::IAppConfigReader& config)
 	{
 		const tstring host = config.readString(TXT("Hosts"), Core::fmt(TXT("Host[%u]"), i), TXT(""));
 
-		if (!host.empty())
-			hosts.push_back(makeHost(host));
+		if (host.empty())
+			throw Core::ConfigurationException(TXT("The name for a host cannot be empty"));
+		
+		hosts.push_back(makeHost(host, TXT(""), TXT("")));
 	}
 
 	std::swap(m_hosts, hosts);
@@ -98,9 +101,16 @@ void Hosts::load(const XML::DocumentPtr config)
 	for(; it != end; ++it)
 	{
 		XML::ElementNodePtr node = Core::dynamic_ptr_cast<XML::ElementNode>(*it);
-		tstring             host = node->findFirstElement(TXT("Name"))->getTextValue();
+
+		const tstring host = node->findFirstElement(TXT("Name"))->getTextValue();
+
+		if (host.empty())
+			throw Core::ConfigurationException(TXT("The name for a host cannot be empty"));
+
+		const tstring environment = node->findFirstElement(TXT("Environment"))->getTextValue();
+		const tstring description = node->findFirstElement(TXT("Description"))->getTextValue();
 		
-		hosts.push_back(makeHost(host));
+		hosts.push_back(makeHost(host, environment, description));
 	}
 
 	std::swap(m_hosts, hosts);
@@ -117,8 +127,14 @@ void Hosts::save(XML::DocumentPtr config)
 
 	for (size_t i = 0; i != m_hosts.size(); ++i)
 	{
-		XML::ElementNodePtr	name = XML::makeElement(TXT("Name"), XML::makeText(m_hosts[i]->m_name));
-		XML::ElementNodePtr	host = XML::makeElement(TXT("Host"), name);
+		XML::NodePtr properties[] =
+		{
+			XML::makeElement(TXT("Name"), XML::makeText(m_hosts[i]->m_name)),
+			XML::makeElement(TXT("Environment"), XML::makeText(m_hosts[i]->m_environment)),
+			XML::makeElement(TXT("Description"), XML::makeText(m_hosts[i]->m_description)),
+		};
+
+		XML::ElementNodePtr	host = XML::makeElement(TXT("Host"), properties, properties+ARRAY_SIZE(properties));
 
 		hosts->appendChild(host);
 	}
@@ -138,9 +154,9 @@ size_t Hosts::add(ConstHostPtr host)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//! Rename a host by position.
+//! Replace a host by position.
 
-void Hosts::rename(size_t index, ConstHostPtr host)
+void Hosts::replace(size_t index, ConstHostPtr host)
 {
 	ASSERT(index < m_hosts.size());
 

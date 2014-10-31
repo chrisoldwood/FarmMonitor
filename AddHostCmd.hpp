@@ -60,7 +60,7 @@ inline void AddHostCmd::execute()
 
 	if (dlg.RunModal(m_appWnd) == IDOK)
 	{
-		m_appDlg.addHost(dlg.m_hostname);
+		m_appDlg.addHost(makeHost(dlg.m_host));
 
 		m_controller.UpdateUI();
 	}

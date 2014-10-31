@@ -74,7 +74,7 @@ public:
 	size_t add(ConstHostPtr host);
 
 	//! Replace a host by position.
-	void rename(size_t index, ConstHostPtr host);
+	void replace(size_t index, ConstHostPtr host);
 
 	//! Remove a host by position.
 	void remove(size_t index);

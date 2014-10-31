@@ -57,13 +57,15 @@ inline EditHostCmd::EditHostCmd(AppWnd& appWnd, AppDlg& appDlg, WCL::ICmdControl
 
 inline void EditHostCmd::execute()
 {
+	ASSERT(m_appDlg.isHostSelected());
+
 	AddEditHostDlg dlg(AddEditHostDlg::EDIT_HOST);
 
-	dlg.m_hostname = m_appDlg.getSelectedHost();
+	dlg.m_host = *m_appDlg.getSelectedHost();
 
 	if (dlg.RunModal(m_appWnd) == IDOK)
 	{
-		m_appDlg.renameHost(dlg.m_hostname);
+		m_appDlg.replaceHost(makeHost(dlg.m_host));
 
 		m_controller.UpdateUI();
 	}

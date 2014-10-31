@@ -12,6 +12,7 @@
 #endif
 
 #include <WCL/CommonUI.hpp>
+#include "Host.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////
 //! The dialog to create and edit a hostname.
@@ -34,7 +35,7 @@ public:
 	//
 
 	//! The hostname to add/edit.
-	tstring m_hostname;
+	Host m_host;
 
 private:
 	//
@@ -46,6 +47,8 @@ private:
 	// Controls.
 	//
 	CEditBox	m_hostnameEditor;
+	CEditBox	m_environmentEditor;
+	CEditBox	m_descriptionEditor;
 
 	//
 	// Message handlers.

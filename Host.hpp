@@ -21,12 +21,14 @@ public:
 	Host();
 
 	//! Constructor.
-	Host(const tstring& name);
+	Host(const tstring& name, const tstring& environment, const tstring& description);
 	
 	//
 	// Members.
 	//
 	tstring		m_name;			//! The name of the host.
+	tstring		m_environment;	//! The host's environment.
+	tstring		m_description;	//! A description of the host.
 };
 
 //! The default Host smart pointer type.
@@ -38,9 +40,17 @@ typedef Core::SharedPtr<const Host> ConstHostPtr;
 ////////////////////////////////////////////////////////////////////////////////
 //! Create a new host.
 
-inline ConstHostPtr makeHost(const tstring& name)
+inline ConstHostPtr makeHost(const tstring& name, const tstring& environment, const tstring& description)
 {
-	return ConstHostPtr(new Host(name));
+	return ConstHostPtr(new Host(name, environment, description));
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! Create a host by copying another.
+
+inline ConstHostPtr makeHost(const Host& rhs)
+{
+	return ConstHostPtr(new Host(rhs));
 }
 
 #endif // APP_HOST_HPP

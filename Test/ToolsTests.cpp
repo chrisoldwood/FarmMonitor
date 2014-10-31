@@ -129,6 +129,30 @@ TEST_CASE("A set of tools can be loaded from an XML document")
 }
 TEST_CASE_END
 
+TEST_CASE("Loading a tool with no name throws")
+{
+	const tstring EMPTY_NAME;
+
+	Tools tools;
+
+	XML::DocumentPtr config = createDocument(EMPTY_NAME, SAVED_CMD_LINE);
+
+	TEST_THROWS(tools.load(config));
+}
+TEST_CASE_END
+
+TEST_CASE("Loading a tool with no command line throws")
+{
+	const tstring EMPTY_CMD_LINE;
+
+	Tools tools;
+
+	XML::DocumentPtr config = createDocument(SAVED_TOOL_NAME, EMPTY_CMD_LINE);
+
+	TEST_THROWS(tools.load(config));
+}
+TEST_CASE_END
+
 TEST_CASE("Loading a set of tools from an app config provider replaces the existing set")
 {
 	FakeAppConfigReader reader;
