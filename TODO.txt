@@ -1,5 +1,3 @@
-- Validate hostname option.
-
 - Allow duplicate hostnames?
 
 - Re-order tools menu.

@@ -5,6 +5,9 @@
 
 #include "Common.hpp"
 #include "AddEditHostDlg.hpp"
+#include <NCL/Socket.hpp>
+#include <WCL/BusyCursor.hpp>
+#include <NCL/AutoWinSock.hpp>
 
 ////////////////////////////////////////////////////////////////////////////////
 //! Constructor.
@@ -20,6 +23,7 @@ AddEditHostDlg::AddEditHostDlg(Mode mode)
 	END_CTRL_TABLE
 
 	DEFINE_CTRLMSG_TABLE
+		CMD_CTRLMSG(IDC_CHECK_HOST, BN_CLICKED, &AddEditHostDlg::onCheckHost)
 	END_CTRLMSG_TABLE
 }
 
@@ -51,4 +55,26 @@ bool AddEditHostDlg::OnOk()
 	m_host.m_description = m_descriptionEditor.Text();
 
 	return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! Check host button handler.
+
+void AddEditHostDlg::onCheckHost()
+{
+	if (m_hostnameEditor.TextLength() == 0)
+	{
+		AlertMsg(TXT("Please enter the name of the host first."));
+		return;
+	}
+
+	CBusyCursor busyCursor;
+	AutoWinSock autoWinSock;
+
+	bool resolved = CSocket::canResolveHostname(m_hostnameEditor.Text());
+
+	if (resolved)
+		NotifyMsg(TXT("The hostname appears to be valid."));
+	else
+		AlertMsg(TXT("The hostname does not appear to be valid."));
 }

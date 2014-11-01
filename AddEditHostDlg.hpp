@@ -59,6 +59,9 @@ private:
 
 	//! OK button handler.
 	virtual bool OnOk();
+
+	//! Check host button handler.
+	void onCheckHost();
 };
 
 #endif // ADDEDITHOSTDLG_HPP
