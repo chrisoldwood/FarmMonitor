@@ -7,6 +7,7 @@
 #include "AppWnd.hpp"
 #include "Tools.hpp"
 #include <Core/StringUtils.hpp>
+#include "ExecuteToolCmd.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////
 //! Constructor.
@@ -60,26 +61,8 @@ void AppWnd::OnCreate(const CRect& clientRect)
 
 void AppWnd::rebuildToolsMenu()
 {
-	const uint beginCommandId = ID_HOST_INVOKE_TOOL_1;
-	const uint endCommandId = ID_HOST_INVOKE_TOOL_19 + 1;
-
+	const bool hostSelected = m_mainDlg.isHostSelected();
 	CPopupMenu hostMenu = m_menu.GetItemPopup(1);
 
-	for (uint id = beginCommandId; id != endCommandId; ++id)
-		hostMenu.RemoveCmd(id);
-
-	const bool hostSelected = m_mainDlg.isHostSelected();
-
-	uint commandId = beginCommandId;
-
-	for (Tools::const_iterator it = m_tools.begin(); ( (it != m_tools.end()) && (commandId != endCommandId) );
-			++it, ++commandId)
-	{
-		const uint    ordinal = (commandId - ID_HOST_INVOKE_TOOL_1) + 1;
-		const tchar*  format = (ordinal < 10) ? TXT("&%u %s") : TXT("%u %s");
-		const tstring text = Core::fmt(format, ordinal, (*it)->m_name.c_str());
-
-		hostMenu.AppendCmd(commandId, text);
-		hostMenu.EnableCmd(commandId, hostSelected);
-	}
+	ExecuteToolCmd::rebuildToolsMainMenu(m_tools, hostMenu, hostSelected);
 }

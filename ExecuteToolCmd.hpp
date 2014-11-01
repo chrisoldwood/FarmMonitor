@@ -12,11 +12,18 @@
 #endif
 
 #include <WCL/UiCommandBase.hpp>
+#include "Tool.hpp"
 
 // Forward declarations.
 class Tools;
 class AppWnd;
 class AppDlg;
+class CPopupMenu;
+
+namespace WCL
+{
+class ContextMenu;
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 //! The command used to execute an external tool for the selected host.
@@ -37,6 +44,16 @@ public:
 	//! Refresh the UI for the command.
 	virtual void updateUi();
 
+	//
+	// Other methods.
+	//
+
+	//! Rebuild the main Tools menu.
+	static void rebuildToolsMainMenu(const Tools& tools, CPopupMenu& menu, bool hostSelected);
+
+	// Build the tools content menu.
+	static void buildToolsContextMenu(const Tools& tools, WCL::ContextMenu& menu, bool hostSelected);
+
 private:
 	//
 	// Members.
@@ -48,6 +65,9 @@ private:
 
 	//! Convert a ShellExecute error code to a string.
 	const tchar* toString(uint code);
+
+	//! Append the command to the Tools menu.
+	static void appendCommand(const ConstToolPtr& tool, uint commandId, CPopupMenu& menu, bool enabled);
 };
 
 #endif // APP_EXECUTETOOLCMD_HPP

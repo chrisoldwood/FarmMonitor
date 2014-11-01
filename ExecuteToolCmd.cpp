@@ -11,6 +11,7 @@
 #include "FarmMonitor.hpp"
 #include <Core/AnsiWide.hpp>
 #include <Core/StringUtils.hpp>
+#include <WCL/ContextMenu.hpp>
 
 //! The host name pattern.
 static const tstring HOSTNAME = TXT("${HostName}");
@@ -59,6 +60,60 @@ void ExecuteToolCmd::updateUi()
 	bool hostSelected = m_appDlg.isHostSelected();
 
 	m_appWnd.Menu()->EnableCmd(id(), hostSelected);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! Rebuild the main Tools menu.
+
+void ExecuteToolCmd::rebuildToolsMainMenu(const Tools& tools, CPopupMenu& menu, bool hostSelected)
+{
+	const uint beginCommandId = ID_HOST_INVOKE_TOOL_1;
+	const uint endCommandId = ID_HOST_INVOKE_TOOL_19 + 1;
+
+	for (uint id = beginCommandId; id != endCommandId; ++id)
+		menu.RemoveCmd(id);
+
+	uint commandId = beginCommandId;
+
+	for (Tools::const_iterator it = tools.begin(); ( (it != tools.end()) && (commandId != endCommandId) );
+			++it, ++commandId)
+	{
+		appendCommand(*it, commandId, menu, hostSelected);
+	}
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Build the tools content menu.
+
+void ExecuteToolCmd::buildToolsContextMenu(const Tools& tools, WCL::ContextMenu& menu, bool hostSelected)
+{
+	const uint beginCommandId = ID_HOST_INVOKE_TOOL_1;
+	const uint endCommandId = ID_HOST_INVOKE_TOOL_19 + 1;
+
+	menu.EnableCmd(ID_HOST_EDITHOST, hostSelected);
+	menu.EnableCmd(ID_HOST_REMOVEHOST, hostSelected);
+	menu.EnableCmd(ID_HOST_COPYHOST, hostSelected);
+
+	uint commandId = beginCommandId;
+
+	for (Tools::const_iterator it = tools.begin(); ( (it != tools.end()) && (commandId != endCommandId) );
+			++it, ++commandId)
+	{
+		ExecuteToolCmd::appendCommand(*it, commandId, menu, hostSelected);
+	}
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! Append the command to the Tools menu.
+
+void ExecuteToolCmd::appendCommand(const ConstToolPtr& tool, uint commandId, CPopupMenu& menu, bool enabled)
+{
+	const uint    ordinal = (commandId - ID_HOST_INVOKE_TOOL_1) + 1;
+	const tchar*  format = (ordinal < 10) ? TXT("&%u %s") : TXT("%u %s");
+	const tstring text = Core::fmt(format, ordinal, tool->m_name.c_str());
+
+	menu.AppendCmd(commandId, text);
+	menu.EnableCmd(commandId, enabled);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

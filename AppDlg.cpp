@@ -16,6 +16,7 @@
 #include <WCL/ContextMenu.hpp>
 #include <WCL/ICmdController.hpp>
 #include <WCL/BusyCursor.hpp>
+#include "ExecuteToolCmd.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////
 //! Constructor.
@@ -187,28 +188,10 @@ LRESULT AppDlg::onHostSelectionChanged(NMHDR& header)
 
 LRESULT AppDlg::onRightClick(NMHDR& /*header*/)
 {
-	const bool isSelection = m_hostView.IsSelection();	
-	const uint beginCommandId = ID_HOST_INVOKE_TOOL_1;
-	const uint endCommandId = ID_HOST_INVOKE_TOOL_19 + 1;
-
+	const bool       isSelection = m_hostView.IsSelection();	
 	WCL::ContextMenu menu(IDR_CONTEXT);
 
-	menu.EnableCmd(ID_HOST_EDITHOST, isSelection);
-	menu.EnableCmd(ID_HOST_REMOVEHOST, isSelection);
-	menu.EnableCmd(ID_HOST_COPYHOST, isSelection);
-
-	uint commandId = beginCommandId;
-
-	for (Tools::const_iterator it = m_tools.begin(); ( (it != m_tools.end()) && (commandId != endCommandId) );
-			++it, ++commandId)
-	{
-		const uint    ordinal = (commandId - ID_HOST_INVOKE_TOOL_1) + 1;
-		const tchar*  format = (ordinal < 10) ? TXT("&%u %s") : TXT("%u %s");
-		const tstring text = Core::fmt(format, ordinal, (*it)->m_name.c_str());
-
-		menu.AppendCmd(commandId, text);
-		menu.EnableCmd(commandId, isSelection);
-	}
+	ExecuteToolCmd::buildToolsContextMenu(m_tools, menu, isSelection);
 
 	menu.display(m_appWnd);
 
