@@ -19,15 +19,15 @@
 ////////////////////////////////////////////////////////////////////////////////
 //! Constructor.
 
-AppCmds::AppCmds(AppWnd& appWnd, AppDlg& appDlg, Tools& tools)
+AppCmds::AppCmds(AppWnd& appWnd, AppDlg& appDlg, Hosts& hosts, Tools& tools)
 	: WCL::ExternalCmdController()
 {
 	WCL_DEFINE_EXTCMD_TABLE
 		// File menu.
 		WCL_EXTCMD_ENTRY(new ExitAppCmd(appWnd))
 		// Host menu
-		WCL_EXTCMD_ENTRY(new AddHostCmd(appWnd, appDlg, *this))
-		WCL_EXTCMD_ENTRY(new EditHostCmd(appWnd, appDlg, *this))
+		WCL_EXTCMD_ENTRY(new AddHostCmd(appWnd, appDlg, *this, hosts))
+		WCL_EXTCMD_ENTRY(new EditHostCmd(appWnd, appDlg, *this, hosts))
 		WCL_EXTCMD_ENTRY(new RemoveHostCmd(appWnd, appDlg, *this))
 		WCL_EXTCMD_ENTRY(new CopyHostCmd(appWnd, appDlg, *this))
 

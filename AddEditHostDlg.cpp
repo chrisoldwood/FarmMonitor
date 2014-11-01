@@ -8,6 +8,7 @@
 #include <NCL/Socket.hpp>
 #include <WCL/BusyCursor.hpp>
 #include <NCL/AutoWinSock.hpp>
+#include <Core/Algorithm.hpp>
 
 ////////////////////////////////////////////////////////////////////////////////
 //! Constructor.
@@ -50,7 +51,15 @@ bool AddEditHostDlg::OnOk()
 		return false;
 	}
 
-	m_host.m_name = m_hostnameEditor.Text();
+	tstring hostname = m_hostnameEditor.Text();
+
+	if (Core::exists(m_hosts, hostname))
+	{
+		AlertMsg(TXT("The host '%s' is already being monitored."), hostname.c_str());
+		return false;
+	}
+
+	m_host.m_name = hostname;
 	m_host.m_environment = m_environmentEditor.Text();
 	m_host.m_description = m_descriptionEditor.Text();
 

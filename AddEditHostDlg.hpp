@@ -13,6 +13,7 @@
 
 #include <WCL/CommonUI.hpp>
 #include "Host.hpp"
+#include <set>
 
 ////////////////////////////////////////////////////////////////////////////////
 //! The dialog to create and edit a hostname.
@@ -36,6 +37,9 @@ public:
 
 	//! The hostname to add/edit.
 	Host m_host;
+
+	//! The unique set of existing hostnames.
+	std::set<tstring> m_hosts;
 
 private:
 	//

@@ -54,6 +54,12 @@ public:
 	//! Has the collection of names been modified?
 	bool isModified() const;
 	
+	//! Get the collection start iterator.
+	const_iterator begin() const;
+
+	//! Get the collection end iterator.
+	const_iterator end() const;
+
 	//
 	// Methods.
 	//

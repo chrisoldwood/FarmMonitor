@@ -20,7 +20,7 @@ class EditHostCmd : public WCL::UiCommandBase
 {
 public:
 	//! Constructor.
-	EditHostCmd(AppWnd& appWnd, AppDlg& appDlg, WCL::ICmdController& controller);
+	EditHostCmd(AppWnd& appWnd, AppDlg& appDlg, WCL::ICmdController& controller, Hosts& hosts);
 
 	//
 	// IUiCommand methods.
@@ -39,16 +39,18 @@ private:
 	AppWnd&					m_appWnd;		//! The app frame window.
 	AppDlg&					m_appDlg;		//! The app main view.
 	WCL::ICmdController&	m_controller;	//! The command dispatcher.
+	Hosts&					m_hosts;		//! The collection of hosts.
 };
 
 ////////////////////////////////////////////////////////////////////////////////
 //! Constructor.
 
-inline EditHostCmd::EditHostCmd(AppWnd& appWnd, AppDlg& appDlg, WCL::ICmdController& controller)
+inline EditHostCmd::EditHostCmd(AppWnd& appWnd, AppDlg& appDlg, WCL::ICmdController& controller, Hosts& hosts)
 	: WCL::UiCommandBase(ID_HOST_EDITHOST)
 	, m_appWnd(appWnd)
 	, m_appDlg(appDlg)
 	, m_controller(controller)
+	, m_hosts(hosts)
 {
 }
 
@@ -62,6 +64,12 @@ inline void EditHostCmd::execute()
 	AddEditHostDlg dlg(AddEditHostDlg::EDIT_HOST);
 
 	dlg.m_host = *m_appDlg.getSelectedHost();
+
+	for (Hosts::const_iterator it = m_hosts.begin(); it != m_hosts.end(); ++it)
+	{
+		if ((*it)->m_name != dlg.m_host.m_name)
+			dlg.m_hosts.insert((*it)->m_name);
+	}
 
 	if (dlg.RunModal(m_appWnd) == IDOK)
 	{

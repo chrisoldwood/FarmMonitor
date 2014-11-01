@@ -10,6 +10,8 @@
 #include <XML/XPathIterator.hpp>
 #include <XML/TextNode.hpp>
 #include <Core/ConfigurationException.hpp>
+#include <set>
+#include <Core/Algorithm.hpp>
 
 ////////////////////////////////////////////////////////////////////////////////
 //! Default constructor.
@@ -54,6 +56,22 @@ bool Hosts::isModified() const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+//! Get the collection start iterator.
+
+Hosts::const_iterator Hosts::begin() const
+{
+	return m_hosts.begin();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! Get the collection end iterator.
+
+Hosts::const_iterator Hosts::end() const
+{
+	return m_hosts.end();
+}
+
+////////////////////////////////////////////////////////////////////////////////
 //! Load the set of hosts from the application config.
 
 void Hosts::load(WCL::IAppConfigReader& config)
@@ -94,6 +112,7 @@ void Hosts::load(const XML::DocumentPtr config)
 	ASSERT(config->hasRootElement());
 
 	Collection hosts;
+	std::set<tstring> names;
 
 	XML::XPathIterator it(TXT("/FarmMonitor/Hosts/Host"), config->getRootElement());
 	XML::XPathIterator end;
@@ -107,10 +126,14 @@ void Hosts::load(const XML::DocumentPtr config)
 		if (host.empty())
 			throw Core::ConfigurationException(TXT("The name for a host cannot be empty"));
 
+		if (Core::exists(names, host))
+			throw Core::ConfigurationException(TXT("The name for a host cannot be duplicated"));
+
 		const tstring environment = node->findFirstElement(TXT("Environment"))->getTextValue();
 		const tstring description = node->findFirstElement(TXT("Description"))->getTextValue();
 		
 		hosts.push_back(makeHost(host, environment, description));
+		names.insert(host);
 	}
 
 	std::swap(m_hosts, hosts);

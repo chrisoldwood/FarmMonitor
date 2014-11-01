@@ -170,6 +170,41 @@ TEST_CASE("Loading a set of hosts from an XML document replaces the existing set
 }
 TEST_CASE_END
 
+TEST_CASE("Loading a set of hosts throws when a duplicate name is encountered")
+{
+	XML::DocumentPtr config = createDocument();
+
+	XML::XPathIterator  it(TXT("/FarmMonitor/Hosts"), config);
+	XML::ElementNodePtr parent(Core::dynamic_ptr_cast<XML::ElementNode>(*it));
+
+	{
+		XML::NodePtr properties[] =
+		{
+			XML::makeElement(TXT("Name"),        XML::makeText(TXT("duplicate"))),
+			XML::makeElement(TXT("Environment"), XML::makeText(TXT(""))),
+			XML::makeElement(TXT("Description"), XML::makeText(TXT(""))),
+		};
+
+		parent->appendChild(XML::makeElement(TXT("Host"), properties, properties+ARRAY_SIZE(properties)));
+	}
+
+	{
+		XML::NodePtr properties[] =
+		{
+			XML::makeElement(TXT("Name"),        XML::makeText(TXT("duplicate"))),
+			XML::makeElement(TXT("Environment"), XML::makeText(TXT(""))),
+			XML::makeElement(TXT("Description"), XML::makeText(TXT(""))),
+		};
+
+		parent->appendChild(XML::makeElement(TXT("Host"), properties, properties+ARRAY_SIZE(properties)));
+	}
+
+	Hosts hosts;
+
+	TEST_THROWS(hosts.load(config));
+}
+TEST_CASE_END
+
 TEST_CASE("A set of hosts can be saved to an app config provider")
 {
 	FakeAppConfigWriter writer;

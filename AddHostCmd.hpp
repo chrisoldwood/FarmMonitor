@@ -14,6 +14,7 @@
 #include <WCL/UiCommandBase.hpp>
 #include "AddEditHostDlg.hpp"
 #include "AppWnd.hpp"
+#include "Hosts.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////
 //! The command to add a new host to monitor.
@@ -22,7 +23,7 @@ class AddHostCmd : public WCL::UiCommandBase
 {
 public:
 	//! Constructor.
-	AddHostCmd(AppWnd& appWnd, AppDlg& appDlg, WCL::ICmdController& controller);
+	AddHostCmd(AppWnd& appWnd, AppDlg& appDlg, WCL::ICmdController& controller, Hosts& hosts);
 
 	//
 	// IUiCommand methods.
@@ -38,16 +39,18 @@ private:
 	AppWnd&					m_appWnd;		//! The app frame window.
 	AppDlg&					m_appDlg;		//! The app main view.
 	WCL::ICmdController&	m_controller;	//! The command dispatcher.
+	Hosts&					m_hosts;		//! The collection of hosts.
 };
 
 ////////////////////////////////////////////////////////////////////////////////
 //! Constructor.
 
-inline AddHostCmd::AddHostCmd(AppWnd& appWnd, AppDlg& appDlg, WCL::ICmdController& controller)
+inline AddHostCmd::AddHostCmd(AppWnd& appWnd, AppDlg& appDlg, WCL::ICmdController& controller, Hosts& hosts)
 	: WCL::UiCommandBase(ID_HOST_ADDHOST)
 	, m_appWnd(appWnd)
 	, m_appDlg(appDlg)
 	, m_controller(controller)
+	, m_hosts(hosts)
 {
 }
 
@@ -57,6 +60,9 @@ inline AddHostCmd::AddHostCmd(AppWnd& appWnd, AppDlg& appDlg, WCL::ICmdControlle
 inline void AddHostCmd::execute()
 {
 	AddEditHostDlg dlg(AddEditHostDlg::ADD_HOST);
+
+	for (Hosts::const_iterator it = m_hosts.begin(); it != m_hosts.end(); ++it)
+		dlg.m_hosts.insert((*it)->m_name);
 
 	if (dlg.RunModal(m_appWnd) == IDOK)
 	{

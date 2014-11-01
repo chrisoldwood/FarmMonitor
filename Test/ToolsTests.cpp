@@ -187,6 +187,39 @@ TEST_CASE("Loading a set of tools from an XML document replaces the existing set
 }
 TEST_CASE_END
 
+TEST_CASE("Loading a set of hosts throws when a duplicate name is encountered")
+{
+	XML::DocumentPtr config = createDocument();
+
+	XML::XPathIterator  it(TXT("/FarmMonitor/Tools"), config);
+	XML::ElementNodePtr parent(Core::dynamic_ptr_cast<XML::ElementNode>(*it));
+
+	{
+		XML::NodePtr properties[] =
+		{
+			XML::makeElement(TXT("Name"),        XML::makeText(TXT("duplicate"))),
+			XML::makeElement(TXT("CommandLine"), XML::makeText(TXT("command line"))),
+		};
+
+		parent->appendChild(XML::makeElement(TXT("Tool"), properties, properties+ARRAY_SIZE(properties)));
+	}
+
+	{
+		XML::NodePtr properties[] =
+		{
+			XML::makeElement(TXT("Name"),        XML::makeText(TXT("duplicate"))),
+			XML::makeElement(TXT("CommandLine"), XML::makeText(TXT("command line"))),
+		};
+
+		parent->appendChild(XML::makeElement(TXT("Tool"), properties, properties+ARRAY_SIZE(properties)));
+	}
+
+	Tools tools;
+
+	TEST_THROWS(tools.load(config));
+}
+TEST_CASE_END
+
 TEST_CASE("A set of tools can be saved to an app config provider")
 {
 	FakeAppConfigWriter writer;

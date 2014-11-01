@@ -9,6 +9,8 @@
 #include <XML/XPathIterator.hpp>
 #include <XML/TextNode.hpp>
 #include <Core/ConfigurationException.hpp>
+#include <set>
+#include <Core/Algorithm.hpp>
 
 ////////////////////////////////////////////////////////////////////////////////
 //! Default constructor.
@@ -145,6 +147,7 @@ void Tools::load(const XML::DocumentPtr config)
 	ASSERT(config->hasRootElement());
 
 	Collection tools;
+	std::set<tstring> names;
 
 	XML::XPathIterator it(TXT("/FarmMonitor/Tools/Tool"), config->getRootElement());
 	XML::XPathIterator end;
@@ -159,6 +162,9 @@ void Tools::load(const XML::DocumentPtr config)
 		if (name.empty())
 			throw Core::ConfigurationException(TXT("The name for a tool cannot be empty"));
 
+		if (Core::exists(names, name))
+			throw Core::ConfigurationException(TXT("The name for a tool cannot be duplicated"));
+
 		const tstring cmdLine = node->getChild<XML::ElementNode>(1)
 		                            ->getChild<XML::TextNode>(0)->text();
 		
@@ -166,6 +172,7 @@ void Tools::load(const XML::DocumentPtr config)
 			throw Core::ConfigurationException(TXT("The command line for a tool cannot be empty"));
 
 		tools.push_back(makeTool(name, cmdLine));
+		names.insert(name);
 	}
 
 	std::swap(m_tools, tools);
