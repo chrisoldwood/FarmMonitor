@@ -13,15 +13,17 @@ Host::Host()
 	: m_name()
 	, m_environment()
 	, m_description()
+	, m_monitor(true)
 {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 //! Constructor.
 
-Host::Host(const tstring& name, const tstring& environment, const tstring& description)
+Host::Host(const tstring& name, const tstring& environment, const tstring& description, bool monitor)
 	: m_name(name)
 	, m_environment(environment)
 	, m_description(description)
+	, m_monitor(monitor)
 {
 }

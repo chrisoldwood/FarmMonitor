@@ -51,6 +51,7 @@
 #define IDC_CHECK_HOST                  1097
 #define IDC_UP                          1098
 #define IDC_DOWN                        1099
+#define IDC_MONITOR                     1100
 #define IDD_MAIN                        5000
 #define IDD_ABOUT                       5001
 #define IDD_ADDEDIT_HOST                5002
@@ -65,7 +66,7 @@
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        136
 #define _APS_NEXT_COMMAND_VALUE         172
-#define _APS_NEXT_CONTROL_VALUE         1100
+#define _APS_NEXT_CONTROL_VALUE         1101
 #define _APS_NEXT_SYMED_VALUE           104
 #endif
 #endif

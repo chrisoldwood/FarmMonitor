@@ -21,7 +21,7 @@ public:
 	Host();
 
 	//! Constructor.
-	Host(const tstring& name, const tstring& environment, const tstring& description);
+	Host(const tstring& name, const tstring& environment, const tstring& description, bool monitor);
 	
 	//
 	// Members.
@@ -29,6 +29,7 @@ public:
 	tstring		m_name;			//! The name of the host.
 	tstring		m_environment;	//! The host's environment.
 	tstring		m_description;	//! A description of the host.
+	bool		m_monitor;		//! Flag to control monitoring.
 };
 
 //! The default Host smart pointer type.
@@ -40,9 +41,9 @@ typedef Core::SharedPtr<const Host> ConstHostPtr;
 ////////////////////////////////////////////////////////////////////////////////
 //! Create a new host.
 
-inline ConstHostPtr makeHost(const tstring& name, const tstring& environment, const tstring& description)
+inline ConstHostPtr makeHost(const tstring& name, const tstring& environment, const tstring& description, bool monitor)
 {
-	return ConstHostPtr(new Host(name, environment, description));
+	return ConstHostPtr(new Host(name, environment, description, monitor));
 }
 
 ////////////////////////////////////////////////////////////////////////////////

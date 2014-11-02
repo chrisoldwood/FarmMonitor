@@ -18,6 +18,7 @@ namespace
 static tstring SAVED_HOST = TXT("saved host");
 static tstring SAVED_ENVIRONMENT = TXT("saved environment");
 static tstring SAVED_DESCRIPTION = TXT("saved description");
+static bool    SAVED_MONITOR = true;
 
 class FakeAppConfigReader : public WCL::IAppConfigReader
 {
@@ -65,7 +66,7 @@ XML::DocumentPtr createDocument()
 	return createDocumentShell();
 }
 
-XML::DocumentPtr createDocument(const tstring& host, const tstring& environment, const tstring& description)
+XML::DocumentPtr createDocument(const tstring& host, const tstring& environment, const tstring& description, bool monitor)
 {
 	XML::DocumentPtr    document(createDocumentShell());
 	XML::XPathIterator  it(TXT("/FarmMonitor/Hosts"), document);
@@ -76,6 +77,7 @@ XML::DocumentPtr createDocument(const tstring& host, const tstring& environment,
 		XML::makeElement(TXT("Name"), XML::makeText(host)),
 		XML::makeElement(TXT("Environment"), XML::makeText(environment)),
 		XML::makeElement(TXT("Description"), XML::makeText(description)),
+		XML::makeElement(TXT("Monitor"), XML::makeText(Core::format(monitor))),
 	};
 
 	hosts->appendChild(XML::makeElement
@@ -93,10 +95,12 @@ TEST_SET(Hosts)
 	const tstring TEST_HOST = TXT("test host");
 	const tstring TEST_ENV = TXT("test environment");
 	const tstring TEST_DESC = TXT("test description");
+	const bool    TEST_MON = true;
 
 	const tstring TEST_HOST_2 = TXT("another host");
 	const tstring TEST_ENV_2 = TXT("another environment");
 	const tstring TEST_DESC_2 = TXT("another description");
+	const bool    TEST_MON_2 = false;
 
 TEST_CASE("By default the container has no items and is not modified")
 {
@@ -122,7 +126,7 @@ TEST_CASE_END
 
 TEST_CASE("A set of hosts can be loaded from an XML document")
 {
-	XML::DocumentPtr config = createDocument(SAVED_HOST, SAVED_ENVIRONMENT, SAVED_DESCRIPTION);
+	XML::DocumentPtr config = createDocument(SAVED_HOST, SAVED_ENVIRONMENT, SAVED_DESCRIPTION, SAVED_MONITOR);
 	Hosts            hosts;
 
 	hosts.load(config);
@@ -132,6 +136,7 @@ TEST_CASE("A set of hosts can be loaded from an XML document")
 	TEST_TRUE(hosts.host(0)->m_name == SAVED_HOST);
 	TEST_TRUE(hosts.host(0)->m_environment == SAVED_ENVIRONMENT);
 	TEST_TRUE(hosts.host(0)->m_description == SAVED_DESCRIPTION);
+	TEST_TRUE(hosts.host(0)->m_monitor == SAVED_MONITOR);
 }
 TEST_CASE_END
 
@@ -140,8 +145,8 @@ TEST_CASE("Loading a set of hosts from the app config provider replaces the exis
 	FakeAppConfigReader reader;
 	Hosts               hosts;
 
-	hosts.add(makeHost(TXT("host 1"), TXT(""), TXT("")));
-	hosts.add(makeHost(TXT("host 2"), TXT(""), TXT("")));
+	hosts.add(makeHost(TXT("host 1"), TXT(""), TXT(""), true));
+	hosts.add(makeHost(TXT("host 2"), TXT(""), TXT(""), true));
 
 	hosts.load(reader);
 
@@ -150,6 +155,7 @@ TEST_CASE("Loading a set of hosts from the app config provider replaces the exis
 	TEST_TRUE(hosts.host(0)->m_name == SAVED_HOST);
 	TEST_TRUE(hosts.host(0)->m_environment == TXT(""));
 	TEST_TRUE(hosts.host(0)->m_description == TXT(""));
+	TEST_TRUE(hosts.host(0)->m_monitor == true);
 }
 TEST_CASE_END
 
@@ -157,16 +163,19 @@ TEST_CASE("Loading a set of hosts from an XML document replaces the existing set
 {
 	Hosts hosts;
 
-	hosts.add(makeHost(TXT("host 1"), TXT(""), TXT("")));
-	hosts.add(makeHost(TXT("host 2"), TXT(""), TXT("")));
+	hosts.add(makeHost(TXT("host 1"), TXT(""), TXT(""), true));
+	hosts.add(makeHost(TXT("host 2"), TXT(""), TXT(""), true));
 
-	XML::DocumentPtr config = createDocument(SAVED_HOST, SAVED_ENVIRONMENT, SAVED_DESCRIPTION);
+	XML::DocumentPtr config = createDocument(SAVED_HOST, SAVED_ENVIRONMENT, SAVED_DESCRIPTION, SAVED_MONITOR);
 
 	hosts.load(config);
 
 	TEST_FALSE(hosts.isModified());
 	TEST_TRUE(hosts.size() == 1);
 	TEST_TRUE(hosts.host(0)->m_name == SAVED_HOST);
+	TEST_TRUE(hosts.host(0)->m_environment == SAVED_ENVIRONMENT);
+	TEST_TRUE(hosts.host(0)->m_description == SAVED_DESCRIPTION);
+	TEST_TRUE(hosts.host(0)->m_monitor == SAVED_MONITOR);
 }
 TEST_CASE_END
 
@@ -210,7 +219,7 @@ TEST_CASE("A set of hosts can be saved to an app config provider")
 	FakeAppConfigWriter writer;
 	Hosts               hosts;
 
-	hosts.add(makeHost(TEST_HOST, TXT(""), TXT("")));
+	hosts.add(makeHost(TEST_HOST, TXT(""), TXT(""), true));
 
 	hosts.save(writer);
 
@@ -225,8 +234,8 @@ TEST_CASE("A set of hosts can be saved to an XML document")
 	XML::DocumentPtr config = createDocument();
 	Hosts            hosts;
 
-	hosts.add(makeHost(TEST_HOST, TEST_ENV, TEST_DESC));
-	hosts.add(makeHost(TEST_HOST_2, TEST_ENV_2, TEST_DESC_2));
+	hosts.add(makeHost(TEST_HOST, TEST_ENV, TEST_DESC, TEST_MON));
+	hosts.add(makeHost(TEST_HOST_2, TEST_ENV_2, TEST_DESC_2, TEST_MON_2));
 
 	hosts.save(config);
 
@@ -274,6 +283,12 @@ TEST_CASE("A set of hosts can be saved to an XML document")
 
 	TEST_TRUE(property->name() == TXT("Description"));
 	TEST_TRUE(value->text() == TEST_DESC_2);
+
+	property = host->getChild<XML::ElementNode>(3);
+	value = property->getChild<XML::TextNode>(0);
+
+	TEST_TRUE(property->name() == TXT("Monitor"));
+	TEST_TRUE(value->text() == Core::format<bool>(TEST_MON_2));
 }
 TEST_CASE_END
 
@@ -299,7 +314,7 @@ TEST_CASE("Writing an unmodified set of hosts should still write to the XML docu
 {
 	Hosts hosts;
 
-	hosts.load(createDocument(SAVED_HOST, SAVED_ENVIRONMENT, SAVED_DESCRIPTION));
+	hosts.load(createDocument(SAVED_HOST, SAVED_ENVIRONMENT, SAVED_DESCRIPTION, SAVED_MONITOR));
 
 	TEST_FALSE(hosts.isModified());
 
@@ -321,7 +336,7 @@ TEST_CASE("Loading a host with no name throws")
 
 	Hosts hosts;
 
-	XML::DocumentPtr config = createDocument(EMPTY_NAME, SAVED_ENVIRONMENT, SAVED_DESCRIPTION);
+	XML::DocumentPtr config = createDocument(EMPTY_NAME, SAVED_ENVIRONMENT, SAVED_DESCRIPTION, SAVED_MONITOR);
 
 	TEST_THROWS(hosts.load(config));
 }
@@ -331,7 +346,7 @@ TEST_CASE("Adding a host increases the size and marks the container as modified"
 {
 	Hosts hosts;
 
-	hosts.add(makeHost(TEST_HOST, TXT(""), TXT("")));
+	hosts.add(makeHost(TEST_HOST, TXT(""), TXT(""), true));
 
 	TEST_TRUE(hosts.size() == 1);
 	TEST_TRUE(hosts.isModified());
@@ -340,7 +355,7 @@ TEST_CASE_END
 
 TEST_CASE("Removing a host decreses the size and marks the container as modified")
 {
-	XML::DocumentPtr config = createDocument(SAVED_HOST, SAVED_ENVIRONMENT, SAVED_DESCRIPTION);
+	XML::DocumentPtr config = createDocument(SAVED_HOST, SAVED_ENVIRONMENT, SAVED_DESCRIPTION, SAVED_MONITOR);
 	Hosts            hosts;
 
 	hosts.load(config);
@@ -356,17 +371,19 @@ TEST_CASE("Renaming a host replaces the item and marks the container as modified
 	const tstring RENAMED_HOST = TXT("renamed host");
 	const tstring RENAMED_ENVIRONMENT = TXT("renamed environment");
 	const tstring RENAMED_DESCRIPTION = TXT("renamed description");
+	const bool    RENAMED_MONITOR = !SAVED_MONITOR;
 
-	XML::DocumentPtr config = createDocument(SAVED_HOST, SAVED_ENVIRONMENT, SAVED_DESCRIPTION);
+	XML::DocumentPtr config = createDocument(SAVED_HOST, SAVED_ENVIRONMENT, SAVED_DESCRIPTION, SAVED_MONITOR);
 	Hosts            hosts;
 
 	hosts.load(config);
-	hosts.replace(0, makeHost(RENAMED_HOST, RENAMED_ENVIRONMENT, RENAMED_DESCRIPTION));
+	hosts.replace(0, makeHost(RENAMED_HOST, RENAMED_ENVIRONMENT, RENAMED_DESCRIPTION, RENAMED_MONITOR));
 
 	TEST_TRUE(hosts.size() == 1);
 	TEST_TRUE(hosts.host(0)->m_name == RENAMED_HOST);
 	TEST_TRUE(hosts.host(0)->m_environment == RENAMED_ENVIRONMENT);
 	TEST_TRUE(hosts.host(0)->m_description == RENAMED_DESCRIPTION);
+	TEST_TRUE(hosts.host(0)->m_monitor == RENAMED_MONITOR);
 	TEST_TRUE(hosts.isModified());
 }
 TEST_CASE_END

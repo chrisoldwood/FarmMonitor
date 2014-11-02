@@ -1,1 +1,7 @@
-- Support more host attributes, e.g. on/offline.
+- Customisable values to monitor.
+
+- Configurable monitoring interval.
+
+- Support different user names for each host.
+
+- Re-order host list.

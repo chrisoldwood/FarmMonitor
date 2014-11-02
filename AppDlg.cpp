@@ -125,7 +125,7 @@ void AppDlg::replaceHost(ConstHostPtr host)
 	m_hostView.ItemText(selection, ENVIRONMENT, host->m_environment);
 	m_hostView.ItemText(selection, DESCRIPTION, host->m_description);
 
-	if (renamed)
+	if ( (renamed) || (!host->m_monitor) )
 		clearHost(selection);
 }
 
@@ -278,11 +278,14 @@ void AppDlg::refreshHost(size_t index)
 {
 	clearHost(index);
 
-	const tstring& host = m_hosts.host(index)->m_name;
+	ConstHostPtr host = m_hosts.host(index);
+
+	if (!host->m_monitor)
+		return;
 
 	try
 	{
-		WMI::Connection connection(host);
+		WMI::Connection connection(host->m_name);
 
 		const WMI::Win32_OperatingSystem::Iterator osIter = WMI::Win32_OperatingSystem::select(connection);
 
