@@ -69,6 +69,12 @@ private:
 	//! Delete button handler.
 	void onDeleteTool();
 
+	//! Up button handler.
+	void onMoveToolUp();
+
+	//! Down button handler.
+	void onMoveToolDown();
+
 	//
 	// Internal methods.
 	//

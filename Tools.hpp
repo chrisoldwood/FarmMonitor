@@ -73,6 +73,9 @@ public:
 	//! Remove a tool from the collection.
 	void remove(size_t index);
 
+	//! Swap two tools in the collection by index.
+	void swap(size_t first, size_t second);
+
 	//! Load the set of tools from the application config.
 	void load(WCL::IAppConfigReader& config);
 

@@ -1,3 +1,1 @@
-- Re-order tools menu.
-
 - Support more host attributes, e.g. on/offline.

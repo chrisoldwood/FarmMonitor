@@ -102,6 +102,20 @@ void Tools::remove(size_t index)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+//! Swap two tools in the collection by index.
+
+void Tools::swap(size_t first, size_t second)
+{
+	ASSERT(first < m_tools.size());
+	ASSERT(second < m_tools.size());
+
+	ConstToolPtr temp = m_tools[first];
+	m_tools[first] = m_tools[second];
+	m_tools[second] = temp;
+	m_modified = true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 //! Load the set of tools.
 
 void Tools::load(WCL::IAppConfigReader& config)

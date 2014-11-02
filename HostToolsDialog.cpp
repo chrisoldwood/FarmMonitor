@@ -25,6 +25,8 @@ HostToolsDialog::HostToolsDialog()
 		CMD_CTRLMSG(IDC_COPY,   BN_CLICKED,      &HostToolsDialog::onCopyTool)
 		CMD_CTRLMSG(IDC_EDIT,   BN_CLICKED,      &HostToolsDialog::onEditTool)
 		CMD_CTRLMSG(IDC_DELETE, BN_CLICKED,      &HostToolsDialog::onDeleteTool)
+		CMD_CTRLMSG(IDC_UP,     BN_CLICKED,      &HostToolsDialog::onMoveToolUp)
+		CMD_CTRLMSG(IDC_DOWN,   BN_CLICKED,      &HostToolsDialog::onMoveToolDown)
 		NFY_CTRLMSG(IDC_TOOLS,  LVN_ITEMCHANGED, &HostToolsDialog::onToolSelected)
 		NFY_CTRLMSG(IDC_TOOLS,  NM_DBLCLK,       &HostToolsDialog::onToolDoubleClicked)
 	END_CTRLMSG_TABLE
@@ -172,17 +174,58 @@ void HostToolsDialog::onDeleteTool()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+//! Up button handler.
+
+void HostToolsDialog::onMoveToolUp()
+{
+	ASSERT(m_view.IsSelection());
+	ASSERT(m_view.Selection() != 0);
+
+	const size_t selection = m_view.Selection();
+
+	m_tools.swap(selection, selection-1);
+
+	updateViewItem(selection,   m_tools.tool(selection));
+	updateViewItem(selection-1, m_tools.tool(selection-1));
+
+	m_view.Select(selection-1);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! Down button handler.
+
+void HostToolsDialog::onMoveToolDown()
+{
+	ASSERT(m_view.IsSelection());
+	ASSERT(m_view.Selection() != (m_view.ItemCount()-1));
+
+	const size_t selection = m_view.Selection();
+
+	m_tools.swap(selection, selection+1);
+
+	updateViewItem(selection,   m_tools.tool(selection));
+	updateViewItem(selection+1, m_tools.tool(selection+1));
+
+	m_view.Select(selection+1);
+}
+
+////////////////////////////////////////////////////////////////////////////////
 //! Update the state of the UI.
 
 void HostToolsDialog::updateUi()
 {
 	const bool isSelection = m_view.IsSelection();
 	const bool maxDefined = (m_view.ItemCount() == MAX_TOOLS);
+	const bool isMoveable = (m_view.ItemCount() > 1);
+	const bool isFirstSelected = isSelection && (m_view.Selection() == 0);
+	const bool isLastSelected = isSelection && (m_view.Selection() == (m_view.ItemCount()-1));
 
 	Control(IDC_ADD).Enable(!maxDefined);
 	Control(IDC_COPY).Enable(!maxDefined && isSelection);
 	Control(IDC_EDIT).Enable(isSelection);
 	Control(IDC_DELETE).Enable(isSelection);
+	Control(IDC_UP).Enable(isMoveable && isSelection && !isFirstSelected);
+	Control(IDC_DOWN).Enable(isMoveable && isSelection && !isLastSelected);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

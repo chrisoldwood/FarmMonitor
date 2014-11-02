@@ -389,5 +389,29 @@ TEST_CASE("Replacing the container contents also becomes modified")
 }
 TEST_CASE_END
 
+TEST_CASE("Two tools can be swapped by index")
+{
+	Tools tools;
+
+	tools.append(makeTool(TXT("1st tool"), TXT("1st cmd")));
+	tools.append(makeTool(TXT("2nd tool"), TXT("2nd cmd")));
+	tools.append(makeTool(TXT("3rd tool"), TXT("3rd cmd")));
+
+	XML::DocumentPtr config = createDocument();
+
+	tools.save(config);
+
+	tools.swap(0, 2);
+
+	TEST_TRUE(tools.tool(0)->m_name == TXT("3rd tool"));
+	TEST_TRUE(tools.tool(0)->m_commandLine ==TXT("3rd cmd"));
+
+	TEST_TRUE(tools.tool(2)->m_name == TXT("1st tool"));
+	TEST_TRUE(tools.tool(2)->m_commandLine == TXT("1st cmd"));
+
+	TEST_TRUE(tools.isModified());
+}
+TEST_CASE_END
+
 }
 TEST_SET_END
