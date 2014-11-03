@@ -72,6 +72,9 @@ BEGIN
         MENUITEM "&Add Host...",                ID_HOST_ADDHOST
         MENUITEM "&Edit Host...",               ID_HOST_EDITHOST
         MENUITEM "&Remove Host",                ID_HOST_REMOVEHOST
+        MENUITEM "Move &Up",                    ID_HOST_UP
+        MENUITEM "Move &Down",                  ID_HOST_DOWN
+        MENUITEM SEPARATOR
         MENUITEM "&Copy Host to Clipboard",     ID_HOST_COPYHOST
         MENUITEM SEPARATOR
     END
@@ -98,6 +101,9 @@ BEGIN
         MENUITEM "&Add Host...",                ID_HOST_ADDHOST
         MENUITEM "&Edit Host...",               ID_HOST_EDITHOST
         MENUITEM "&Remove Host",                ID_HOST_REMOVEHOST
+        MENUITEM "Move &Up",                    ID_HOST_UP
+        MENUITEM "Move &Down",                  ID_HOST_DOWN
+        MENUITEM SEPARATOR
         MENUITEM "&Copy Host to Clipboard",     ID_HOST_COPYHOST
         MENUITEM SEPARATOR
     END
@@ -290,8 +296,10 @@ STRINGTABLE
 BEGIN
     ID_HOST_POPUP           "Host options"
     ID_HOST_ADDHOST         "Add a new host\nAdd Host"
-    ID_HOST_EDITHOST        "Edit the name of the selected host\nEdit Host"
+    ID_HOST_EDITHOST        "Edit the details of the selected host\nEdit Host"
     ID_HOST_REMOVEHOST      "Remove the selected host\nRemove Host"
+    ID_HOST_UP              "Move the host up the list\nMove Up"
+    ID_HOST_DOWN            "Move the host down the list\nMove Down"
     ID_HOST_COPYHOST        "Copy the host name to the clipboard"
 END
 

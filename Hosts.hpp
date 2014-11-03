@@ -85,6 +85,9 @@ public:
 	//! Remove a host by position.
 	void remove(size_t index);
 
+	//! Swap two hosts in the collection by index.
+	void swap(size_t first, size_t second);
+
 private:
 	//
 	// Members.

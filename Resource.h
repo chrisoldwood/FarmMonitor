@@ -14,7 +14,9 @@
 #define ID_HOST_ADDHOST                 201
 #define ID_HOST_EDITHOST                202
 #define ID_HOST_REMOVEHOST              203
-#define ID_HOST_COPYHOST                204
+#define ID_HOST_UP                      204
+#define ID_HOST_DOWN                    205
+#define ID_HOST_COPYHOST                206
 #define ID_HOST_INVOKE_TOOL_1           211
 #define ID_HOST_INVOKE_TOOL_2           212
 #define ID_HOST_INVOKE_TOOL_3           213
@@ -67,6 +69,6 @@
 #define _APS_NEXT_RESOURCE_VALUE        136
 #define _APS_NEXT_COMMAND_VALUE         172
 #define _APS_NEXT_CONTROL_VALUE         1101
-#define _APS_NEXT_SYMED_VALUE           104
+#define _APS_NEXT_SYMED_VALUE           106
 #endif
 #endif

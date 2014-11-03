@@ -22,7 +22,7 @@ class CopyHostCmd : public WCL::UiCommandBase
 {
 public:
 	//! Constructor.
-	CopyHostCmd(AppWnd& appWnd, AppDlg& appDlg, WCL::ICmdController& controller);
+	CopyHostCmd(AppWnd& appWnd, AppDlg& appDlg);
 
 	//
 	// IUiCommand methods.
@@ -40,17 +40,15 @@ private:
 	//
 	AppWnd&					m_appWnd;		//! The app frame window.
 	AppDlg&					m_appDlg;		//! The app main view.
-	WCL::ICmdController&	m_controller;	//! The command dispatcher.
 };
 
 ////////////////////////////////////////////////////////////////////////////////
 //! Constructor.
 
-inline CopyHostCmd::CopyHostCmd(AppWnd& appWnd, AppDlg& appDlg, WCL::ICmdController& controller)
+inline CopyHostCmd::CopyHostCmd(AppWnd& appWnd, AppDlg& appDlg)
 	: WCL::UiCommandBase(ID_HOST_COPYHOST)
 	, m_appWnd(appWnd)
 	, m_appDlg(appDlg)
-	, m_controller(controller)
 {
 }
 

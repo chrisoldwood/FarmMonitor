@@ -90,10 +90,6 @@ void ExecuteToolCmd::buildToolsContextMenu(const Tools& tools, WCL::ContextMenu&
 	const uint beginCommandId = ID_HOST_INVOKE_TOOL_1;
 	const uint endCommandId = ID_HOST_INVOKE_TOOL_19 + 1;
 
-	menu.EnableCmd(ID_HOST_EDITHOST, hostSelected);
-	menu.EnableCmd(ID_HOST_REMOVEHOST, hostSelected);
-	menu.EnableCmd(ID_HOST_COPYHOST, hostSelected);
-
 	uint commandId = beginCommandId;
 
 	for (Tools::const_iterator it = tools.begin(); ( (it != tools.end()) && (commandId != endCommandId) );

@@ -203,6 +203,12 @@
 				RelativePath=".\ExitAppCmd.hpp">
 			</File>
 			<File
+				RelativePath=".\MoveHostDownCmd.hpp">
+			</File>
+			<File
+				RelativePath=".\MoveHostUpCmd.hpp">
+			</File>
+			<File
 				RelativePath=".\RefreshViewCmd.hpp">
 			</File>
 			<File

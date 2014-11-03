@@ -199,3 +199,17 @@ void Hosts::remove(size_t index)
 	m_hosts.erase(m_hosts.begin() + index);
 	m_modified = true;
 }
+
+////////////////////////////////////////////////////////////////////////////////
+//! Swap two hosts in the collection by index.
+
+void Hosts::swap(size_t first, size_t second)
+{
+	ASSERT(first < m_hosts.size());
+	ASSERT(second < m_hosts.size());
+
+	ConstHostPtr temp = m_hosts[first];
+	m_hosts[first] = m_hosts[second];
+	m_hosts[second] = temp;
+	m_modified = true;
+}

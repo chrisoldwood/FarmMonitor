@@ -48,6 +48,9 @@ public:
 	//! Is a host currently selected?
 	bool isHostSelected() const;
 
+	//! Get the index of the currently selected host, if available.
+	size_t getSelectedHostIndex() const;
+
 	//! Get the currently selected host, if available.
 	ConstHostPtr getSelectedHost() const;
 
@@ -67,6 +70,9 @@ public:
 	//! Replace the currently selected host.
 	void replaceHost(ConstHostPtr host);
 	
+	//! Swap two hosts in the view by index.
+	void swapHosts(size_t first, size_t second);
+
 	//! Remove the currently selected host.
 	void removeSelectedHost();
 	

@@ -8,6 +8,8 @@
 #include "ExitAppCmd.hpp"
 #include "AddHostCmd.hpp"
 #include "EditHostCmd.hpp"
+#include "MoveHostUpCmd.hpp"
+#include "MoveHostDownCmd.hpp"
 #include "RemoveHostCmd.hpp"
 #include "CopyHostCmd.hpp"
 #include "EditToolsCmd.hpp"
@@ -29,7 +31,9 @@ AppCmds::AppCmds(AppWnd& appWnd, AppDlg& appDlg, Hosts& hosts, Tools& tools)
 		WCL_EXTCMD_ENTRY(new AddHostCmd(appWnd, appDlg, *this, hosts))
 		WCL_EXTCMD_ENTRY(new EditHostCmd(appWnd, appDlg, *this, hosts))
 		WCL_EXTCMD_ENTRY(new RemoveHostCmd(appWnd, appDlg, *this))
-		WCL_EXTCMD_ENTRY(new CopyHostCmd(appWnd, appDlg, *this))
+		WCL_EXTCMD_ENTRY(new MoveHostUpCmd(appWnd, appDlg, *this, hosts))
+		WCL_EXTCMD_ENTRY(new MoveHostDownCmd(appWnd, appDlg, *this, hosts))
+		WCL_EXTCMD_ENTRY(new CopyHostCmd(appWnd, appDlg))
 
 		for (size_t i = 0, end = ID_HOST_INVOKE_TOOL_19-ID_HOST_INVOKE_TOOL_1+1; i != end; ++i)
 		{

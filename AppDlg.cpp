@@ -60,8 +60,17 @@ bool AppDlg::isHostSelected() const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+//! Get the index of the currently selected host, if available. If no host is
+//! selected it returns npos;
+
+size_t AppDlg::getSelectedHostIndex() const
+{
+	return m_hostView.Selection();
+}
+
+////////////////////////////////////////////////////////////////////////////////
 //! Get the currently selected host, if available. If no host is selected this
-//! returns and empty string.
+//! returns a null host ptr.
 
 ConstHostPtr AppDlg::getSelectedHost() const
 {
@@ -130,6 +139,24 @@ void AppDlg::replaceHost(ConstHostPtr host)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+//! Swap two hosts in the view by index.
+
+void AppDlg::swapHosts(size_t first, size_t second)
+{
+	for (size_t column = 0; column != m_hostView.NumColumns(); ++column)
+	{
+		tstring temp = m_hostView.ItemText(first, column);
+		m_hostView.ItemText(first, column, m_hostView.ItemText(second, column));
+		m_hostView.ItemText(second, column, temp);
+	}
+
+	if (m_hostView.Selection() == first)
+		m_hostView.Select(second);
+	else if (m_hostView.Selection() == second)
+		m_hostView.Select(first);
+}
+
+////////////////////////////////////////////////////////////////////////////////
 //! Remove the currently selected host.
 
 void AppDlg::removeSelectedHost()
@@ -190,6 +217,16 @@ LRESULT AppDlg::onRightClick(NMHDR& /*header*/)
 {
 	const bool       isSelection = m_hostView.IsSelection();	
 	WCL::ContextMenu menu(IDR_CONTEXT);
+
+	const bool isMoveable = (m_hostView.ItemCount() > 1);
+	const bool isFirstSelected = isSelection && (m_hostView.Selection() == 0);
+	const bool isLastSelected = isSelection && (m_hostView.Selection() == (m_hostView.ItemCount()-1));
+
+	menu.EnableCmd(ID_HOST_EDITHOST, isSelection);
+	menu.EnableCmd(ID_HOST_REMOVEHOST, isSelection);
+	menu.EnableCmd(ID_HOST_UP, isMoveable && isSelection && !isFirstSelected);
+	menu.EnableCmd(ID_HOST_DOWN, isMoveable && isSelection && !isLastSelected);
+	menu.EnableCmd(ID_HOST_COPYHOST, isSelection);
 
 	ExecuteToolCmd::buildToolsContextMenu(m_tools, menu, isSelection);
 

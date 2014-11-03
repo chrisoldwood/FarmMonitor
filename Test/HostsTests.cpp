@@ -388,5 +388,27 @@ TEST_CASE("Renaming a host replaces the item and marks the container as modified
 }
 TEST_CASE_END
 
+TEST_CASE("Two hosts can be swapped by index")
+{
+	Hosts hosts;
+
+	hosts.add(makeHost(TXT("1st host"), TXT(""), TXT(""), true));
+	hosts.add(makeHost(TXT("2nd host"), TXT(""), TXT(""), true));
+	hosts.add(makeHost(TXT("3rd host"), TXT(""), TXT(""), true));
+
+	XML::DocumentPtr config = createDocument();
+
+	hosts.save(config);
+
+	hosts.swap(0, 2);
+
+	TEST_TRUE(hosts.host(0)->m_name == TXT("3rd host"));
+
+	TEST_TRUE(hosts.host(2)->m_name == TXT("1st host"));
+
+	TEST_TRUE(hosts.isModified());
+}
+TEST_CASE_END
+
 }
 TEST_SET_END
