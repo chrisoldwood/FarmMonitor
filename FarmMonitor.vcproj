@@ -286,6 +286,12 @@
 				RelativePath=".\Model.hpp">
 			</File>
 			<File
+				RelativePath=".\Query.cpp">
+			</File>
+			<File
+				RelativePath=".\Query.hpp">
+			</File>
+			<File
 				RelativePath=".\Tool.cpp">
 			</File>
 			<File
@@ -324,6 +330,12 @@
 						Name="VCCLCompilerTool"
 						UsePrecompiledHeader="1"/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\QueryRunner.cpp">
+			</File>
+			<File
+				RelativePath=".\QueryRunner.hpp">
 			</File>
 		</Filter>
 		<File

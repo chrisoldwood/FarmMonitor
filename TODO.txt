@@ -3,5 +3,3 @@
 - Configurable monitoring interval.
 
 - Support different user names for each host.
-
-- Re-order host list.

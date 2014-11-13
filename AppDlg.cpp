@@ -17,6 +17,7 @@
 #include <WCL/ICmdController.hpp>
 #include <WCL/BusyCursor.hpp>
 #include "ExecuteToolCmd.hpp"
+#include "QueryRunner.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////
 //! Constructor.
@@ -256,7 +257,8 @@ void AppDlg::initialiseHostView()
 	m_hostView.InsertColumn(DESCRIPTION,      TXT("Description"), m_hostView.StringWidth(15), LVCFMT_LEFT);
 	m_hostView.InsertColumn(TOTAL_MEMORY,     TXT("Total Mem"),   m_hostView.StringWidth(10), LVCFMT_LEFT);
 	m_hostView.InsertColumn(FREE_MEMORY,      TXT("Free Mem"),    m_hostView.StringWidth(10), LVCFMT_LEFT);
-	m_hostView.InsertColumn(DISK_USAGE,       TXT("C: Usage"),	  m_hostView.StringWidth(10), LVCFMT_LEFT);
+	m_hostView.InsertColumn(DISK_SIZE,        TXT("C: Size"),	  m_hostView.StringWidth(10), LVCFMT_LEFT);
+	m_hostView.InsertColumn(DISK_FREE,        TXT("C: Free"),	  m_hostView.StringWidth(10), LVCFMT_LEFT);
 	m_hostView.InsertColumn(LAST_BOOTUP_TIME, TXT("Rebooted"),    m_hostView.StringWidth(20), LVCFMT_LEFT);
 	m_hostView.InsertColumn(LAST_ERROR,       TXT("Last Error"),  m_hostView.StringWidth(25), LVCFMT_LEFT);
 
@@ -322,24 +324,19 @@ void AppDlg::refreshHost(size_t index)
 
 	try
 	{
-		WMI::Connection connection(host->m_name);
-
-		const WMI::Win32_OperatingSystem::Iterator osIter = WMI::Win32_OperatingSystem::select(connection);
-
-		m_hostView.ItemText(index, TOTAL_MEMORY,     FormatMemoryValue(osIter->TotalVirtualMemorySize()));
-		m_hostView.ItemText(index, FREE_MEMORY,      FormatMemoryValue(osIter->FreeVirtualMemory()));
-		m_hostView.ItemText(index, LAST_BOOTUP_TIME, osIter->LastBootUpTime().ToString());
-
-		WMI::Win32_LogicalDisk::Iterator diskIter = WMI::Win32_LogicalDisk::select(connection);
-		WMI::Win32_LogicalDisk::Iterator diskEnd;
-
-		for (; diskIter != diskEnd; ++diskIter)
+		ConstQueryPtr queries[] =
 		{
-			if (diskIter->DeviceID() == TXT("C:"))
-			{
-				m_hostView.ItemText(index, DISK_USAGE, FormatDiskUsage(*diskIter));
-			}
-		}
+			makeQuery(TXT("Win32_OperatingSystem"), TXT("TotalVirtualMemorySize")),
+			makeQuery(TXT("Win32_OperatingSystem"), TXT("FreeVirtualMemory")),
+			makeQuery(TXT("Win32_LogicalDisk"),     TXT("Size"),      TXT("DeviceID"), TXT("C:")),
+			makeQuery(TXT("Win32_LogicalDisk"),     TXT("FreeSpace"), TXT("DeviceID"), TXT("C:")),
+			makeQuery(TXT("Win32_OperatingSystem"), TXT("LastBootUpTime")),
+		};
+
+		QueryRunner::Results results = QueryRunner::run(host->m_name, QueryRunner::Queries(queries, queries+ARRAY_SIZE(queries)));
+
+		for (size_t column = 0; column != results.size(); ++column)
+			m_hostView.ItemText(index, column+TOTAL_MEMORY, results[column]);
 
 		m_hostView.ItemImage(index, STATUS_GOOD);
 	}
@@ -355,10 +352,8 @@ void AppDlg::refreshHost(size_t index)
 
 void AppDlg::clearHost(size_t index)
 {
-	m_hostView.ItemText(index, TOTAL_MEMORY,     TXT(""));
-	m_hostView.ItemText(index, FREE_MEMORY,      TXT(""));
-	m_hostView.ItemText(index, DISK_USAGE,       TXT(""));
-	m_hostView.ItemText(index, LAST_BOOTUP_TIME, TXT(""));
-	m_hostView.ItemText(index, LAST_ERROR,       TXT(""));
+	for (size_t column = TOTAL_MEMORY; column != NUM_COLUMNS; ++column)
+		m_hostView.ItemText(index, column+TOTAL_MEMORY, TXT(""));
+
 	m_hostView.ItemImage(index, STATUS_UNKNOWN);
 }

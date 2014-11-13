@@ -166,6 +166,9 @@
 					RelativePath="..\Model.cpp">
 				</File>
 				<File
+					RelativePath="..\Query.cpp">
+				</File>
+				<File
 					RelativePath="..\Tool.cpp">
 				</File>
 				<File
@@ -195,8 +198,18 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\QueryRunnerTests.cpp">
+			</File>
+			<File
 				RelativePath=".\Test.cpp">
 			</File>
+			<Filter
+				Name="Impl"
+				Filter="">
+				<File
+					RelativePath="..\QueryRunner.cpp">
+				</File>
+			</Filter>
 		</Filter>
 	</Files>
 	<Globals>
