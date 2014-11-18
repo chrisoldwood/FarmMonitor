@@ -11,7 +11,7 @@
 #pragma once
 #endif
 
-#include "Query.hpp"
+#include "Queries.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////
 //! The runner for the WMI queries.
@@ -19,15 +19,18 @@
 class QueryRunner
 {
 public:
-	//! The type used for the collection of queries.
-	typedef std::vector<ConstQueryPtr> Queries;
+	//! The type used for the query sequence.
+	typedef Queries::const_iterator const_iterator;
 
 	//! The type used for the query results.
 	typedef std::vector<tstring> Results;
 
 public:
 	//! Execute the queries for a host.
-	static Results run(const tstring& host, const Queries& queries);
+	static Results run(const tstring& host, const ConstQueryPtr* begin, const ConstQueryPtr* end);
+
+	//! Execute the queries for a host.
+	static Results run(const tstring& host, const_iterator begin, const_iterator end);
 };
 
 #endif // APP_QUERYRUNNER_HPP

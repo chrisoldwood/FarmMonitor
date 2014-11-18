@@ -11,15 +11,25 @@
 ////////////////////////////////////////////////////////////////////////////////
 //! Execute the queries for a host.
 
-QueryRunner::Results QueryRunner::run(const tstring& host, const Queries& queries)
+QueryRunner::Results QueryRunner::run(const tstring& host, const ConstQueryPtr* begin, const ConstQueryPtr* end)
 {
-	WMI::ObjectIterator end;
+	std::vector<ConstQueryPtr> queries(begin, end);
+
+	return run(host, queries.begin(), queries.end());
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! Execute the queries for a host.
+
+QueryRunner::Results QueryRunner::run(const tstring& host, const_iterator begin, const_iterator end)
+{
+	WMI::ObjectIterator resultsEnd;
 
 	WMI::Connection connection(host);
 
 	Results results;
 
-	for (Queries::const_iterator queryIt = queries.begin(); queryIt != queries.end(); ++queryIt)
+	for (const_iterator queryIt = begin; queryIt != end; ++queryIt)
 	{
 		const ConstQueryPtr& query = *queryIt;
 
@@ -31,10 +41,10 @@ QueryRunner::Results QueryRunner::run(const tstring& host, const Queries& querie
 														query->m_filterValue.c_str());
 		}
 
-		WMI::ObjectIterator objectIt = connection.execQuery(text.c_str());
+		WMI::ObjectIterator resultsIt = connection.execQuery(text.c_str());
 
-		if (objectIt != end)
-			results.push_back(objectIt->getProperty<tstring>(query->m_wmiProperty));
+		if (resultsIt != resultsEnd)
+			results.push_back(resultsIt->getProperty<tstring>(query->m_wmiProperty));
 		else
 			results.push_back(TXT(""));
 	}

@@ -166,6 +166,9 @@
 					RelativePath="..\Model.cpp">
 				</File>
 				<File
+					RelativePath="..\Queries.cpp">
+				</File>
+				<File
 					RelativePath="..\Query.cpp">
 				</File>
 				<File

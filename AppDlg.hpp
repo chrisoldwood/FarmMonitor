@@ -21,6 +21,7 @@ namespace WCL
 class ICmdController;
 }
 class AppWnd;
+class Model;
 class Hosts;
 class Tools;
 
@@ -36,7 +37,7 @@ public:
 
 public:
 	//! Constructor.
-	AppDlg(AppWnd& appWnd, WCL::ICmdController& appCmds, Hosts& hosts, Tools& tools);
+	AppDlg(AppWnd& appWnd, WCL::ICmdController& appCmds, Model& model);
 
 	//! Destructor.
 	virtual ~AppDlg();
@@ -85,8 +86,7 @@ private:
 	//
 	AppWnd&					m_appWnd;		//!< The main window.
 	WCL::ICmdController&	m_appCmds;		//!< The command controller.
-	Hosts&					m_hosts;		//!< The hosts being monitored.
-	Tools&					m_tools;		//!< The set of external tools.
+	Model&					m_model;		//!< The data model.
 	ColumnWidths			m_finalWidths;	//!< The final width for each column.
 
 	//

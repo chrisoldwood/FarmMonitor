@@ -32,7 +32,7 @@ const tchar* CONFIG_VERSION = TXT("0.1");
 
 FarmMonitor::FarmMonitor()
 	: CApp(m_appWnd, m_appCmds)
-	, m_appWnd(m_MainThread, m_appCmds, m_model.m_hosts, m_model.m_tools)
+	, m_appWnd(m_MainThread, m_appCmds, m_model)
 	, m_appCmds(m_appWnd, m_appWnd.m_mainDlg, m_model.m_hosts, m_model.m_tools)
 {
 	m_strTitle = TXT("Farm Monitor");
@@ -97,6 +97,12 @@ bool FarmMonitor::loadConfig()
 		appConfig.readList<size_t>(TXT("UI"), TXT("ColumnWidths"), m_startWidths, m_startWidths);
 
 		m_model.loadConfig();
+
+		if ( (m_model.m_hosts.size() == 0) && (m_model.m_tools.size() == 0) 
+		  && !m_model.configFileExists() )
+		{
+			applyDefaultConfiguration();
+		}
 	}
 	catch (const Core::Exception& e)
 	{
@@ -127,4 +133,26 @@ void FarmMonitor::saveConfig()
 	{
 		FatalMsg(TXT("Failed to save the application configuration:-\n\n%s"), e.twhat());
 	}
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! Apply default model settings.
+
+void FarmMonitor::applyDefaultConfiguration()
+{
+	m_model.m_hosts.add(makeHost(TXT("localhost"), TXT(""), TXT(""), true));
+
+	m_model.m_tools.append(makeTool(TXT("Remote Desktop"), TXT("mstsc /f /v ${HOSTNAME}")));
+	m_model.m_tools.append(makeTool(TXT("Ping Host"), TXT("ping -t ${HOSTNAME}")));
+
+	ConstQueryPtr queries[] =
+	{
+		makeQuery(TXT("Total Mem"), TXT("Win32_OperatingSystem"), TXT("TotalVirtualMemorySize")),
+		makeQuery(TXT("Free Mem"),  TXT("Win32_OperatingSystem"), TXT("FreeVirtualMemory")),
+		makeQuery(TXT("C: Size"),   TXT("Win32_LogicalDisk"),     TXT("Size"),      TXT("DeviceID"), TXT("C:")),
+		makeQuery(TXT("C: Free"),   TXT("Win32_LogicalDisk"),     TXT("FreeSpace"), TXT("DeviceID"), TXT("C:")),
+		makeQuery(TXT("Rebooted"),  TXT("Win32_OperatingSystem"), TXT("LastBootUpTime")),
+	};
+
+	m_model.m_queries.append(queries, queries+ARRAY_SIZE(queries));
 }

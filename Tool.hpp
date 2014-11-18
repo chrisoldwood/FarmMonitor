@@ -11,6 +11,8 @@
 #pragma once
 #endif
 
+#include <Core/SharedPtr.hpp>
+
 ////////////////////////////////////////////////////////////////////////////////
 //! The defintion of an external tool that can be launched for a host.
 

@@ -65,6 +65,9 @@ private:
 
 	//! Save the application settings.
 	void saveConfig();
+
+	//! Apply default model settings.
+	void applyDefaultConfiguration();
 };
 
 //! The application singleton instance.

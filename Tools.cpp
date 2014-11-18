@@ -170,8 +170,7 @@ void Tools::load(const XML::DocumentPtr config)
 	{
 		XML::ElementNodePtr node = Core::dynamic_ptr_cast<XML::ElementNode>(*it);
 
-		const tstring name = node->getChild<XML::ElementNode>(0)
-		                         ->getChild<XML::TextNode>(0)->text();
+		const tstring name = node->findFirstElement(TXT("Name"))->getTextValue();
 
 		if (name.empty())
 			throw Core::ConfigurationException(TXT("The name for a tool cannot be empty"));
@@ -179,8 +178,7 @@ void Tools::load(const XML::DocumentPtr config)
 		if (Core::exists(names, name))
 			throw Core::ConfigurationException(TXT("The name for a tool cannot be duplicated"));
 
-		const tstring cmdLine = node->getChild<XML::ElementNode>(1)
-		                            ->getChild<XML::TextNode>(0)->text();
+		const tstring cmdLine = node->findFirstElement(TXT("CommandLine"))->getTextValue();
 		
 		if (cmdLine.empty())
 			throw Core::ConfigurationException(TXT("The command line for a tool cannot be empty"));

@@ -12,7 +12,6 @@
 #endif
 
 #include "Host.hpp"
-#include <Core/SharedPtr.hpp>
 #include <XML/Document.hpp>
 
 // Forward declarations.

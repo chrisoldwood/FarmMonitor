@@ -13,6 +13,7 @@
 
 #include "Hosts.hpp"
 #include "Tools.hpp"
+#include "Queries.hpp"
 
 // Forward declarations.
 class CPath;
@@ -35,10 +36,14 @@ public:
 	//
 	Hosts		m_hosts;		//!< The hosts being monitored.
 	Tools		m_tools;		//!< The external tools to invoke.
+	Queries		m_queries;		//!< The WMI queries to execute.
 
 	//
 	// Methods.
 	//
+
+	//! Query if the application data file exists.
+	bool configFileExists();
 
 	//! Load the application settings.
 	void loadConfig();

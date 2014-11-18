@@ -36,6 +36,7 @@ const tchar* DEFAULT_CONFIG_FILE = TXT("FarmMonitor.xml");
 Model::Model()
 	: m_hosts()
 	, m_tools()
+	, m_queries()
 {
 }
 
@@ -44,6 +45,16 @@ Model::Model()
 
 Model::~Model()
 {
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! Query if the application data file exists.
+
+bool Model::configFileExists()
+{
+	const CPath configFile = CPath::SpecialDir(CSIDL_APPDATA) / DEFAULT_CONFIG_FOLDER / DEFAULT_CONFIG_FILE;
+
+	return configFile.Exists();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -71,6 +82,7 @@ void Model::loadConfig(XML::DocumentPtr config)
 {
 	m_hosts.load(config);
 	m_tools.load(config);
+	m_queries.load(config);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -78,7 +90,7 @@ void Model::loadConfig(XML::DocumentPtr config)
 
 void Model::saveConfig()
 {
-	if (m_hosts.isModified() || m_tools.isModified())
+	if (m_hosts.isModified() || m_tools.isModified() || m_queries.isModified())
 	{
 		saveConfigToAppConfig();
 
@@ -110,17 +122,17 @@ void Model::saveConfig()
 
 void Model::saveConfig(XML::DocumentPtr config)
 {
-	XML::ElementNodePtr hostsRoot = XML::makeElement(TXT("Hosts"));
-	XML::ElementNodePtr toolsRoot = XML::makeElement(TXT("Tools"));
 	XML::ElementNodePtr root = XML::makeElement(TXT("FarmMonitor"));
 
 	root->setAttribute(TXT("Version"), CONFIG_VERSION);
-	root->appendChild(hostsRoot);
-	root->appendChild(toolsRoot);
+	root->appendChild(XML::makeElement(TXT("Hosts")));
+	root->appendChild(XML::makeElement(TXT("Tools")));
+	root->appendChild(XML::makeElement(TXT("Queries")));
 	config->appendChild(root);
 
 	m_hosts.save(config);
 	m_tools.save(config);
+	m_queries.save(config);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

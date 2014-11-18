@@ -286,6 +286,12 @@
 				RelativePath=".\Model.hpp">
 			</File>
 			<File
+				RelativePath=".\Queries.cpp">
+			</File>
+			<File
+				RelativePath=".\Queries.hpp">
+			</File>
+			<File
 				RelativePath=".\Query.cpp">
 			</File>
 			<File

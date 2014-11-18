@@ -18,8 +18,9 @@ Query::Query()
 ////////////////////////////////////////////////////////////////////////////////
 //! Constructor.
 
-Query::Query(const tstring& wmiClass, const tstring& wmiProperty)
-	: m_wmiClass(wmiClass)
+Query::Query(const tstring& title, const tstring& wmiClass, const tstring& wmiProperty)
+	: m_title(title)
+	, m_wmiClass(wmiClass)
 	, m_wmiProperty(wmiProperty)
 {
 }
@@ -27,8 +28,9 @@ Query::Query(const tstring& wmiClass, const tstring& wmiProperty)
 ////////////////////////////////////////////////////////////////////////////////
 //! Constructor.
 
-Query::Query(const tstring& wmiClass, const tstring& wmiProperty, const tstring& filterProperty, const tstring& filterValue)
-	: m_wmiClass(wmiClass)
+Query::Query(const tstring& title, const tstring& wmiClass, const tstring& wmiProperty, const tstring& filterProperty, const tstring& filterValue)
+	: m_title(title)
+	, m_wmiClass(wmiClass)
 	, m_wmiProperty(wmiProperty)
 	, m_filterProperty(filterProperty)
 	, m_filterValue(filterValue)

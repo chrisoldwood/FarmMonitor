@@ -5,18 +5,18 @@
 
 #include "Common.hpp"
 #include "AppWnd.hpp"
-#include "Tools.hpp"
+#include "Model.hpp"
 #include <Core/StringUtils.hpp>
 #include "ExecuteToolCmd.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////
 //! Constructor.
 
-AppWnd::AppWnd(WCL::IMsgThread& thread, WCL::ICmdController& controller, Hosts& hosts, Tools& tools)
+AppWnd::AppWnd(WCL::IMsgThread& thread, WCL::ICmdController& controller, Model& model)
 	: CDlgFrame(IDR_APPICON, m_mainDlg, false)
-	, m_mainDlg(*this, controller, hosts, tools)
+	, m_mainDlg(*this, controller, model)
 	, m_toolbar(thread, controller)
-	, m_tools(tools)
+	, m_tools(model.m_tools)
 {
 }
 

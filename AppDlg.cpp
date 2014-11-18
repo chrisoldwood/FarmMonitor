@@ -5,8 +5,7 @@
 
 #include "Common.hpp"
 #include "AppDlg.hpp"
-#include "Hosts.hpp"
-#include "Tools.hpp"
+#include "Model.hpp"
 #include "AppWnd.hpp"
 #include <WMI/Connection.hpp>
 #include <WMI/Exception.hpp>
@@ -22,12 +21,11 @@
 ////////////////////////////////////////////////////////////////////////////////
 //! Constructor.
 
-AppDlg::AppDlg(AppWnd& appWnd, WCL::ICmdController& appCmds, Hosts& hosts, Tools& tools)
+AppDlg::AppDlg(AppWnd& appWnd, WCL::ICmdController& appCmds, Model& model)
 	: CMainDlg(IDD_MAIN)
 	, m_appWnd(appWnd)
 	, m_appCmds(appCmds)
-	, m_hosts(hosts)
-	, m_tools(tools)
+	, m_model(model)
 {
 	DEFINE_CTRL_TABLE
 		CTRL(IDC_HOSTS,	&m_hostView)
@@ -80,7 +78,7 @@ ConstHostPtr AppDlg::getSelectedHost() const
 	size_t selection = m_hostView.Selection();
 
 	if (selection != Core::npos)
-		host = m_hosts.host(selection);
+		host = m_model.m_hosts.host(selection);
 
 	return host;
 }
@@ -111,7 +109,7 @@ void AppDlg::setColumnWidths(const ColumnWidths& widths)
 
 void AppDlg::addHost(ConstHostPtr host)
 {
-	const size_t index = m_hosts.add(host);
+	const size_t index = m_model.m_hosts.add(host);
 
 	addHostToView(index);
 
@@ -127,9 +125,9 @@ void AppDlg::replaceHost(ConstHostPtr host)
 	ASSERT(m_hostView.IsSelection());
 
 	const size_t selection = m_hostView.Selection();
-	const bool   renamed = (m_hosts.host(selection)->m_name != host->m_name);
+	const bool   renamed = (m_model.m_hosts.host(selection)->m_name != host->m_name);
 
-	m_hosts.replace(selection, host);
+	m_model.m_hosts.replace(selection, host);
 
 	m_hostView.ItemText(selection, HOST_NAME,   host->m_name);
 	m_hostView.ItemText(selection, ENVIRONMENT, host->m_environment);
@@ -166,7 +164,7 @@ void AppDlg::removeSelectedHost()
 
 	const size_t selection = m_hostView.Selection();
 
-	m_hosts.remove(selection);
+	m_model.m_hosts.remove(selection);
 	m_hostView.DeleteItem(selection);
 
 	if (m_hostView.ItemCount() != 0)
@@ -229,7 +227,7 @@ LRESULT AppDlg::onRightClick(NMHDR& /*header*/)
 	menu.EnableCmd(ID_HOST_DOWN, isMoveable && isSelection && !isLastSelected);
 	menu.EnableCmd(ID_HOST_COPYHOST, isSelection);
 
-	ExecuteToolCmd::buildToolsContextMenu(m_tools, menu, isSelection);
+	ExecuteToolCmd::buildToolsContextMenu(m_model.m_tools, menu, isSelection);
 
 	menu.display(m_appWnd);
 
@@ -252,17 +250,16 @@ void AppDlg::initialiseHostView()
 	m_hostView.ImageList(LVSIL_SMALL, IDB_HOST_ICONS, 16, RGB(255, 0, 255));
 	m_hostView.FullRowSelect(true);
 
-	m_hostView.InsertColumn(HOST_NAME,        TXT("Host"),        m_hostView.StringWidth(20), LVCFMT_LEFT);
-	m_hostView.InsertColumn(ENVIRONMENT,      TXT("Environment"), m_hostView.StringWidth(15), LVCFMT_LEFT);
-	m_hostView.InsertColumn(DESCRIPTION,      TXT("Description"), m_hostView.StringWidth(15), LVCFMT_LEFT);
-	m_hostView.InsertColumn(TOTAL_MEMORY,     TXT("Total Mem"),   m_hostView.StringWidth(10), LVCFMT_LEFT);
-	m_hostView.InsertColumn(FREE_MEMORY,      TXT("Free Mem"),    m_hostView.StringWidth(10), LVCFMT_LEFT);
-	m_hostView.InsertColumn(DISK_SIZE,        TXT("C: Size"),	  m_hostView.StringWidth(10), LVCFMT_LEFT);
-	m_hostView.InsertColumn(DISK_FREE,        TXT("C: Free"),	  m_hostView.StringWidth(10), LVCFMT_LEFT);
-	m_hostView.InsertColumn(LAST_BOOTUP_TIME, TXT("Rebooted"),    m_hostView.StringWidth(20), LVCFMT_LEFT);
-	m_hostView.InsertColumn(LAST_ERROR,       TXT("Last Error"),  m_hostView.StringWidth(25), LVCFMT_LEFT);
+	m_hostView.InsertColumn(HOST_NAME,   TXT("Host"),        m_hostView.StringWidth(20), LVCFMT_LEFT);
+	m_hostView.InsertColumn(ENVIRONMENT, TXT("Environment"), m_hostView.StringWidth(15), LVCFMT_LEFT);
+	m_hostView.InsertColumn(DESCRIPTION, TXT("Description"), m_hostView.StringWidth(15), LVCFMT_LEFT);
 
-	for (size_t i = 0; i != m_hosts.size(); ++i)
+	for (size_t column = 0; column != m_model.m_queries.size(); ++column)
+		m_hostView.InsertColumn(column+TOTAL_MEMORY, m_model.m_queries.query(column)->m_title.c_str(), m_hostView.StringWidth(10), LVCFMT_LEFT);
+
+	m_hostView.InsertColumn(LAST_ERROR,  TXT("Last Error"),  m_hostView.StringWidth(25), LVCFMT_LEFT);
+
+	for (size_t i = 0; i != m_model.m_hosts.size(); ++i)
 		addHostToView(i);
 }
 
@@ -271,9 +268,9 @@ void AppDlg::initialiseHostView()
 
 void AppDlg::addHostToView(size_t index)
 {
-	m_hostView.InsertItem(index,              m_hosts.host(index)->m_name, STATUS_UNKNOWN);
-	m_hostView.ItemText  (index, ENVIRONMENT, m_hosts.host(index)->m_environment);
-	m_hostView.ItemText  (index, DESCRIPTION, m_hosts.host(index)->m_description);
+	m_hostView.InsertItem(index,              m_model.m_hosts.host(index)->m_name, STATUS_UNKNOWN);
+	m_hostView.ItemText  (index, ENVIRONMENT, m_model.m_hosts.host(index)->m_environment);
+	m_hostView.ItemText  (index, DESCRIPTION, m_model.m_hosts.host(index)->m_description);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -306,7 +303,7 @@ void AppDlg::refreshView()
 {
 	CBusyCursor waitCursor;
 
-	for (size_t i = 0; i != m_hosts.size(); ++i)
+	for (size_t i = 0; i != m_model.m_hosts.size(); ++i)
 		refreshHost(i);
 }
 
@@ -317,23 +314,16 @@ void AppDlg::refreshHost(size_t index)
 {
 	clearHost(index);
 
-	ConstHostPtr host = m_hosts.host(index);
+	ConstHostPtr host = m_model.m_hosts.host(index);
 
 	if (!host->m_monitor)
 		return;
 
 	try
 	{
-		ConstQueryPtr queries[] =
-		{
-			makeQuery(TXT("Win32_OperatingSystem"), TXT("TotalVirtualMemorySize")),
-			makeQuery(TXT("Win32_OperatingSystem"), TXT("FreeVirtualMemory")),
-			makeQuery(TXT("Win32_LogicalDisk"),     TXT("Size"),      TXT("DeviceID"), TXT("C:")),
-			makeQuery(TXT("Win32_LogicalDisk"),     TXT("FreeSpace"), TXT("DeviceID"), TXT("C:")),
-			makeQuery(TXT("Win32_OperatingSystem"), TXT("LastBootUpTime")),
-		};
-
-		QueryRunner::Results results = QueryRunner::run(host->m_name, QueryRunner::Queries(queries, queries+ARRAY_SIZE(queries)));
+		QueryRunner::const_iterator begin = m_model.m_queries.begin();
+		QueryRunner::const_iterator end = m_model.m_queries.end();
+		QueryRunner::Results results = QueryRunner::run(host->m_name, begin, end);
 
 		for (size_t column = 0; column != results.size(); ++column)
 			m_hostView.ItemText(index, column+TOTAL_MEMORY, results[column]);

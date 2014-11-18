@@ -31,10 +31,10 @@ TEST_CASE("a query returns the value from the only item of a single item result 
 
 	ConstQueryPtr queries[] =
 	{
-		makeQuery(TXT("Win32_OperatingSystem"), TXT("Name")),
+		makeQuery(TXT("title"), TXT("Win32_OperatingSystem"), TXT("Name")),
 	};
 
-	QueryRunner::Results results = QueryRunner::run(localhost, QueryRunner::Queries(queries, queries+ARRAY_SIZE(queries)));
+	QueryRunner::Results results = QueryRunner::run(localhost, queries, queries+ARRAY_SIZE(queries));
 	
 	TEST_TRUE(results.size() == ARRAY_SIZE(queries));
 	TEST_TRUE(results[0] == expected);
@@ -55,13 +55,13 @@ TEST_CASE("multiple queries returns one value per query in the order defined")
 
 	ConstQueryPtr queries[] =
 	{
-		makeQuery(TXT("Win32_OperatingSystem"), TXT("Name")),
-		makeQuery(TXT("Win32_OperatingSystem"), TXT("LastBootUpTime")),
-		makeQuery(TXT("Win32_OperatingSystem"), TXT("FreeVirtualMemory")),
-		makeQuery(TXT("Win32_OperatingSystem"), TXT("Name")),
+		makeQuery(TXT("title"), TXT("Win32_OperatingSystem"), TXT("Name")),
+		makeQuery(TXT("title"), TXT("Win32_OperatingSystem"), TXT("LastBootUpTime")),
+		makeQuery(TXT("title"), TXT("Win32_OperatingSystem"), TXT("FreeVirtualMemory")),
+		makeQuery(TXT("title"), TXT("Win32_OperatingSystem"), TXT("Name")),
 	};
 
-	QueryRunner::Results results = QueryRunner::run(localhost, QueryRunner::Queries(queries, queries+ARRAY_SIZE(queries)));
+	QueryRunner::Results results = QueryRunner::run(localhost, queries, queries+ARRAY_SIZE(queries));
 	
 	TEST_TRUE(results.size() == ARRAY_SIZE(queries));
 	TEST_TRUE(results[0] == expected);
@@ -83,10 +83,10 @@ TEST_CASE("a query returns the value from the first item of the result set")
 
 	ConstQueryPtr queries[] =
 	{
-		makeQuery(TXT("Win32_LogicalDisk"), TXT("DeviceID")),
+		makeQuery(TXT("title"), TXT("Win32_LogicalDisk"), TXT("DeviceID")),
 	};
 
-	QueryRunner::Results results = QueryRunner::run(localhost, QueryRunner::Queries(queries, queries+ARRAY_SIZE(queries)));
+	QueryRunner::Results results = QueryRunner::run(localhost, queries, queries+ARRAY_SIZE(queries));
 	
 	TEST_TRUE(results.size() == ARRAY_SIZE(queries));
 	TEST_TRUE(results[0] == expected);
@@ -113,10 +113,10 @@ TEST_CASE("a query returns the value from the matching item when the result set 
 
 	ConstQueryPtr queries[] =
 	{
-		makeQuery(TXT("Win32_LogicalDisk"), TXT("DeviceID"), TXT("DeviceID"), nonFirstDevice)
+		makeQuery(TXT("title"), TXT("Win32_LogicalDisk"), TXT("DeviceID"), TXT("DeviceID"), nonFirstDevice)
 	};
 
-	QueryRunner::Results results = QueryRunner::run(localhost, QueryRunner::Queries(queries, queries+ARRAY_SIZE(queries)));
+	QueryRunner::Results results = QueryRunner::run(localhost, queries, queries+ARRAY_SIZE(queries));
 	
 	TEST_TRUE(results.size() == ARRAY_SIZE(queries));
 	TEST_TRUE(results[0] == nonFirstDevice);
@@ -127,10 +127,10 @@ TEST_CASE("a query returns an empty value when the result set is empty")
 {
 	ConstQueryPtr queries[] =
 	{
-		makeQuery(TXT("Win32_LogicalDisk"), TXT("DeviceID"), TXT("DeviceID"), TXT("invalid device id"))
+		makeQuery(TXT("title"), TXT("Win32_LogicalDisk"), TXT("DeviceID"), TXT("DeviceID"), TXT("invalid device id"))
 	};
 
-	QueryRunner::Results results = QueryRunner::run(localhost, QueryRunner::Queries(queries, queries+ARRAY_SIZE(queries)));
+	QueryRunner::Results results = QueryRunner::run(localhost, queries, queries+ARRAY_SIZE(queries));
 	
 	TEST_TRUE(results.size() == ARRAY_SIZE(queries));
 }
