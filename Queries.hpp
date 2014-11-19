@@ -56,6 +56,9 @@ public:
 	// Methods.
 	//
 
+	//! Add a query to the collection.
+	void append(ConstQueryPtr query);
+
 	//! Add a sequence of queries to the collection.
 	void append(const ConstQueryPtr* begin, const ConstQueryPtr* end);
 

@@ -151,6 +151,9 @@
 				RelativePath=".\ModelTests.cpp">
 			</File>
 			<File
+				RelativePath=".\QueriesTests.cpp">
+			</File>
+			<File
 				RelativePath=".\ToolsTests.cpp">
 			</File>
 			<Filter

@@ -13,6 +13,8 @@
 //! Default constructor.
 
 Queries::Queries()
+	: m_modified(false)
+	, m_queries()
 {
 }
 
@@ -63,6 +65,15 @@ Queries::const_iterator Queries::begin() const
 Queries::const_iterator Queries::end() const
 {
 	return m_queries.end();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! Add a query to the collection.
+
+void Queries::append(ConstQueryPtr query)
+{
+	m_queries.push_back(query);
+	m_modified = true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

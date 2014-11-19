@@ -15,6 +15,7 @@ XML::DocumentPtr createDocumentShell()
 	{
 		XML::makeElement(TXT("Hosts")),
 		XML::makeElement(TXT("Tools")),
+		XML::makeElement(TXT("Queries")),
 	};
 
 	XML::ElementNodePtr root = XML::makeElement
