@@ -149,9 +149,9 @@ void FarmMonitor::applyDefaultConfiguration()
 	{
 		makeQuery(TXT("Total Mem"), TXT("Win32_OperatingSystem"), TXT("TotalVirtualMemorySize")),
 		makeQuery(TXT("Free Mem"),  TXT("Win32_OperatingSystem"), TXT("FreeVirtualMemory")),
-		makeQuery(TXT("C: Size"),   TXT("Win32_LogicalDisk"),     TXT("Size"),      TXT("DeviceID"), TXT("C:")),
-		makeQuery(TXT("C: Free"),   TXT("Win32_LogicalDisk"),     TXT("FreeSpace"), TXT("DeviceID"), TXT("C:")),
-		makeQuery(TXT("Rebooted"),  TXT("Win32_OperatingSystem"), TXT("LastBootUpTime")),
+		makeQuery(TXT("C: Size"),   TXT("Win32_LogicalDisk"),     TXT("Size"),           TXT("DeviceID"), TXT("C:"), Query::DEFAULT_FORMAT),
+		makeQuery(TXT("C: Free"),   TXT("Win32_LogicalDisk"),     TXT("FreeSpace"),      TXT("DeviceID"), TXT("C:"), Query::DEFAULT_FORMAT),
+		makeQuery(TXT("Rebooted"),  TXT("Win32_OperatingSystem"), TXT("LastBootUpTime"), TXT(""),         TXT(""),   Query::DATETIME_FORMAT),
 	};
 
 	m_model.m_queries.append(queries, queries+ARRAY_SIZE(queries));

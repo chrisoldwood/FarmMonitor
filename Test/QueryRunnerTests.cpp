@@ -113,7 +113,7 @@ TEST_CASE("a query returns the value from the matching item when the result set 
 
 	ConstQueryPtr queries[] =
 	{
-		makeQuery(TXT("title"), TXT("Win32_LogicalDisk"), TXT("DeviceID"), TXT("DeviceID"), nonFirstDevice)
+		makeQuery(TXT("title"), TXT("Win32_LogicalDisk"), TXT("DeviceID"), TXT("DeviceID"), nonFirstDevice, Query::DEFAULT_FORMAT)
 	};
 
 	QueryRunner::Results results = QueryRunner::run(localhost, queries, queries+ARRAY_SIZE(queries));
@@ -127,12 +127,90 @@ TEST_CASE("a query returns an empty value when the result set is empty")
 {
 	ConstQueryPtr queries[] =
 	{
-		makeQuery(TXT("title"), TXT("Win32_LogicalDisk"), TXT("DeviceID"), TXT("DeviceID"), TXT("invalid device id"))
+		makeQuery(TXT("title"), TXT("Win32_LogicalDisk"), TXT("DeviceID"), TXT("DeviceID"), TXT("invalid device id"), Query::DEFAULT_FORMAT)
 	};
 
 	QueryRunner::Results results = QueryRunner::run(localhost, queries, queries+ARRAY_SIZE(queries));
 	
 	TEST_TRUE(results.size() == ARRAY_SIZE(queries));
+}
+TEST_CASE_END
+
+TEST_CASE("the default format for a value is to convert it to a string")
+{
+	const tstring NO_FORMAT = TXT("");
+
+	ConstQueryPtr queries[] =
+	{
+		makeQuery(TXT("title"), TXT("Win32_OperatingSystem"), TXT("OSType"), TXT(""), TXT(""), NO_FORMAT),
+	};
+
+	QueryRunner::Results results = QueryRunner::run(localhost, queries, queries+ARRAY_SIZE(queries));
+	
+	TEST_TRUE(results.size() == 1);
+	TEST_TRUE(results[0] != TXT(""));
+}
+TEST_CASE_END
+
+TEST_CASE("an unsupported format returns the value as an error message")
+{
+	const tstring INVALID_FORMAT = TXT("%z");
+
+	ConstQueryPtr queries[] =
+	{
+		makeQuery(TXT("title"), TXT("Win32_OperatingSystem"), TXT("OSType"), TXT(""), TXT(""), INVALID_FORMAT),
+	};
+
+	QueryRunner::Results results = QueryRunner::run(localhost, queries, queries+ARRAY_SIZE(queries));
+	
+	TEST_TRUE(results.size() == 1);
+	TEST_TRUE(results[0] == TXT("<unknown format>"));
+}
+TEST_CASE_END
+
+TEST_CASE("'%s' explicitly formats the value as a simple string")
+{
+	tstring expected;
+
+{
+	WMI::Connection connection(localhost);
+
+	const WMI::Win32_OperatingSystem::Iterator it = WMI::Win32_OperatingSystem::select(connection);
+
+	expected = it->Name();
+}
+
+	const tstring STRING_FORMAT = TXT("%s");
+
+	ConstQueryPtr queries[] =
+	{
+		makeQuery(TXT("title"), TXT("Win32_OperatingSystem"), TXT("Name"), TXT(""), TXT(""), STRING_FORMAT),
+	};
+
+	QueryRunner::Results results = QueryRunner::run(localhost, queries, queries+ARRAY_SIZE(queries));
+	
+	TEST_TRUE(results.size() == 1);
+	TEST_TRUE(results[0] == expected);
+}
+TEST_CASE_END
+
+TEST_CASE("'%t' formats the value as a date/time")
+{
+	const tstring DATETIME_FORMAT = TXT("%t");
+
+	ConstQueryPtr queries[] =
+	{
+		makeQuery(TXT("title"), TXT("Win32_OperatingSystem"), TXT("LastBootUpTime"), TXT(""), TXT(""), DATETIME_FORMAT),
+	};
+
+	QueryRunner::Results results = QueryRunner::run(localhost, queries, queries+ARRAY_SIZE(queries));
+
+	TEST_TRUE(results.size() == 1);
+	TEST_TRUE(results[0][2]  == TXT('/'));
+	TEST_TRUE(results[0][5]  == TXT('/'));
+	TEST_TRUE(results[0][10] == TXT(' '));
+	TEST_TRUE(results[0][13] == TXT(':'));
+	TEST_TRUE(results[0][16] == TXT(':'));
 }
 TEST_CASE_END
 

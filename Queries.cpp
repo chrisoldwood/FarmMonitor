@@ -120,8 +120,9 @@ void Queries::load(const XML::DocumentPtr config)
 
 		const tstring filterProperty = node->findFirstElement(TXT("FilterProperty"))->getTextValue();
 		const tstring filterValue = node->findFirstElement(TXT("FilterValue"))->getTextValue();
+		const tstring format = node->findFirstElement(TXT("Format"))->getTextValue();
 
-		queries.push_back(makeQuery(title, wmiClass, wmiProperty, filterProperty, filterValue));
+		queries.push_back(makeQuery(title, wmiClass, wmiProperty, filterProperty, filterValue, format));
 	}
 
 	std::swap(m_queries, queries);
@@ -143,6 +144,7 @@ void Queries::save(XML::DocumentPtr config)
 		XML::ElementNodePtr	wmiProperty = XML::makeElement(TXT("WMIProperty"), XML::makeText(m_queries[i]->m_wmiProperty));
 		XML::ElementNodePtr	filterProperty = XML::makeElement(TXT("FilterProperty"), XML::makeText(m_queries[i]->m_filterProperty));
 		XML::ElementNodePtr	filterValue = XML::makeElement(TXT("FilterValue"), XML::makeText(m_queries[i]->m_filterValue));
+		XML::ElementNodePtr	format = XML::makeElement(TXT("Format"), XML::makeText(m_queries[i]->m_format));
 
 		XML::ElementNodePtr	query = XML::makeElement(TXT("Query"));
 
@@ -151,6 +153,7 @@ void Queries::save(XML::DocumentPtr config)
 		query->appendChild(wmiProperty);
 		query->appendChild(filterProperty);
 		query->appendChild(filterValue);
+		query->appendChild(format);
 		queries->appendChild(query);
 	}
 

@@ -26,7 +26,8 @@ public:
 	Query(const tstring& title, const tstring& wmiClass, const tstring& wmiProperty);
 	
 	//! Constructor.
-	Query(const tstring& title, const tstring& wmiClass, const tstring& wmiProperty, const tstring& filterProperty, const tstring& filterValue);
+	Query(const tstring& title, const tstring& wmiClass, const tstring& wmiProperty,
+			const tstring& filterProperty, const tstring& filterValue, const tstring& format);
 	
 	//
 	// Members.
@@ -36,6 +37,16 @@ public:
 	tstring		m_wmiProperty;		//!< The WMI property to use.
 	tstring		m_filterProperty;	//!< The (optional) property to filter on.
 	tstring		m_filterValue;		//!< The (optional) property value to match.
+	tstring		m_format;			//!< The format to use to display the value.
+
+	//
+	// Constants.
+	//
+
+	//! The default format for a value.
+	static const tstring DEFAULT_FORMAT;
+	//! The format for a datetime value.
+	static const tstring DATETIME_FORMAT;
 };
 
 //! The default Query const smart pointer type.
@@ -52,9 +63,10 @@ inline ConstQueryPtr makeQuery(const tstring& title, const tstring& wmiClass, co
 ////////////////////////////////////////////////////////////////////////////////
 //! Create a new query.
 
-inline ConstQueryPtr makeQuery(const tstring& title, const tstring& wmiClass, const tstring& wmiProperty, const tstring& filterProperty, const tstring& filterValue)
+inline ConstQueryPtr makeQuery(const tstring& title, const tstring& wmiClass, const tstring& wmiProperty,
+								const tstring& filterProperty, const tstring& filterValue, const tstring& format)
 {
-	return ConstQueryPtr(new Query(title, wmiClass, wmiProperty, filterProperty, filterValue));
+	return ConstQueryPtr(new Query(title, wmiClass, wmiProperty, filterProperty, filterValue, format));
 }
 
 #endif // APP_QUERY_HPP

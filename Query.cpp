@@ -7,11 +7,21 @@
 #include "Query.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////
+//! Constants.
+
+const tstring Query::DEFAULT_FORMAT = TXT("%s");
+const tstring Query::DATETIME_FORMAT = TXT("%t");
+
+////////////////////////////////////////////////////////////////////////////////
 //! Default constructor.
 
 Query::Query()
-	: m_wmiClass()
+	: m_title()
+	, m_wmiClass()
 	, m_wmiProperty()
+	, m_filterProperty()
+	, m_filterValue()
+	, m_format(DEFAULT_FORMAT)
 {
 }
 
@@ -22,17 +32,22 @@ Query::Query(const tstring& title, const tstring& wmiClass, const tstring& wmiPr
 	: m_title(title)
 	, m_wmiClass(wmiClass)
 	, m_wmiProperty(wmiProperty)
+	, m_filterProperty()
+	, m_filterValue()
+	, m_format(DEFAULT_FORMAT)
 {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 //! Constructor.
 
-Query::Query(const tstring& title, const tstring& wmiClass, const tstring& wmiProperty, const tstring& filterProperty, const tstring& filterValue)
+Query::Query(const tstring& title, const tstring& wmiClass, const tstring& wmiProperty,
+				const tstring& filterProperty, const tstring& filterValue, const tstring& format)
 	: m_title(title)
 	, m_wmiClass(wmiClass)
 	, m_wmiProperty(wmiProperty)
 	, m_filterProperty(filterProperty)
 	, m_filterValue(filterValue)
+	, m_format(format)
 {
 }

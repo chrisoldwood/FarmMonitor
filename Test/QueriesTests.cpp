@@ -19,7 +19,8 @@ XML::DocumentPtr createDocument()
 }
 
 XML::DocumentPtr createDocument(const tstring& title, const tstring& wmiClass, const tstring& wmiProperty,
-									const tstring& filterProperty, const tstring& filterValue)
+									const tstring& filterProperty, const tstring& filterValue,
+									const tstring& format)
 {
 	XML::DocumentPtr    document(createDocumentShell());
 	XML::XPathIterator  it(TXT("/FarmMonitor/Queries"), document);
@@ -32,6 +33,7 @@ XML::DocumentPtr createDocument(const tstring& title, const tstring& wmiClass, c
 		XML::makeElement(TXT("WMIProperty"), XML::makeText(wmiProperty)),
 		XML::makeElement(TXT("FilterProperty"), XML::makeText(filterProperty)),
 		XML::makeElement(TXT("FilterValue"), XML::makeText(filterValue)),
+		XML::makeElement(TXT("Format"), XML::makeText(format)),
 	};
 
 	queries->appendChild(XML::makeElement
@@ -42,21 +44,28 @@ XML::DocumentPtr createDocument(const tstring& title, const tstring& wmiClass, c
 	return document;
 }
 
+XML::DocumentPtr createDocument(const tstring& title, const tstring& wmiClass, const tstring& wmiProperty)
+{
+	return createDocument(title, wmiClass, wmiProperty, TXT(""), TXT(""), TXT(""));
+}
+
 const tstring SAVED_TITLE = TXT("saved title");
-const tstring SAVED_WMI_CLASS  = TXT("saved WMI class");
-const tstring SAVED_WMI_PROPERTY  = TXT("saved WMI property");
-const tstring SAVED_FILTER_PROPERTY  = TXT("saved filter property");
-const tstring SAVED_FILTER_VALUE  = TXT("saved filter value");
+const tstring SAVED_WMI_CLASS = TXT("saved WMI class");
+const tstring SAVED_WMI_PROPERTY = TXT("saved WMI property");
+const tstring SAVED_FILTER_PROPERTY = TXT("saved filter property");
+const tstring SAVED_FILTER_VALUE = TXT("saved filter value");
+const tstring SAVED_FORMAT = TXT("%t");
 
 }
 
 TEST_SET(Queries)
 {
 	const tstring TEST_TITLE = TXT("test title");
-	const tstring TEST_WMI_CLASS  = TXT("test WMI class");
-	const tstring TEST_WMI_PROPERTY  = TXT("test WMI property");
-	const tstring TEST_FILTER_PROPERTY  = TXT("test filter property");
-	const tstring TEST_FILTER_VALUE  = TXT("test filter value");
+	const tstring TEST_WMI_CLASS = TXT("test WMI class");
+	const tstring TEST_WMI_PROPERTY = TXT("test WMI property");
+	const tstring TEST_FILTER_PROPERTY = TXT("test filter property");
+	const tstring TEST_FILTER_VALUE = TXT("test filter value");
+	const tstring TEST_FORMAT = TXT("%t");
 
 TEST_CASE("By default the container has no items and is not modified")
 {
@@ -71,7 +80,7 @@ TEST_CASE("Appending a query increases the size and marks the container as modif
 {
 	Queries queries;
 
-	queries.append(makeQuery(TEST_TITLE, TEST_WMI_CLASS, TEST_WMI_PROPERTY, TXT(""), TXT("")));
+	queries.append(makeQuery(TEST_TITLE, TEST_WMI_CLASS, TEST_WMI_PROPERTY));
 
 	TEST_TRUE(queries.size() == 1);
 	TEST_TRUE(queries.isModified());
@@ -81,7 +90,7 @@ TEST_CASE_END
 TEST_CASE("A set of queries can be loaded from an XML document")
 {
 	XML::DocumentPtr config = createDocument(SAVED_TITLE, SAVED_WMI_CLASS, SAVED_WMI_PROPERTY,
-												SAVED_FILTER_PROPERTY, SAVED_FILTER_VALUE);
+												SAVED_FILTER_PROPERTY, SAVED_FILTER_VALUE, SAVED_FORMAT);
 	Queries queries;
 
 	queries.load(config);
@@ -93,6 +102,7 @@ TEST_CASE("A set of queries can be loaded from an XML document")
 	TEST_TRUE(queries.query(0)->m_wmiProperty == SAVED_WMI_PROPERTY);
 	TEST_TRUE(queries.query(0)->m_filterProperty == SAVED_FILTER_PROPERTY);
 	TEST_TRUE(queries.query(0)->m_filterValue == SAVED_FILTER_VALUE);
+	TEST_TRUE(queries.query(0)->m_format == SAVED_FORMAT);
 }
 TEST_CASE_END
 
@@ -103,7 +113,7 @@ TEST_CASE("Loading a query with no title throws")
 	Queries queries;
 
 	XML::DocumentPtr config = createDocument(EMPTY_TITLE, SAVED_WMI_CLASS, SAVED_WMI_PROPERTY,
-												SAVED_FILTER_PROPERTY, SAVED_FILTER_VALUE);
+												SAVED_FILTER_PROPERTY, SAVED_FILTER_VALUE, SAVED_FORMAT);
 
 	TEST_THROWS(queries.load(config));
 }
@@ -116,7 +126,7 @@ TEST_CASE("Loading a query with no WMI class throws")
 	Queries queries;
 
 	XML::DocumentPtr config = createDocument(SAVED_TITLE, EMPTY_WMI_CLASS, SAVED_WMI_PROPERTY,
-												SAVED_FILTER_PROPERTY, SAVED_FILTER_VALUE);
+												SAVED_FILTER_PROPERTY, SAVED_FILTER_VALUE, SAVED_FORMAT);
 
 	TEST_THROWS(queries.load(config));
 }
@@ -129,7 +139,7 @@ TEST_CASE("Loading a query with no WMI property throws")
 	Queries queries;
 
 	XML::DocumentPtr config = createDocument(SAVED_TITLE, SAVED_WMI_CLASS, EMPTY_WMI_PROPERTY,
-												SAVED_FILTER_PROPERTY, SAVED_FILTER_VALUE);
+												SAVED_FILTER_PROPERTY, SAVED_FILTER_VALUE, SAVED_FORMAT);
 
 	TEST_THROWS(queries.load(config));
 }
@@ -138,7 +148,7 @@ TEST_CASE_END
 TEST_CASE("Loading a set of queries from an XML document replaces the existing set")
 {
 	XML::DocumentPtr config = createDocument(SAVED_TITLE, SAVED_WMI_CLASS, SAVED_WMI_PROPERTY,
-												SAVED_FILTER_PROPERTY, SAVED_FILTER_VALUE);
+												SAVED_FILTER_PROPERTY, SAVED_FILTER_VALUE, SAVED_FORMAT);
 	Queries queries;
 
 	queries.append(makeQuery(TXT("query 1"), TXT("WMI class 1"), TXT("WMI property 1")));
@@ -158,7 +168,7 @@ TEST_CASE("A set of queries can be saved to an XML document")
 	Queries          queries;
 
 	queries.append(makeQuery(TEST_TITLE, TEST_WMI_CLASS, TEST_WMI_PROPERTY,
-								TEST_FILTER_PROPERTY, TEST_FILTER_VALUE));
+								TEST_FILTER_PROPERTY, TEST_FILTER_VALUE, TEST_FORMAT));
 
 	queries.save(config);
 
@@ -206,6 +216,12 @@ TEST_CASE("A set of queries can be saved to an XML document")
 
 	TEST_TRUE(property->name() == TXT("FilterValue"));
 	TEST_TRUE(value->text() == TEST_FILTER_VALUE);
+
+	property = query->getChild<XML::ElementNode>(5);
+	value = property->getChild<XML::TextNode>(0);
+
+	TEST_TRUE(property->name() == TXT("Format"));
+	TEST_TRUE(value->text() == TEST_FORMAT);
 }
 TEST_CASE_END
 
@@ -213,7 +229,7 @@ TEST_CASE("Writing an unmodified set of queries should still write to the XML do
 {
 	Queries queries;
 
-	queries.load(createDocument(SAVED_TITLE, SAVED_WMI_CLASS, SAVED_WMI_PROPERTY, TXT(""), TXT("")));
+	queries.load(createDocument(SAVED_TITLE, SAVED_WMI_CLASS, SAVED_WMI_PROPERTY));
 
 	TEST_FALSE(queries.isModified());
 
