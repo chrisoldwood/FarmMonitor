@@ -10,6 +10,112 @@
 #include <WMI/DateTime.hpp>
 
 ////////////////////////////////////////////////////////////////////////////////
+//! Execute the queries for a host.
+
+QueryRunner::Results QueryRunner::run(WMI::Connection& connection, const ConstQueryPtr* begin, const ConstQueryPtr* end)
+{
+	std::vector<ConstQueryPtr> queries(begin, end);
+
+	return run(connection, queries.begin(), queries.end());
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! Execute the queries for a host.
+
+QueryRunner::Results QueryRunner::run(WMI::Connection& connection, const_iterator begin, const_iterator end)
+{
+	WMI::ObjectIterator resultsEnd;
+	Results             results;
+
+	for (const_iterator queryIt = begin; queryIt != end; ++queryIt)
+	{
+		const ConstQueryPtr& query = *queryIt;
+
+		tstring text = Core::fmt(TXT("SELECT * FROM %s"), query->m_wmiClass.c_str());
+
+		if (!query->m_filterProperty.empty())
+		{
+			text += Core::fmt(TXT(" WHERE %s = '%s'"), query->m_filterProperty.c_str(),
+														query->m_filterValue.c_str());
+		}
+
+		WMI::ObjectIterator resultsIt = connection.execQuery(text.c_str());
+		tstring             formattedValue = TXT("");
+
+		if (resultsIt != resultsEnd)
+		{
+			if (resultsIt->hasProperty(query->m_wmiProperty))
+			{
+				WCL::Variant value;
+
+				resultsIt->getProperty(query->m_wmiProperty, value);
+
+				formattedValue = formatValue(value, query->m_format);
+			}
+			else
+			{
+				formattedValue = TXT("#N/A");
+			}
+		}
+
+		results.push_back(formattedValue);
+	}
+
+	return results;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! Get the string used to separate groups of digits in a number.
+
+static tstring getGroupSeparator()
+{
+	int    count = ::GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_SMONTHOUSANDSEP, NULL, 0);
+	tchar* buffer = static_cast<tchar*>(_alloca(Core::numBytes<tchar>(count+1)));
+
+	buffer[0] = TXT('\0');
+
+	if (::GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_SMONTHOUSANDSEP, buffer, count+1) == 0)
+		return TXT(",");
+
+	return buffer;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! Format an integer value.
+
+static tstring formatIntegerValue(uint64 value)
+{
+	typedef tstring::reverse_iterator rev_iter;
+	typedef tstring::const_reverse_iterator c_rev_iter;
+
+	const tstring rawResult = Core::format<uint64>(value);
+
+	const size_t  numDigits = (rawResult[0] != TXT('-')) ? rawResult.length() : (rawResult.length()-1);
+	const tstring separator = getGroupSeparator();
+	const size_t  numSeps = (numDigits-1) / 3;
+	const size_t  total = rawResult.length() + (numSeps * separator.length());
+
+	tstring result = tstring(total, TXT(' '));
+
+	c_rev_iter it = rawResult.rbegin();
+	c_rev_iter end = rawResult.rend();
+
+	size_t   digits = 0;
+	size_t   seps = 0;
+	rev_iter output = result.rbegin();
+
+	while (it != end)
+	{
+		*output++ = *it++;
+
+		if ( ((++digits % 3) == 0) && (seps++ != numSeps) )
+			output = std::copy(separator.rbegin(), separator.rend(), output);
+	}
+
+	return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 //! Try and convert a string into a datetime. The format of a WMI datetime is:-
 //! YYYYMMDDHHMMSS.FFFFFF+TZO e.g. 20101008181758.546000+060
 
@@ -29,71 +135,62 @@ bool tryConvertDateTime(const tstring& value, tstring& datetime)
 ////////////////////////////////////////////////////////////////////////////////
 //! Format the value according to the custom format string.
 
-static tstring formatValue(const WMI::ObjectIterator& it, const tstring& property, const tstring& format)
+tstring QueryRunner::formatValue(const WCL::Variant& value, const tstring& format)
 {
-	WCL::Variant wmiValue;
-
-	it->getProperty(property, wmiValue);
-
-	tstring formattedValue = TXT("<unknown format>");
-
-	if (format == TXT(""))
+	try
 	{
-		formattedValue = wmiValue.format();
-	}
-	else if (format == TXT("%s"))
-	{
-		formattedValue = wmiValue.format();
-	}
-	else if (format == TXT("%t"))
-	{
-		if (!tryConvertDateTime(wmiValue.format(), formattedValue))
-			formattedValue = TXT("<non-datetime value>");
-	}	
+		tstring formattedValue = TXT("<unknown format>");
 
-	return formattedValue;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//! Execute the queries for a host.
-
-QueryRunner::Results QueryRunner::run(const tstring& host, const ConstQueryPtr* begin, const ConstQueryPtr* end)
-{
-	std::vector<ConstQueryPtr> queries(begin, end);
-
-	return run(host, queries.begin(), queries.end());
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//! Execute the queries for a host.
-
-QueryRunner::Results QueryRunner::run(const tstring& host, const_iterator begin, const_iterator end)
-{
-	WMI::ObjectIterator resultsEnd;
-
-	WMI::Connection connection(host);
-
-	Results results;
-
-	for (const_iterator queryIt = begin; queryIt != end; ++queryIt)
-	{
-		const ConstQueryPtr& query = *queryIt;
-
-		tstring text = Core::fmt(TXT("SELECT * FROM %s"), query->m_wmiClass.c_str());
-
-		if (!query->m_filterProperty.empty())
+		if (format == Query::STRING_FORMAT)
 		{
-			text += Core::fmt(TXT(" WHERE %s = '%s'"), query->m_filterProperty.c_str(),
-														query->m_filterValue.c_str());
+			formattedValue = value.format();
+		}
+		else if (format == Query::DATETIME_FORMAT)
+		{
+			if (!tryConvertDateTime(WCL::getValue<tstring>(value), formattedValue))
+				formattedValue = TXT("<non-datetime value>");
+		}	
+		else if (format == TXT("B"))
+		{
+			WCL::Variant uint64Value(value, VT_UI8);
+
+			formattedValue = formatIntegerValue(V_UI8(&uint64Value)) + TXT(" B");
+		}
+		else if (format == TXT("KB"))
+		{
+			WCL::Variant uint64Value(value, VT_UI8);
+
+			formattedValue = formatIntegerValue(V_UI8(&uint64Value) / 1024u) + TXT(" KB");
+		}
+		else if (format == TXT("MB"))
+		{
+			WCL::Variant uint64Value(value, VT_UI8);
+
+			formattedValue = formatIntegerValue(V_UI8(&uint64Value) / (1024u*1024u)) + TXT(" MB");
+		}
+		else if (format == TXT("GB"))
+		{
+			WCL::Variant uint64Value(value, VT_UI8);
+
+			formattedValue = formatIntegerValue(V_UI8(&uint64Value) / (1024u*1024u*1024u)) + TXT(" GB");
+		}
+		else if (format == TXT("KB2MB"))
+		{
+			WCL::Variant uint64Value(value, VT_UI8);
+
+			formattedValue = formatIntegerValue(V_UI8(&uint64Value) / 1024u) + TXT(" MB");
+		}
+		else if (format == TXT("KB2GB"))
+		{
+			WCL::Variant uint64Value(value, VT_UI8);
+
+			formattedValue = formatIntegerValue(V_UI8(&uint64Value) / (1024u*1024u)) + TXT(" GB");
 		}
 
-		WMI::ObjectIterator resultsIt = connection.execQuery(text.c_str());
-
-		if (resultsIt != resultsEnd)
-			results.push_back(formatValue(resultsIt, query->m_wmiProperty, query->m_format));
-		else
-			results.push_back(TXT(""));
+		return formattedValue;
 	}
-
-	return results;
+	catch (const WCL::ComException& /*e*/)
+	{
+		return TXT("#ERR");
+	}
 }

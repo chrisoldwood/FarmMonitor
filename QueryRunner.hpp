@@ -13,6 +13,17 @@
 
 #include "Queries.hpp"
 
+// Forward declarations.
+namespace WCL
+{
+class Variant;
+}
+
+namespace WMI
+{
+class Connection;
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 //! The runner for the WMI queries.
 
@@ -26,11 +37,22 @@ public:
 	typedef std::vector<tstring> Results;
 
 public:
-	//! Execute the queries for a host.
-	static Results run(const tstring& host, const ConstQueryPtr* begin, const ConstQueryPtr* end);
+	//
+	// Methods.
+	//
 
 	//! Execute the queries for a host.
-	static Results run(const tstring& host, const_iterator begin, const_iterator end);
+	static Results run(WMI::Connection& connection, const ConstQueryPtr* begin, const ConstQueryPtr* end);
+
+	//! Execute the queries for a host.
+	static Results run(WMI::Connection& connection, const_iterator begin, const_iterator end);
+
+	//
+	// Internal methods.
+	//
+	
+	//! Format the value according to the custom format string.
+	static tstring formatValue(const WCL::Variant& value, const tstring& format);
 };
 
 #endif // APP_QUERYRUNNER_HPP

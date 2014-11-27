@@ -15,15 +15,14 @@ TEST_SET(QueryRunner)
 {
 	WCL::AutoCom autoCom(COINIT_APARTMENTTHREADED);
 
-	const tstring localhost = TXT("localhost");
+	const tstring   localhost = TXT("localhost");
+	WMI::Connection connection(localhost);
 
 TEST_CASE("a query returns the value from the only item of a single item result set")
 {
 	tstring expected;
 
 {
-	WMI::Connection connection(localhost);
-
 	const WMI::Win32_OperatingSystem::Iterator it = WMI::Win32_OperatingSystem::select(connection);
 
 	expected = it->Name();
@@ -34,7 +33,7 @@ TEST_CASE("a query returns the value from the only item of a single item result 
 		makeQuery(TXT("title"), TXT("Win32_OperatingSystem"), TXT("Name")),
 	};
 
-	QueryRunner::Results results = QueryRunner::run(localhost, queries, queries+ARRAY_SIZE(queries));
+	QueryRunner::Results results = QueryRunner::run(connection, queries, queries+ARRAY_SIZE(queries));
 	
 	TEST_TRUE(results.size() == ARRAY_SIZE(queries));
 	TEST_TRUE(results[0] == expected);
@@ -46,8 +45,6 @@ TEST_CASE("multiple queries returns one value per query in the order defined")
 	tstring expected;
 
 {
-	WMI::Connection connection(localhost);
-
 	const WMI::Win32_OperatingSystem::Iterator it = WMI::Win32_OperatingSystem::select(connection);
 
 	expected = it->Name();
@@ -61,7 +58,7 @@ TEST_CASE("multiple queries returns one value per query in the order defined")
 		makeQuery(TXT("title"), TXT("Win32_OperatingSystem"), TXT("Name")),
 	};
 
-	QueryRunner::Results results = QueryRunner::run(localhost, queries, queries+ARRAY_SIZE(queries));
+	QueryRunner::Results results = QueryRunner::run(connection, queries, queries+ARRAY_SIZE(queries));
 	
 	TEST_TRUE(results.size() == ARRAY_SIZE(queries));
 	TEST_TRUE(results[0] == expected);
@@ -74,8 +71,6 @@ TEST_CASE("a query returns the value from the first item of the result set")
 	tstring expected;
 
 {
-	WMI::Connection connection(localhost);
-
 	const WMI::Win32_LogicalDisk::Iterator it = WMI::Win32_LogicalDisk::select(connection);
 
 	expected = it->DeviceID();
@@ -86,7 +81,7 @@ TEST_CASE("a query returns the value from the first item of the result set")
 		makeQuery(TXT("title"), TXT("Win32_LogicalDisk"), TXT("DeviceID")),
 	};
 
-	QueryRunner::Results results = QueryRunner::run(localhost, queries, queries+ARRAY_SIZE(queries));
+	QueryRunner::Results results = QueryRunner::run(connection, queries, queries+ARRAY_SIZE(queries));
 	
 	TEST_TRUE(results.size() == ARRAY_SIZE(queries));
 	TEST_TRUE(results[0] == expected);
@@ -98,8 +93,6 @@ TEST_CASE("a query returns the value from the matching item when the result set 
 	std::vector<tstring> devices;
 
 {
-	WMI::Connection connection(localhost);
-
 	WMI::Win32_LogicalDisk::Iterator it = WMI::Win32_LogicalDisk::select(connection);
 	WMI::Win32_LogicalDisk::Iterator end;
 
@@ -116,7 +109,7 @@ TEST_CASE("a query returns the value from the matching item when the result set 
 		makeQuery(TXT("title"), TXT("Win32_LogicalDisk"), TXT("DeviceID"), TXT("DeviceID"), nonFirstDevice, Query::DEFAULT_FORMAT)
 	};
 
-	QueryRunner::Results results = QueryRunner::run(localhost, queries, queries+ARRAY_SIZE(queries));
+	QueryRunner::Results results = QueryRunner::run(connection, queries, queries+ARRAY_SIZE(queries));
 	
 	TEST_TRUE(results.size() == ARRAY_SIZE(queries));
 	TEST_TRUE(results[0] == nonFirstDevice);
@@ -130,87 +123,145 @@ TEST_CASE("a query returns an empty value when the result set is empty")
 		makeQuery(TXT("title"), TXT("Win32_LogicalDisk"), TXT("DeviceID"), TXT("DeviceID"), TXT("invalid device id"), Query::DEFAULT_FORMAT)
 	};
 
-	QueryRunner::Results results = QueryRunner::run(localhost, queries, queries+ARRAY_SIZE(queries));
+	QueryRunner::Results results = QueryRunner::run(connection, queries, queries+ARRAY_SIZE(queries));
 	
 	TEST_TRUE(results.size() == ARRAY_SIZE(queries));
 }
 TEST_CASE_END
 
-TEST_CASE("the default format for a value is to convert it to a string")
+TEST_CASE("a query returns an error when the property does not exist")
 {
-	const tstring NO_FORMAT = TXT("");
-
 	ConstQueryPtr queries[] =
 	{
-		makeQuery(TXT("title"), TXT("Win32_OperatingSystem"), TXT("OSType"), TXT(""), TXT(""), NO_FORMAT),
+		makeQuery(TXT("title"), TXT("Win32_OperatingSystem"), TXT("Unknown Property Name")),
 	};
 
-	QueryRunner::Results results = QueryRunner::run(localhost, queries, queries+ARRAY_SIZE(queries));
+	QueryRunner::Results results = QueryRunner::run(connection, queries, queries+ARRAY_SIZE(queries));
 	
-	TEST_TRUE(results.size() == 1);
-	TEST_TRUE(results[0] != TXT(""));
+	TEST_TRUE(results.size() == ARRAY_SIZE(queries));
+	TEST_TRUE(results[0] == TXT("#N/A"));
 }
 TEST_CASE_END
 
 TEST_CASE("an unsupported format returns the value as an error message")
 {
-	const tstring INVALID_FORMAT = TXT("%z");
+	const tstring      INVALID_FORMAT = TXT("invalid format");
+	const WCL::Variant value(L"test value");
 
-	ConstQueryPtr queries[] =
-	{
-		makeQuery(TXT("title"), TXT("Win32_OperatingSystem"), TXT("OSType"), TXT(""), TXT(""), INVALID_FORMAT),
-	};
+	const tstring actual = QueryRunner::formatValue(value, INVALID_FORMAT);
 
-	QueryRunner::Results results = QueryRunner::run(localhost, queries, queries+ARRAY_SIZE(queries));
-	
-	TEST_TRUE(results.size() == 1);
-	TEST_TRUE(results[0] == TXT("<unknown format>"));
+	TEST_TRUE(actual == TXT("<unknown format>"));
 }
 TEST_CASE_END
 
 TEST_CASE("'%s' explicitly formats the value as a simple string")
 {
-	tstring expected;
+	const tstring      STRING_FORMAT = TXT("%s");
+	const tstring      expected = TXT("test value");
+	const WCL::Variant value(T2W(expected));
 
-{
-	WMI::Connection connection(localhost);
+	const tstring actual = QueryRunner::formatValue(value, STRING_FORMAT);
 
-	const WMI::Win32_OperatingSystem::Iterator it = WMI::Win32_OperatingSystem::select(connection);
-
-	expected = it->Name();
-}
-
-	const tstring STRING_FORMAT = TXT("%s");
-
-	ConstQueryPtr queries[] =
-	{
-		makeQuery(TXT("title"), TXT("Win32_OperatingSystem"), TXT("Name"), TXT(""), TXT(""), STRING_FORMAT),
-	};
-
-	QueryRunner::Results results = QueryRunner::run(localhost, queries, queries+ARRAY_SIZE(queries));
-	
-	TEST_TRUE(results.size() == 1);
-	TEST_TRUE(results[0] == expected);
+	TEST_TRUE(actual == expected);
 }
 TEST_CASE_END
 
 TEST_CASE("'%t' formats the value as a date/time")
 {
-	const tstring DATETIME_FORMAT = TXT("%t");
+	const tstring      DATETIME_FORMAT = TXT("%t");
+	const WCL::Variant value(L"20010203040506.375000+123");
 
-	ConstQueryPtr queries[] =
-	{
-		makeQuery(TXT("title"), TXT("Win32_OperatingSystem"), TXT("LastBootUpTime"), TXT(""), TXT(""), DATETIME_FORMAT),
-	};
+	const tstring actual = QueryRunner::formatValue(value, DATETIME_FORMAT);
 
-	QueryRunner::Results results = QueryRunner::run(localhost, queries, queries+ARRAY_SIZE(queries));
+	TEST_TRUE(actual == TXT("03/02/2001 04:05:06 +123"));
+}
+TEST_CASE_END
 
-	TEST_TRUE(results.size() == 1);
-	TEST_TRUE(results[0][2]  == TXT('/'));
-	TEST_TRUE(results[0][5]  == TXT('/'));
-	TEST_TRUE(results[0][10] == TXT(' '));
-	TEST_TRUE(results[0][13] == TXT(':'));
-	TEST_TRUE(results[0][16] == TXT(':'));
+TEST_CASE("'%t' formats an error when the value is not a WMI datetime")
+{
+	const tstring      DATETIME_FORMAT = TXT("%t");
+	const WCL::Variant value(L"invalid datetime");
+
+	const tstring actual = QueryRunner::formatValue(value, DATETIME_FORMAT);
+
+	TEST_TRUE(actual == TXT("<non-datetime value>"));
+}
+TEST_CASE_END
+
+TEST_CASE("'B' formats the value as a whole number of bytes")
+{
+	const tstring      BYTES_FORMAT = TXT("B");
+	const WCL::Variant value((uint32)12345);
+
+	const tstring actual = QueryRunner::formatValue(value, BYTES_FORMAT);
+
+	TEST_TRUE(actual == TXT("12,345 B"));
+}
+TEST_CASE_END
+
+TEST_CASE("'KB' formats the value as a whole number of kilobytes")
+{
+	const tstring      KILOBYTES_FORMAT = TXT("KB");
+	const WCL::Variant value((uint32)4u*1024u);
+
+	const tstring actual = QueryRunner::formatValue(value, KILOBYTES_FORMAT);
+
+	TEST_TRUE(actual == TXT("4 KB"));
+}
+TEST_CASE_END
+
+TEST_CASE("'MB' formats the value as a whole number of megabytes")
+{
+	const tstring      MEGABYTES_FORMAT = TXT("MB");
+	const WCL::Variant value((uint32)8u*1024u*1024u);
+
+	const tstring actual = QueryRunner::formatValue(value, MEGABYTES_FORMAT);
+
+	TEST_TRUE(actual == TXT("8 MB"));
+}
+TEST_CASE_END
+
+TEST_CASE("'GB' formats the value as a whole number of gigabytes")
+{
+	const tstring      GIGABYTES_FORMAT = TXT("GB");
+	const WCL::Variant value((uint64)16u*1024u*1024u*1024u);
+
+	const tstring actual = QueryRunner::formatValue(value, GIGABYTES_FORMAT);
+
+	TEST_TRUE(actual == TXT("16 GB"));
+}
+TEST_CASE_END
+
+TEST_CASE("'KB2MB' formats the value in KB as a whole number of megabytes")
+{
+	const tstring      KB2MB_FORMAT = TXT("KB2MB");
+	const WCL::Variant value((uint32)8u*1024u);
+
+	const tstring actual = QueryRunner::formatValue(value, KB2MB_FORMAT);
+
+	TEST_TRUE(actual == TXT("8 MB"));
+}
+TEST_CASE_END
+
+TEST_CASE("'KB2GB' formats the value in KB as a whole number of gigabytes")
+{
+	const tstring      KB2GB_FORMAT = TXT("KB2GB");
+	const WCL::Variant value((uint32)16u*1024u*1024u);
+
+	const tstring actual = QueryRunner::formatValue(value, KB2GB_FORMAT);
+
+	TEST_TRUE(actual == TXT("16 GB"));
+}
+TEST_CASE_END
+
+TEST_CASE("An error is returned if the value cannot be coerced")
+{
+	const tstring      BYTES_FORMAT = TXT("B");
+	const WCL::Variant value(L"text value");
+
+	const tstring actual = QueryRunner::formatValue(value, BYTES_FORMAT);
+
+	TEST_TRUE(actual == TXT("#ERR"));
 }
 TEST_CASE_END
 

@@ -120,7 +120,11 @@ void Queries::load(const XML::DocumentPtr config)
 
 		const tstring filterProperty = node->findFirstElement(TXT("FilterProperty"))->getTextValue();
 		const tstring filterValue = node->findFirstElement(TXT("FilterValue"))->getTextValue();
+
 		const tstring format = node->findFirstElement(TXT("Format"))->getTextValue();
+
+		if (format.empty())
+			throw Core::ConfigurationException(TXT("The format for a query cannot be empty"));
 
 		queries.push_back(makeQuery(title, wmiClass, wmiProperty, filterProperty, filterValue, format));
 	}

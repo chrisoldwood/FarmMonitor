@@ -43,10 +43,13 @@ public:
 	// Constants.
 	//
 
-	//! The default format for a value.
-	static const tstring DEFAULT_FORMAT;
+	//! The format for any value as a string.
+	static const tstring STRING_FORMAT;
 	//! The format for a datetime value.
 	static const tstring DATETIME_FORMAT;
+
+	//! The default format for a value.
+	static const tstring DEFAULT_FORMAT;
 };
 
 //! The default Query const smart pointer type.

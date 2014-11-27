@@ -145,6 +145,19 @@ TEST_CASE("Loading a query with no WMI property throws")
 }
 TEST_CASE_END
 
+TEST_CASE("Loading a query with no format throws")
+{
+	const tstring EMPTY_FORMAT;
+
+	Queries queries;
+
+	XML::DocumentPtr config = createDocument(SAVED_TITLE, SAVED_WMI_CLASS, SAVED_WMI_PROPERTY,
+												SAVED_FILTER_PROPERTY, SAVED_FILTER_VALUE, EMPTY_FORMAT);
+
+	TEST_THROWS(queries.load(config));
+}
+TEST_CASE_END
+
 TEST_CASE("Loading a set of queries from an XML document replaces the existing set")
 {
 	XML::DocumentPtr config = createDocument(SAVED_TITLE, SAVED_WMI_CLASS, SAVED_WMI_PROPERTY,
@@ -229,7 +242,8 @@ TEST_CASE("Writing an unmodified set of queries should still write to the XML do
 {
 	Queries queries;
 
-	queries.load(createDocument(SAVED_TITLE, SAVED_WMI_CLASS, SAVED_WMI_PROPERTY));
+	queries.load(createDocument(SAVED_TITLE, SAVED_WMI_CLASS, SAVED_WMI_PROPERTY,
+								SAVED_FILTER_PROPERTY, SAVED_FILTER_VALUE, SAVED_FORMAT));
 
 	TEST_FALSE(queries.isModified());
 

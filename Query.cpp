@@ -9,8 +9,9 @@
 ////////////////////////////////////////////////////////////////////////////////
 //! Constants.
 
-const tstring Query::DEFAULT_FORMAT = TXT("%s");
+const tstring Query::STRING_FORMAT = TXT("%s");
 const tstring Query::DATETIME_FORMAT = TXT("%t");
+const tstring Query::DEFAULT_FORMAT = STRING_FORMAT;
 
 ////////////////////////////////////////////////////////////////////////////////
 //! Default constructor.
