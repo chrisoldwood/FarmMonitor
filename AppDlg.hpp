@@ -14,6 +14,7 @@
 #include <WCL/MainDlg.hpp>
 #include <WCL/ListView.hpp>
 #include "Host.hpp"
+#include "Credentials.hpp"
 
 // Forward declarations.
 namespace WCL
@@ -88,6 +89,7 @@ private:
 	WCL::ICmdController&	m_appCmds;		//!< The command controller.
 	Model&					m_model;		//!< The data model.
 	ColumnWidths			m_finalWidths;	//!< The final width for each column.
+	Credentials				m_logons;		//!< The credential cache.
 
 	//
 	// Controls.

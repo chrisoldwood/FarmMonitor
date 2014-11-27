@@ -14,16 +14,31 @@ Host::Host()
 	, m_environment()
 	, m_description()
 	, m_monitor(true)
+	, m_logon()
 {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 //! Constructor.
 
-Host::Host(const tstring& name, const tstring& environment, const tstring& description, bool monitor)
+Host::Host(const tstring& name)
+	: m_name(name)
+	, m_environment()
+	, m_description()
+	, m_monitor(true)
+	, m_logon()
+{
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! Constructor.
+
+Host::Host(const tstring& name, const tstring& environment, const tstring& description,
+			bool monitor, const tstring& logon)
 	: m_name(name)
 	, m_environment(environment)
 	, m_description(description)
 	, m_monitor(monitor)
+	, m_logon(logon)
 {
 }

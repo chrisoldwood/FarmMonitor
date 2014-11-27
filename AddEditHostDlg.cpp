@@ -20,6 +20,7 @@ AddEditHostDlg::AddEditHostDlg(Mode mode)
 	DEFINE_CTRL_TABLE
 		CTRL(IDC_HOST_NAME,   &m_hostnameEditor)
 		CTRL(IDC_MONITOR,     &m_monitorSwitch)
+		CTRL(IDC_LOGON,	      &m_logonEditor)
 		CTRL(IDC_ENVIRONMENT, &m_environmentEditor)
 		CTRL(IDC_DESCRIPTION, &m_descriptionEditor)
 	END_CTRL_TABLE
@@ -38,6 +39,7 @@ void AddEditHostDlg::OnInitDialog()
 
 	m_hostnameEditor.Text(m_host.m_name);
 	m_monitorSwitch.Check(m_host.m_monitor);
+	m_logonEditor.Text(m_host.m_logon);
 	m_environmentEditor.Text(m_host.m_environment);
 	m_descriptionEditor.Text(m_host.m_description);
 }
@@ -65,6 +67,7 @@ bool AddEditHostDlg::OnOk()
 	m_host.m_environment = m_environmentEditor.Text();
 	m_host.m_description = m_descriptionEditor.Text();
 	m_host.m_monitor = m_monitorSwitch.IsChecked();
+	m_host.m_logon = m_logonEditor.Text();;
 
 	return true;
 }

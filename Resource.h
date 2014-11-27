@@ -10,6 +10,7 @@
 #define IDB_HOST_ICONS                  7
 #define ID_FILE_POPUP                   100
 #define ID_FILE_EXIT                    109
+#define IDD_LOGON                       136
 #define ID_HOST_POPUP                   200
 #define ID_HOST_ADDHOST                 201
 #define ID_HOST_EDITHOST                202
@@ -46,6 +47,7 @@
 #define IDC_DESCRIPTION                 1092
 #define IDC_EDIT                        1093
 #define IDC_NAME                        1093
+#define IDC_LOGON                       1093
 #define IDC_DELETE                      1094
 #define IDC_CMD_LINE                    1095
 #define IDC_COPY                        1095
@@ -54,6 +56,9 @@
 #define IDC_UP                          1098
 #define IDC_DOWN                        1099
 #define IDC_MONITOR                     1100
+#define IDC_USER                        1101
+#define IDC_EDIT2                       1102
+#define IDC_PASSWORD                    1102
 #define IDD_MAIN                        5000
 #define IDD_ABOUT                       5001
 #define IDD_ADDEDIT_HOST                5002
@@ -66,9 +71,9 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
-#define _APS_NEXT_RESOURCE_VALUE        136
+#define _APS_NEXT_RESOURCE_VALUE        137
 #define _APS_NEXT_COMMAND_VALUE         172
-#define _APS_NEXT_CONTROL_VALUE         1101
+#define _APS_NEXT_CONTROL_VALUE         1102
 #define _APS_NEXT_SYMED_VALUE           106
 #endif
 #endif

@@ -17,6 +17,7 @@
 #include <WCL/BusyCursor.hpp>
 #include "ExecuteToolCmd.hpp"
 #include "QueryRunner.hpp"
+#include "LogonDialog.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////
 //! Constructor.
@@ -26,6 +27,8 @@ AppDlg::AppDlg(AppWnd& appWnd, WCL::ICmdController& appCmds, Model& model)
 	, m_appWnd(appWnd)
 	, m_appCmds(appCmds)
 	, m_model(model)
+	, m_finalWidths()
+	, m_logons()
 {
 	DEFINE_CTRL_TABLE
 		CTRL(IDC_HOSTS,	&m_hostView)
@@ -255,7 +258,7 @@ void AppDlg::initialiseHostView()
 	m_hostView.InsertColumn(DESCRIPTION, TXT("Description"), m_hostView.StringWidth(15), LVCFMT_LEFT);
 
 	for (size_t column = 0; column != m_model.m_queries.size(); ++column)
-		m_hostView.InsertColumn(column+TOTAL_MEMORY, m_model.m_queries.query(column)->m_title.c_str(), m_hostView.StringWidth(10), LVCFMT_LEFT);
+		m_hostView.InsertColumn(column+TOTAL_MEMORY, m_model.m_queries.query(column)->m_title.c_str(), m_hostView.StringWidth(10), LVCFMT_RIGHT);
 
 	m_hostView.InsertColumn(LAST_ERROR,  TXT("Last Error"),  m_hostView.StringWidth(25), LVCFMT_LEFT);
 
@@ -318,12 +321,24 @@ void AppDlg::refreshHost(size_t index)
 
 	if (!host->m_monitor)
 		return;
+/*
+	if (!host->m_logon.empty())
+	{
+		LogonDialog dialog;
 
+		dialog.m_logon.m_user = host->m_logon;
+
+		if (dialog.RunModal(m_appWnd) != IDOK)
+			return;
+	}
+*/
 	try
 	{
 		QueryRunner::const_iterator begin = m_model.m_queries.begin();
 		QueryRunner::const_iterator end = m_model.m_queries.end();
-		QueryRunner::Results results = QueryRunner::run(host->m_name, begin, end);
+
+		WMI::Connection      connection(host->m_name);
+		QueryRunner::Results results = QueryRunner::run(connection, begin, end);
 
 		for (size_t column = 0; column != results.size(); ++column)
 			m_hostView.ItemText(index, column+TOTAL_MEMORY, results[column]);

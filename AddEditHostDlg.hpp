@@ -52,6 +52,7 @@ private:
 	//
 	CEditBox	m_hostnameEditor;
 	CCheckBox	m_monitorSwitch;
+	CEditBox	m_logonEditor;
 	CEditBox	m_environmentEditor;
 	CEditBox	m_descriptionEditor;
 

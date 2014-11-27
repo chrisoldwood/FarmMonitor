@@ -140,18 +140,18 @@ void FarmMonitor::saveConfig()
 
 void FarmMonitor::applyDefaultConfiguration()
 {
-	m_model.m_hosts.add(makeHost(TXT("localhost"), TXT(""), TXT(""), true));
+	m_model.m_hosts.add(makeHost(TXT("localhost")));
 
 	m_model.m_tools.append(makeTool(TXT("Remote Desktop"), TXT("mstsc /f /v ${HOSTNAME}")));
 	m_model.m_tools.append(makeTool(TXT("Ping Host"), TXT("ping -t ${HOSTNAME}")));
 
 	ConstQueryPtr queries[] =
 	{
-		makeQuery(TXT("Total Mem"), TXT("Win32_OperatingSystem"), TXT("TotalVirtualMemorySize")),
-		makeQuery(TXT("Free Mem"),  TXT("Win32_OperatingSystem"), TXT("FreeVirtualMemory")),
-		makeQuery(TXT("C: Size"),   TXT("Win32_LogicalDisk"),     TXT("Size"),           TXT("DeviceID"), TXT("C:"), Query::DEFAULT_FORMAT),
-		makeQuery(TXT("C: Free"),   TXT("Win32_LogicalDisk"),     TXT("FreeSpace"),      TXT("DeviceID"), TXT("C:"), Query::DEFAULT_FORMAT),
-		makeQuery(TXT("Rebooted"),  TXT("Win32_OperatingSystem"), TXT("LastBootUpTime"), TXT(""),         TXT(""),   Query::DATETIME_FORMAT),
+		makeQuery(TXT("Total Mem"), TXT("Win32_LogicalMemoryConfiguration"), TXT("TotalPhysicalMemory"),    TXT(""),         TXT(""),   TXT("KB2MB")),
+		makeQuery(TXT("Free Mem"),  TXT("Win32_LogicalMemoryConfiguration"), TXT("AvailableVirtualMemory"), TXT(""),         TXT(""),   TXT("KB2MB")),
+		makeQuery(TXT("C: Size"),   TXT("Win32_LogicalDisk"),                TXT("Size"),                   TXT("DeviceID"), TXT("C:"), TXT("GB")),
+		makeQuery(TXT("C: Free"),   TXT("Win32_LogicalDisk"),                TXT("FreeSpace"),              TXT("DeviceID"), TXT("C:"), TXT("GB")),
+		makeQuery(TXT("Rebooted"),  TXT("Win32_OperatingSystem"),            TXT("LastBootUpTime"),         TXT(""),         TXT(""),   Query::DATETIME_FORMAT),
 	};
 
 	m_model.m_queries.append(queries, queries+ARRAY_SIZE(queries));

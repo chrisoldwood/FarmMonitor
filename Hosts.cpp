@@ -87,7 +87,7 @@ void Hosts::load(WCL::IAppConfigReader& config)
 		if (host.empty())
 			throw Core::ConfigurationException(TXT("The name for a host cannot be empty"));
 		
-		hosts.push_back(makeHost(host, TXT(""), TXT(""), true));
+		hosts.push_back(makeHost(host));
 	}
 
 	std::swap(m_hosts, hosts);
@@ -132,8 +132,9 @@ void Hosts::load(const XML::DocumentPtr config)
 		const tstring environment = node->findFirstElement(TXT("Environment"))->getTextValue();
 		const tstring description = node->findFirstElement(TXT("Description"))->getTextValue();
 		const bool    monitor = Core::parse<bool>(node->findFirstElement(TXT("Monitor"))->getTextValue());
+		const tstring logon = node->findFirstElement(TXT("Logon"))->getTextValue();
 		
-		hosts.push_back(makeHost(host, environment, description, monitor));
+		hosts.push_back(makeHost(host, environment, description, monitor, logon));
 		names.insert(host);
 	}
 
@@ -157,6 +158,7 @@ void Hosts::save(XML::DocumentPtr config)
 			XML::makeElement(TXT("Environment"), XML::makeText(m_hosts[i]->m_environment)),
 			XML::makeElement(TXT("Description"), XML::makeText(m_hosts[i]->m_description)),
 			XML::makeElement(TXT("Monitor"), XML::makeText(Core::format(m_hosts[i]->m_monitor))),
+			XML::makeElement(TXT("Logon"), XML::makeText(m_hosts[i]->m_logon)),
 		};
 
 		XML::ElementNodePtr	host = XML::makeElement(TXT("Host"), properties, properties+ARRAY_SIZE(properties));

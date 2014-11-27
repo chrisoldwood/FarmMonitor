@@ -263,6 +263,12 @@
 			<File
 				RelativePath=".\HostToolsDialog.hpp">
 			</File>
+			<File
+				RelativePath=".\LogonDialog.cpp">
+			</File>
+			<File
+				RelativePath=".\LogonDialog.hpp">
+			</File>
 		</Filter>
 		<Filter
 			Name="Model"
@@ -317,10 +323,19 @@
 				RelativePath=".\Common.hpp">
 			</File>
 			<File
+				RelativePath=".\Credentials.cpp">
+			</File>
+			<File
+				RelativePath=".\Credentials.hpp">
+			</File>
+			<File
 				RelativePath=".\FarmMonitor.cpp">
 			</File>
 			<File
 				RelativePath=".\FarmMonitor.hpp">
+			</File>
+			<File
+				RelativePath=".\Logon.hpp">
 			</File>
 			<File
 				RelativePath=".\pch.cpp">
