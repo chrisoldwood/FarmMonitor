@@ -126,7 +126,7 @@ private:
 	void addHostToView(size_t index);
 
 	//! Refresh the view for a single host.
-	void refreshHost(size_t index);
+	bool refreshHost(size_t index);
 
 	//! Clear the results for the host.
 	void clearHost(size_t index);

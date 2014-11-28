@@ -305,39 +305,64 @@ tstring FormatDiskUsage(const WMI::Win32_LogicalDisk& disk)
 void AppDlg::refreshView()
 {
 	CBusyCursor waitCursor;
+	bool        abort = false;
 
-	for (size_t i = 0; i != m_model.m_hosts.size(); ++i)
-		refreshHost(i);
+	for (size_t i = 0; (i != m_model.m_hosts.size()) && (!abort); ++i)
+	{
+		if (!refreshHost(i))
+			abort = true;
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//! Refresh the view for a single host.
+//! Refresh the view for a single host. Returns true to continue or false if
+//! the refreshing is to be aborted.
 
-void AppDlg::refreshHost(size_t index)
+bool AppDlg::refreshHost(size_t index)
 {
 	clearHost(index);
 
 	ConstHostPtr host = m_model.m_hosts.host(index);
 
 	if (!host->m_monitor)
-		return;
-/*
+		return true;
+
+	ConstLogonPtr logon;
+//	bool          newLogon = false;
+
 	if (!host->m_logon.empty())
 	{
-		LogonDialog dialog;
+		logon = m_logons.find(host->m_logon);
 
-		dialog.m_logon.m_user = host->m_logon;
+		if (logon.empty())
+		{
+			LogonDialog dialog;
 
-		if (dialog.RunModal(m_appWnd) != IDOK)
-			return;
+			dialog.m_logon.m_user = host->m_logon;
+
+			if (dialog.RunModal(m_appWnd) != IDOK)
+				return false;
+
+//			logon = makeLogon(dialog.m_logon);
+//			newLogon = true;
+		}
 	}
-*/
+
 	try
 	{
 		QueryRunner::const_iterator begin = m_model.m_queries.begin();
 		QueryRunner::const_iterator end = m_model.m_queries.end();
 
-		WMI::Connection      connection(host->m_name);
+		WMI::Connection connection;
+
+		if (logon.empty())
+			connection.open(host->m_name);
+		else
+			connection.open(host->m_name, logon->m_user, logon->m_password);
+
+//		if (newLogon)
+//			m_logons.set(logon);
+
 		QueryRunner::Results results = QueryRunner::run(connection, begin, end);
 
 		for (size_t column = 0; column != results.size(); ++column)
@@ -350,6 +375,8 @@ void AppDlg::refreshHost(size_t index)
 		m_hostView.ItemText(index, LAST_ERROR, e.twhat());
 		m_hostView.ItemImage(index, STATUS_BAD);
 	}
+
+	return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

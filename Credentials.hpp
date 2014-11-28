@@ -28,7 +28,20 @@ public:
 
 	//! Destructor.
 	~Credentials();
-	
+
+	//
+	// Methods.
+	//
+
+	//! Set the logon for a user.
+	void set(ConstLogonPtr logon);
+
+	//! Find the logon for a user.
+	ConstLogonPtr find(const tstring& user) const;
+
+	//! Remove the logon for a user.
+	void remove(const tstring& user);
+
 private:
 	//
 	// Members.

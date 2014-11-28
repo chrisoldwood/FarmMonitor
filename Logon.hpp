@@ -61,4 +61,12 @@ inline ConstLogonPtr makeLogon(const tstring& user, const tstring& password)
 	return ConstLogonPtr(new Logon(user, password));
 }
 
+////////////////////////////////////////////////////////////////////////////////
+//! Create a new logon.
+
+inline ConstLogonPtr makeLogon(const Logon& logon)
+{
+	return ConstLogonPtr(new Logon(logon.m_user, logon.m_password));
+}
+
 #endif // APP_LOGON_HPP

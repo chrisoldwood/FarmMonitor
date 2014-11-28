@@ -189,6 +189,9 @@
 				RelativePath="..\Common.hpp">
 			</File>
 			<File
+				RelativePath=".\CredentialsTests.cpp">
+			</File>
+			<File
 				RelativePath=".\pch.cpp">
 				<FileConfiguration
 					Name="Debug|Win32">
@@ -212,6 +215,9 @@
 			<Filter
 				Name="Impl"
 				Filter="">
+				<File
+					RelativePath="..\Credentials.cpp">
+				</File>
 				<File
 					RelativePath="..\QueryRunner.cpp">
 				</File>
