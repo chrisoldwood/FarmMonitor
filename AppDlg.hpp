@@ -112,9 +112,6 @@ private:
 	//! Handle a right-click on the hosts view.
 	LRESULT onRightClick(NMHDR& header);
 
-	//! Handle the refresh button being clicked.
-	void onRefreshClicked();
-
 	//
 	// Internal methods.
 	//
