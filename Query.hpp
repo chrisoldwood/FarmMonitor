@@ -72,4 +72,12 @@ inline ConstQueryPtr makeQuery(const tstring& title, const tstring& wmiClass, co
 	return ConstQueryPtr(new Query(title, wmiClass, wmiProperty, filterProperty, filterValue, format));
 }
 
+////////////////////////////////////////////////////////////////////////////////
+//! Create a query by copying another.
+
+inline ConstQueryPtr makeQuery(const Query& rhs)
+{
+	return ConstQueryPtr(new Query(rhs));
+}
+
 #endif // APP_QUERY_HPP

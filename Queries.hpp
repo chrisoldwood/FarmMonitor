@@ -62,11 +62,23 @@ public:
 	//! Add a sequence of queries to the collection.
 	void append(const ConstQueryPtr* begin, const ConstQueryPtr* end);
 
+	//! Remove a query from the collection.
+	void remove(size_t index);
+
+	//! Swap two queries in the collection by index.
+	void swap(size_t first, size_t second);
+
 	//! Load the set of queries from the XML document.
 	void load(const XML::DocumentPtr config);
 
 	//! Save the set of queries to the XML document.
 	void save(XML::DocumentPtr config);
+
+	//! Create a deep copy of another collection.
+	void deepCopy(const Queries& rhs);
+
+	//! Replace the entire collection with another.
+	void replaceAll(const Queries& rhs);
 
 private:
 	//
@@ -74,6 +86,9 @@ private:
 	//
 	bool		m_modified;		//!< Has the collection been modified?
 	Collection	m_queries;		//!< The collection of queries to execute.
+
+	//! Create a deep copy of another collection.
+	void deepCopy(const Queries& rhs, bool modified);
 };
 
 #endif // APP_QUERIES_HPP

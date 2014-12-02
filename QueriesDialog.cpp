@@ -1,47 +1,49 @@
 ////////////////////////////////////////////////////////////////////////////////
-//! \file   HostToolsDialog.cpp
-//! \brief  The HostToolsDialog class definition.
+//! \file   QueriesDialog.cpp
+//! \brief  The QueriesDialog class definition.
 //! \author Chris Oldwood
 
 #include "Common.hpp"
-#include "HostToolsDialog.hpp"
-#include "HostToolDialog.hpp"
-
-//! The maximum number of tool definitions supported.
-const size_t MAX_TOOLS = ID_HOST_INVOKE_TOOL_19 - ID_HOST_INVOKE_TOOL_1 + 1;
+#include "QueriesDialog.hpp"
+#include "Resource.h"
+#include "QueryDialog.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////
 //! Default constructor.
 
-HostToolsDialog::HostToolsDialog()
-	: CDialog(IDD_HOST_TOOLS)
+QueriesDialog::QueriesDialog()
+	: CDialog(IDD_QUERIES)
 {
 	DEFINE_CTRL_TABLE
-		CTRL(IDC_TOOLS, &m_view)
+		CTRL(IDC_QUERIES, &m_view)
 	END_CTRL_TABLE
 
 	DEFINE_CTRLMSG_TABLE
-		CMD_CTRLMSG(IDC_ADD,    BN_CLICKED,      &HostToolsDialog::onAddTool)
-		CMD_CTRLMSG(IDC_COPY,   BN_CLICKED,      &HostToolsDialog::onCopyTool)
-		CMD_CTRLMSG(IDC_EDIT,   BN_CLICKED,      &HostToolsDialog::onEditTool)
-		CMD_CTRLMSG(IDC_DELETE, BN_CLICKED,      &HostToolsDialog::onDeleteTool)
-		CMD_CTRLMSG(IDC_UP,     BN_CLICKED,      &HostToolsDialog::onMoveToolUp)
-		CMD_CTRLMSG(IDC_DOWN,   BN_CLICKED,      &HostToolsDialog::onMoveToolDown)
-		NFY_CTRLMSG(IDC_TOOLS,  LVN_ITEMCHANGED, &HostToolsDialog::onToolSelected)
-		NFY_CTRLMSG(IDC_TOOLS,  NM_DBLCLK,       &HostToolsDialog::onToolDoubleClicked)
+		CMD_CTRLMSG(IDC_ADD,      BN_CLICKED,      &QueriesDialog::onAddQuery)
+		CMD_CTRLMSG(IDC_COPY,     BN_CLICKED,      &QueriesDialog::onCopyQuery)
+		CMD_CTRLMSG(IDC_EDIT,     BN_CLICKED,      &QueriesDialog::onEditQuery)
+		CMD_CTRLMSG(IDC_DELETE,   BN_CLICKED,      &QueriesDialog::onDeleteQuery)
+		CMD_CTRLMSG(IDC_UP,       BN_CLICKED,      &QueriesDialog::onMoveQueryUp)
+		CMD_CTRLMSG(IDC_DOWN,     BN_CLICKED,      &QueriesDialog::onMoveQueryDown)
+		NFY_CTRLMSG(IDC_QUERIES,  LVN_ITEMCHANGED, &QueriesDialog::onQuerySelected)
+		NFY_CTRLMSG(IDC_QUERIES,  NM_DBLCLK,       &QueriesDialog::onQueryDoubleClicked)
 	END_CTRLMSG_TABLE
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 //! Dialog initialisation handler.
 
-void HostToolsDialog::OnInitDialog()
+void QueriesDialog::OnInitDialog()
 {
-	m_view.InsertColumn(TOOL_NAME,    TXT("Tool"),         m_view.StringWidth(25));
-	m_view.InsertColumn(COMMAND_LINE, TXT("Command Line"), m_view.StringWidth(45));
+	m_view.InsertColumn(TITLE,           TXT("Title"),           m_view.StringWidth(15));
+	m_view.InsertColumn(WMI_CLASS,       TXT("WMI Class"),       m_view.StringWidth(35));
+	m_view.InsertColumn(WMI_PROPERTY,    TXT("WMI Property"),    m_view.StringWidth(20));
+	m_view.InsertColumn(FILTER_PROPERTY, TXT("Filter Property"), m_view.StringWidth(20));
+	m_view.InsertColumn(FILTER_VALUE,    TXT("Filter Value"),    m_view.StringWidth(15));
+	m_view.InsertColumn(FORMAT,          TXT("Format"),          m_view.StringWidth(10));
 
-	for (Tools::const_iterator it = m_tools.begin(); it != m_tools.end(); ++it)
-		addItemToView(*it, (it == m_tools.begin()));
+	for (Queries::const_iterator it = m_queries.begin(); it != m_queries.end(); ++it)
+		addItemToView(*it, (it == m_queries.begin()));
 
 	updateUi();
 }
@@ -49,15 +51,15 @@ void HostToolsDialog::OnInitDialog()
 ////////////////////////////////////////////////////////////////////////////////
 //! OK button handler.
 
-bool HostToolsDialog::OnOk()
+bool QueriesDialog::OnOk()
 {
 	return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//! Tools view selection change handler.
+//! Queries view selection change handler.
 
-LRESULT HostToolsDialog::onToolSelected(NMHDR& header)
+LRESULT QueriesDialog::onQuerySelected(NMHDR& header)
 {
 	const NMLISTVIEW& message = reinterpret_cast<const NMLISTVIEW&>(header);
 
@@ -68,22 +70,23 @@ LRESULT HostToolsDialog::onToolSelected(NMHDR& header)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//! Double-clicked tool.
+//! Double-clicked query.
 
-LRESULT HostToolsDialog::onToolDoubleClicked(NMHDR& /*header*/)
+LRESULT QueriesDialog::onQueryDoubleClicked(NMHDR& /*header*/)
 {
 	if (m_view.IsSelection())
-		onEditTool();
+		onEditQuery();
 
 	return 0;
 }
 
+
 ////////////////////////////////////////////////////////////////////////////////
 //! Add button handler.
 
-void HostToolsDialog::onAddTool()
+void QueriesDialog::onAddQuery()
 {
-	HostToolDialog dialog;
+/*	QueryDialog dialog;
 
 	for (Tools::const_iterator it = m_tools.begin(); it != m_tools.end(); ++it)
 		dialog.m_usedNames.insert((*it)->m_name);
@@ -96,20 +99,20 @@ void HostToolsDialog::onAddTool()
 
 		addItemToView(tool, true);
 		updateUi();
-	}
+	}*/
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 //! Copy button handler.
 
-void HostToolsDialog::onCopyTool()
+void QueriesDialog::onCopyQuery()
 {
 	ASSERT(m_view.IsSelection());
 
-	const size_t       selection = m_view.Selection();
-	const ConstToolPtr source = m_tools.tool(selection);
-
-	HostToolDialog dialog;
+	const size_t        selection = m_view.Selection();
+	const ConstQueryPtr source = m_queries.query(selection);
+/*
+	QueryDialog dialog;
 
 	dialog.m_tool = *source;
 
@@ -124,20 +127,20 @@ void HostToolsDialog::onCopyTool()
 
 		addItemToView(tool, true);
 		updateUi();
-	}
+	}*/
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 //! Edit button handler.
 
-void HostToolsDialog::onEditTool()
+void QueriesDialog::onEditQuery()
 {
 	ASSERT(m_view.IsSelection());
 
-	const size_t       selection = m_view.Selection();
-	const ConstToolPtr original = m_tools.tool(selection);
-
-	HostToolDialog dialog;
+	const size_t        selection = m_view.Selection();
+	const ConstQueryPtr original = m_queries.query(selection);
+/*
+	QueryDialog dialog;
 
 	dialog.m_tool = *original;
 
@@ -155,20 +158,20 @@ void HostToolsDialog::onEditTool()
 
 		updateViewItem(selection, edited);
 		updateUi();
-	}
+	}*/
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 //! Delete button handler.
 
-void HostToolsDialog::onDeleteTool()
+void QueriesDialog::onDeleteQuery()
 {
 	ASSERT(m_view.IsSelection());
 
 	const size_t selection = m_view.Selection();
 
 	m_view.DeleteItem(selection, true);
-	m_tools.remove(selection);
+	m_queries.remove(selection);
 
 	updateUi();
 }
@@ -176,17 +179,17 @@ void HostToolsDialog::onDeleteTool()
 ////////////////////////////////////////////////////////////////////////////////
 //! Up button handler.
 
-void HostToolsDialog::onMoveToolUp()
+void QueriesDialog::onMoveQueryUp()
 {
 	ASSERT(m_view.IsSelection());
 	ASSERT(m_view.Selection() != 0);
 
 	const size_t selection = m_view.Selection();
 
-	m_tools.swap(selection, selection-1);
+	m_queries.swap(selection, selection-1);
 
-	updateViewItem(selection,   m_tools.tool(selection));
-	updateViewItem(selection-1, m_tools.tool(selection-1));
+	updateViewItem(selection,   m_queries.query(selection));
+	updateViewItem(selection-1, m_queries.query(selection-1));
 
 	m_view.Select(selection-1);
 }
@@ -194,17 +197,17 @@ void HostToolsDialog::onMoveToolUp()
 ////////////////////////////////////////////////////////////////////////////////
 //! Down button handler.
 
-void HostToolsDialog::onMoveToolDown()
+void QueriesDialog::onMoveQueryDown()
 {
 	ASSERT(m_view.IsSelection());
 	ASSERT(m_view.Selection() != (m_view.ItemCount()-1));
 
 	const size_t selection = m_view.Selection();
 
-	m_tools.swap(selection, selection+1);
+	m_queries.swap(selection, selection+1);
 
-	updateViewItem(selection,   m_tools.tool(selection));
-	updateViewItem(selection+1, m_tools.tool(selection+1));
+	updateViewItem(selection,   m_queries.query(selection));
+	updateViewItem(selection+1, m_queries.query(selection+1));
 
 	m_view.Select(selection+1);
 }
@@ -212,16 +215,15 @@ void HostToolsDialog::onMoveToolDown()
 ////////////////////////////////////////////////////////////////////////////////
 //! Update the state of the UI.
 
-void HostToolsDialog::updateUi()
+void QueriesDialog::updateUi()
 {
 	const bool isSelection = m_view.IsSelection();
-	const bool maxDefined = (m_view.ItemCount() == MAX_TOOLS);
 	const bool isMoveable = (m_view.ItemCount() > 1);
 	const bool isFirstSelected = isSelection && (m_view.Selection() == 0);
 	const bool isLastSelected = isSelection && (m_view.Selection() == (m_view.ItemCount()-1));
 
-	Control(IDC_ADD).Enable(!maxDefined);
-	Control(IDC_COPY).Enable(!maxDefined && isSelection);
+	Control(IDC_ADD).Enable(true);
+	Control(IDC_COPY).Enable(isSelection);
 	Control(IDC_EDIT).Enable(isSelection);
 	Control(IDC_DELETE).Enable(isSelection);
 	Control(IDC_UP).Enable(isMoveable && isSelection && !isFirstSelected);
@@ -231,11 +233,11 @@ void HostToolsDialog::updateUi()
 ////////////////////////////////////////////////////////////////////////////////
 //! Add an item to the view.
 
-void HostToolsDialog::addItemToView(ConstToolPtr tool, bool select)
+void QueriesDialog::addItemToView(ConstQueryPtr query, bool select)
 {
-	const size_t row = m_view.AppendItem(tool->m_name);
+	const size_t row = m_view.AppendItem(query->m_title);
 
-	updateViewItem(row, tool);
+	updateViewItem(row, query);
 
 	if (select)
 		m_view.Select(row);
@@ -244,8 +246,12 @@ void HostToolsDialog::addItemToView(ConstToolPtr tool, bool select)
 ////////////////////////////////////////////////////////////////////////////////
 //! Update an item in the view.
 
-void HostToolsDialog::updateViewItem(size_t row, ConstToolPtr tool)
+void QueriesDialog::updateViewItem(size_t row, ConstQueryPtr query)
 {
-	m_view.ItemText(row, TOOL_NAME,    tool->m_name);
-	m_view.ItemText(row, COMMAND_LINE, tool->m_commandLine);
+	m_view.ItemText(row, TITLE,	          query->m_title);
+	m_view.ItemText(row, WMI_CLASS,       query->m_wmiClass);
+	m_view.ItemText(row, WMI_PROPERTY,    query->m_wmiProperty);
+	m_view.ItemText(row, FILTER_PROPERTY, query->m_filterProperty);
+	m_view.ItemText(row, FILTER_VALUE,    query->m_filterValue);
+	m_view.ItemText(row, FORMAT,          query->m_format);
 }

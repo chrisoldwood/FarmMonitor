@@ -188,6 +188,12 @@
 				RelativePath=".\EditHostCmd.hpp">
 			</File>
 			<File
+				RelativePath=".\EditQueriesCmd.cpp">
+			</File>
+			<File
+				RelativePath=".\EditQueriesCmd.hpp">
+			</File>
+			<File
 				RelativePath=".\EditToolsCmd.cpp">
 			</File>
 			<File
@@ -268,6 +274,18 @@
 			</File>
 			<File
 				RelativePath=".\LogonDialog.hpp">
+			</File>
+			<File
+				RelativePath=".\QueriesDialog.cpp">
+			</File>
+			<File
+				RelativePath=".\QueriesDialog.hpp">
+			</File>
+			<File
+				RelativePath=".\QueryDialog.cpp">
+			</File>
+			<File
+				RelativePath=".\QueryDialog.hpp">
 			</File>
 		</Filter>
 		<Filter

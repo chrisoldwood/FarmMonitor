@@ -11,6 +11,9 @@
 #define ID_FILE_POPUP                   100
 #define ID_FILE_EXIT                    109
 #define IDD_LOGON                       136
+#define IDD_QUERIES                     137
+#define IDD_DIALOG1                     138
+#define IDD_QUERY                       138
 #define ID_HOST_POPUP                   200
 #define ID_HOST_ADDHOST                 201
 #define ID_HOST_EDITHOST                202
@@ -29,7 +32,8 @@
 #define ID_HOST_INVOKE_TOOL_9           219
 #define ID_HOST_INVOKE_TOOL_19          229
 #define ID_VIEW_POPUP                   300
-#define ID_VIEW_REFRESH                 301
+#define ID_VIEW_QUERIES                 301
+#define ID_VIEW_REFRESH                 302
 #define ID_TOOLS_POPUP                  400
 #define ID_TOOLS_HOSTTOOLS              401
 #define ID_HELP_POPUP                   900
@@ -59,6 +63,7 @@
 #define IDC_USER                        1101
 #define IDC_EDIT2                       1102
 #define IDC_PASSWORD                    1102
+#define IDC_QUERIES                     1102
 #define IDD_MAIN                        5000
 #define IDD_ABOUT                       5001
 #define IDD_ADDEDIT_HOST                5002
@@ -71,9 +76,9 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
-#define _APS_NEXT_RESOURCE_VALUE        137
-#define _APS_NEXT_COMMAND_VALUE         172
-#define _APS_NEXT_CONTROL_VALUE         1102
+#define _APS_NEXT_RESOURCE_VALUE        139
+#define _APS_NEXT_COMMAND_VALUE         173
+#define _APS_NEXT_CONTROL_VALUE         1103
 #define _APS_NEXT_SYMED_VALUE           106
 #endif
 #endif

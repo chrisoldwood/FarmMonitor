@@ -16,8 +16,7 @@
 // Forward declarations.
 class AppWnd;
 class AppDlg;
-class Hosts;
-class Tools;
+class Model;
 
 ////////////////////////////////////////////////////////////////////////////////
 //! The application command controller.
@@ -26,7 +25,7 @@ class AppCmds : public WCL::ExternalCmdController
 {
 public:
 	//! Constructor.
-	AppCmds(AppWnd& appWnd, AppDlg& appDlg, Hosts& hosts, Tools& tools);
+	AppCmds(AppWnd& appWnd, AppDlg& appDlg, Model& model);
 
 	//! Destructor.
 	virtual ~AppCmds();

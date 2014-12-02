@@ -77,6 +77,9 @@ public:
 
 	//! Remove the currently selected host.
 	void removeSelectedHost();
+
+	//! Rebuild the view.
+	void rebuildView();
 	
 	//! Refresh the hosts view.
 	void refreshView();

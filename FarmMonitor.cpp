@@ -33,7 +33,7 @@ const tchar* CONFIG_VERSION = TXT("0.1");
 FarmMonitor::FarmMonitor()
 	: CApp(m_appWnd, m_appCmds)
 	, m_appWnd(m_MainThread, m_appCmds, m_model)
-	, m_appCmds(m_appWnd, m_appWnd.m_mainDlg, m_model.m_hosts, m_model.m_tools)
+	, m_appCmds(m_appWnd, m_appWnd.m_mainDlg, m_model)
 {
 	m_strTitle = TXT("Farm Monitor");
 }

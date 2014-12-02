@@ -88,6 +88,31 @@ void Queries::append(const ConstQueryPtr* begin, const ConstQueryPtr* end)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+//! Remove a query from the collection.
+
+void Queries::remove(size_t index)
+{
+	ASSERT(index < m_queries.size());
+
+	m_queries.erase(m_queries.begin() + index);
+	m_modified = true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! Swap two queries in the collection by index.
+
+void Queries::swap(size_t first, size_t second)
+{
+	ASSERT(first < m_queries.size());
+	ASSERT(second < m_queries.size());
+
+	ConstQueryPtr temp = m_queries[first];
+	m_queries[first] = m_queries[second];
+	m_queries[second] = temp;
+	m_modified = true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 //! Load the set of queries from the XML document.
 
 void Queries::load(const XML::DocumentPtr config)
@@ -162,4 +187,34 @@ void Queries::save(XML::DocumentPtr config)
 	}
 
 	m_modified = false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! Create a deep copy of another collection.
+
+void Queries::deepCopy(const Queries& rhs)
+{
+	deepCopy(rhs, false);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! Replace the entire collection with another.
+
+void Queries::replaceAll(const Queries& rhs)
+{
+	deepCopy(rhs, true);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! Create a deep copy of another collection.
+
+void Queries::deepCopy(const Queries& rhs, bool modified)
+{
+	Collection queries;
+
+	for (const_iterator it = rhs.begin(); it != rhs.end(); ++it)
+		queries.push_back(makeQuery(*(*it)));
+
+	std::swap(m_queries, queries);
+	m_modified = modified;
 }

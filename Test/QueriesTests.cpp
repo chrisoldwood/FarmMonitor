@@ -259,5 +259,81 @@ TEST_CASE("Writing an unmodified set of queries should still write to the XML do
 }
 TEST_CASE_END
 
+TEST_CASE("Removing a query decreses the size and marks the container as modified")
+{
+	XML::DocumentPtr config = createDocument(SAVED_TITLE, SAVED_WMI_CLASS, SAVED_WMI_PROPERTY,
+												SAVED_FILTER_PROPERTY, SAVED_FILTER_VALUE, SAVED_FORMAT);
+	Queries          queries;
+
+	queries.load(config);
+	queries.remove(0);
+
+	TEST_TRUE(queries.isModified());
+	TEST_TRUE(queries.size() == 0);
+}
+TEST_CASE_END
+
+TEST_CASE("A deep copy of the container replaces the existing contents and becomes unmodified")
+{
+	Queries lhs;
+
+	lhs.append(makeQuery(TEST_TITLE, TEST_WMI_CLASS, TEST_WMI_PROPERTY));
+
+	Queries rhs;
+
+	rhs.append(makeQuery(TXT("to be replaced 1"), TXT("to be replaced 1"), TXT("to be replaced 1")));
+	rhs.append(makeQuery(TXT("to be replaced 2"), TXT("to be replaced 2"), TXT("to be replaced 2")));
+	rhs.deepCopy(lhs);
+
+	lhs.remove(0);
+
+	TEST_FALSE(rhs.isModified());
+	TEST_TRUE(rhs.size() == 1);
+}
+TEST_CASE_END
+
+TEST_CASE("Replacing the container contents also becomes modified")
+{
+	Queries lhs;
+
+	lhs.append(makeQuery(TEST_TITLE, TEST_WMI_CLASS, TEST_WMI_PROPERTY));
+
+	Queries rhs;
+
+	rhs.append(makeQuery(TXT("to be replaced 1"), TXT("to be replaced 1"), TXT("to be replaced 1")));
+	rhs.append(makeQuery(TXT("to be replaced 2"), TXT("to be replaced 2"), TXT("to be replaced 2")));
+	rhs.replaceAll(lhs);
+
+	TEST_TRUE(rhs.isModified());
+	TEST_TRUE(rhs.size() == 1);
+}
+TEST_CASE_END
+
+TEST_CASE("Two queries can be swapped by index")
+{
+	Queries queries;
+
+	queries.append(makeQuery(TXT("1st query"), TXT("1st class"), TXT("1st property")));
+	queries.append(makeQuery(TXT("2nd query"), TXT("2nd class"), TXT("2nd property")));
+	queries.append(makeQuery(TXT("3rd query"), TXT("3rd class"), TXT("3rd property")));
+
+	XML::DocumentPtr config = createDocument();
+
+	queries.save(config);
+
+	queries.swap(0, 2);
+
+	TEST_TRUE(queries.query(0)->m_title == TXT("3rd query"));
+	TEST_TRUE(queries.query(0)->m_wmiClass ==TXT("3rd class"));
+	TEST_TRUE(queries.query(0)->m_wmiProperty ==TXT("3rd property"));
+
+	TEST_TRUE(queries.query(2)->m_title == TXT("1st query"));
+	TEST_TRUE(queries.query(2)->m_wmiClass == TXT("1st class"));
+	TEST_TRUE(queries.query(2)->m_wmiProperty ==TXT("1st property"));
+
+	TEST_TRUE(queries.isModified());
+}
+TEST_CASE_END
+
 }
 TEST_SET_END

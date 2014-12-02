@@ -1,0 +1,36 @@
+////////////////////////////////////////////////////////////////////////////////
+//! \file   QueryDialog.cpp
+//! \brief  The QueryDialog class definition.
+//! \author Chris Oldwood
+
+#include "Common.hpp"
+#include "QueryDialog.hpp"
+#include "Resource.h"
+
+////////////////////////////////////////////////////////////////////////////////
+//! Default constructor.
+
+QueryDialog::QueryDialog()
+	: CDialog(IDD_QUERY)
+{
+	DEFINE_CTRL_TABLE
+	END_CTRL_TABLE
+
+	DEFINE_CTRLMSG_TABLE
+	END_CTRLMSG_TABLE
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! Dialog initialisation handler.
+
+void QueryDialog::OnInitDialog()
+{
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! OK button handler.
+
+bool QueryDialog::OnOk()
+{
+	return true;
+}
