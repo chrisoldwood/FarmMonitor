@@ -12,7 +12,7 @@
 #endif
 
 #include <WCL/UiCommandBase.hpp>
-#include "AddEditHostDlg.hpp"
+#include "EditHostDialog.hpp"
 #include "AppWnd.hpp"
 #include "Hosts.hpp"
 
@@ -59,14 +59,14 @@ inline AddHostCmd::AddHostCmd(AppWnd& appWnd, AppDlg& appDlg, WCL::ICmdControlle
 
 inline void AddHostCmd::execute()
 {
-	AddEditHostDlg dlg(AddEditHostDlg::ADD_HOST);
+	EditHostDialog dialog(EditHostDialog::ADD_HOST);
 
 	for (Hosts::const_iterator it = m_hosts.begin(); it != m_hosts.end(); ++it)
-		dlg.m_hosts.insert((*it)->m_name);
+		dialog.m_hosts.insert((*it)->m_name);
 
-	if (dlg.RunModal(m_appWnd) == IDOK)
+	if (dialog.RunModal(m_appWnd) == IDOK)
 	{
-		m_appDlg.addHost(makeHost(dlg.m_host));
+		m_appDlg.addHost(makeHost(dialog.m_host));
 
 		m_controller.UpdateUI();
 	}

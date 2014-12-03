@@ -1,10 +1,10 @@
 ////////////////////////////////////////////////////////////////////////////////
-//! \file   AddEditHostDlg.cpp
-//! \brief  The AddEditHostDlg class definition.
+//! \file   EditHostDialog.cpp
+//! \brief  The EditHostDialog class definition.
 //! \author Chris Oldwood
 
 #include "Common.hpp"
-#include "AddEditHostDlg.hpp"
+#include "EditHostDialog.hpp"
 #include <NCL/Socket.hpp>
 #include <WCL/BusyCursor.hpp>
 #include <NCL/AutoWinSock.hpp>
@@ -13,7 +13,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 //! Constructor.
 
-AddEditHostDlg::AddEditHostDlg(Mode mode)
+EditHostDialog::EditHostDialog(Mode mode)
 	: CDialog(IDD_ADDEDIT_HOST)
 	, m_mode(mode)
 {
@@ -26,14 +26,14 @@ AddEditHostDlg::AddEditHostDlg(Mode mode)
 	END_CTRL_TABLE
 
 	DEFINE_CTRLMSG_TABLE
-		CMD_CTRLMSG(IDC_CHECK_HOST, BN_CLICKED, &AddEditHostDlg::onCheckHost)
+		CMD_CTRLMSG(IDC_CHECK_HOST, BN_CLICKED, &EditHostDialog::onCheckHost)
 	END_CTRLMSG_TABLE
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 //! Dialog initialisation handler.
 
-void AddEditHostDlg::OnInitDialog()
+void EditHostDialog::OnInitDialog()
 {
 	Title((m_mode == ADD_HOST) ? TXT("Add Host") : TXT("Edit Host"));
 
@@ -47,7 +47,7 @@ void AddEditHostDlg::OnInitDialog()
 ////////////////////////////////////////////////////////////////////////////////
 //! OK button handler.
 
-bool AddEditHostDlg::OnOk()
+bool EditHostDialog::OnOk()
 {
 	if (m_hostnameEditor.TextLength() == 0)
 	{
@@ -75,7 +75,7 @@ bool AddEditHostDlg::OnOk()
 ////////////////////////////////////////////////////////////////////////////////
 //! Check host button handler.
 
-void AddEditHostDlg::onCheckHost()
+void EditHostDialog::onCheckHost()
 {
 	if (m_hostnameEditor.TextLength() == 0)
 	{

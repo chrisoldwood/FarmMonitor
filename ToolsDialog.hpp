@@ -1,11 +1,11 @@
 ////////////////////////////////////////////////////////////////////////////////
-//! \file   HostToolsDialog.hpp
-//! \brief  The HostToolsDialog class declaration.
+//! \file   ToolsDialog.hpp
+//! \brief  The ToolsDialog class declaration.
 //! \author Chris Oldwood
 
 // Check for previous inclusion
-#ifndef HOSTTOOLSDIALOG_HPP
-#define HOSTTOOLSDIALOG_HPP
+#ifndef TOOLSDIALOG_HPP
+#define TOOLSDIALOG_HPP
 
 #if _MSC_VER > 1000
 #pragma once
@@ -17,11 +17,11 @@
 ////////////////////////////////////////////////////////////////////////////////
 //! The dialog used to edit the set of tools.
 
-class HostToolsDialog : public CDialog
+class ToolsDialog : public CDialog
 {
 public:
 	//! Default constructor.
-	HostToolsDialog();
+	ToolsDialog();
 	
 	//
 	// Members.
@@ -89,4 +89,4 @@ private:
 	void updateViewItem(size_t row, ConstToolPtr tool);
 };
 
-#endif // HOSTTOOLSDIALOG_HPP
+#endif // TOOLSDIALOG_HPP

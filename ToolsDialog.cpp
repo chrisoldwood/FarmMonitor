@@ -1,11 +1,11 @@
 ////////////////////////////////////////////////////////////////////////////////
-//! \file   HostToolsDialog.cpp
-//! \brief  The HostToolsDialog class definition.
+//! \file   ToolsDialog.cpp
+//! \brief  The ToolsDialog class definition.
 //! \author Chris Oldwood
 
 #include "Common.hpp"
-#include "HostToolsDialog.hpp"
-#include "HostToolDialog.hpp"
+#include "ToolsDialog.hpp"
+#include "EditToolDialog.hpp"
 
 //! The maximum number of tool definitions supported.
 const size_t MAX_TOOLS = ID_HOST_INVOKE_TOOL_19 - ID_HOST_INVOKE_TOOL_1 + 1;
@@ -13,7 +13,7 @@ const size_t MAX_TOOLS = ID_HOST_INVOKE_TOOL_19 - ID_HOST_INVOKE_TOOL_1 + 1;
 ////////////////////////////////////////////////////////////////////////////////
 //! Default constructor.
 
-HostToolsDialog::HostToolsDialog()
+ToolsDialog::ToolsDialog()
 	: CDialog(IDD_HOST_TOOLS)
 {
 	DEFINE_CTRL_TABLE
@@ -21,21 +21,21 @@ HostToolsDialog::HostToolsDialog()
 	END_CTRL_TABLE
 
 	DEFINE_CTRLMSG_TABLE
-		CMD_CTRLMSG(IDC_ADD,    BN_CLICKED,      &HostToolsDialog::onAddTool)
-		CMD_CTRLMSG(IDC_COPY,   BN_CLICKED,      &HostToolsDialog::onCopyTool)
-		CMD_CTRLMSG(IDC_EDIT,   BN_CLICKED,      &HostToolsDialog::onEditTool)
-		CMD_CTRLMSG(IDC_DELETE, BN_CLICKED,      &HostToolsDialog::onDeleteTool)
-		CMD_CTRLMSG(IDC_UP,     BN_CLICKED,      &HostToolsDialog::onMoveToolUp)
-		CMD_CTRLMSG(IDC_DOWN,   BN_CLICKED,      &HostToolsDialog::onMoveToolDown)
-		NFY_CTRLMSG(IDC_TOOLS,  LVN_ITEMCHANGED, &HostToolsDialog::onToolSelected)
-		NFY_CTRLMSG(IDC_TOOLS,  NM_DBLCLK,       &HostToolsDialog::onToolDoubleClicked)
+		CMD_CTRLMSG(IDC_ADD,    BN_CLICKED,      &ToolsDialog::onAddTool)
+		CMD_CTRLMSG(IDC_COPY,   BN_CLICKED,      &ToolsDialog::onCopyTool)
+		CMD_CTRLMSG(IDC_EDIT,   BN_CLICKED,      &ToolsDialog::onEditTool)
+		CMD_CTRLMSG(IDC_DELETE, BN_CLICKED,      &ToolsDialog::onDeleteTool)
+		CMD_CTRLMSG(IDC_UP,     BN_CLICKED,      &ToolsDialog::onMoveToolUp)
+		CMD_CTRLMSG(IDC_DOWN,   BN_CLICKED,      &ToolsDialog::onMoveToolDown)
+		NFY_CTRLMSG(IDC_TOOLS,  LVN_ITEMCHANGED, &ToolsDialog::onToolSelected)
+		NFY_CTRLMSG(IDC_TOOLS,  NM_DBLCLK,       &ToolsDialog::onToolDoubleClicked)
 	END_CTRLMSG_TABLE
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 //! Dialog initialisation handler.
 
-void HostToolsDialog::OnInitDialog()
+void ToolsDialog::OnInitDialog()
 {
 	m_view.InsertColumn(TOOL_NAME,    TXT("Tool"),         m_view.StringWidth(25));
 	m_view.InsertColumn(COMMAND_LINE, TXT("Command Line"), m_view.StringWidth(45));
@@ -49,7 +49,7 @@ void HostToolsDialog::OnInitDialog()
 ////////////////////////////////////////////////////////////////////////////////
 //! OK button handler.
 
-bool HostToolsDialog::OnOk()
+bool ToolsDialog::OnOk()
 {
 	return true;
 }
@@ -57,7 +57,7 @@ bool HostToolsDialog::OnOk()
 ////////////////////////////////////////////////////////////////////////////////
 //! Tools view selection change handler.
 
-LRESULT HostToolsDialog::onToolSelected(NMHDR& header)
+LRESULT ToolsDialog::onToolSelected(NMHDR& header)
 {
 	const NMLISTVIEW& message = reinterpret_cast<const NMLISTVIEW&>(header);
 
@@ -70,7 +70,7 @@ LRESULT HostToolsDialog::onToolSelected(NMHDR& header)
 ////////////////////////////////////////////////////////////////////////////////
 //! Double-clicked tool.
 
-LRESULT HostToolsDialog::onToolDoubleClicked(NMHDR& /*header*/)
+LRESULT ToolsDialog::onToolDoubleClicked(NMHDR& /*header*/)
 {
 	if (m_view.IsSelection())
 		onEditTool();
@@ -81,9 +81,9 @@ LRESULT HostToolsDialog::onToolDoubleClicked(NMHDR& /*header*/)
 ////////////////////////////////////////////////////////////////////////////////
 //! Add button handler.
 
-void HostToolsDialog::onAddTool()
+void ToolsDialog::onAddTool()
 {
-	HostToolDialog dialog;
+	EditToolDialog dialog;
 
 	for (Tools::const_iterator it = m_tools.begin(); it != m_tools.end(); ++it)
 		dialog.m_usedNames.insert((*it)->m_name);
@@ -102,14 +102,14 @@ void HostToolsDialog::onAddTool()
 ////////////////////////////////////////////////////////////////////////////////
 //! Copy button handler.
 
-void HostToolsDialog::onCopyTool()
+void ToolsDialog::onCopyTool()
 {
 	ASSERT(m_view.IsSelection());
 
 	const size_t       selection = m_view.Selection();
 	const ConstToolPtr source = m_tools.tool(selection);
 
-	HostToolDialog dialog;
+	EditToolDialog dialog;
 
 	dialog.m_tool = *source;
 
@@ -130,14 +130,14 @@ void HostToolsDialog::onCopyTool()
 ////////////////////////////////////////////////////////////////////////////////
 //! Edit button handler.
 
-void HostToolsDialog::onEditTool()
+void ToolsDialog::onEditTool()
 {
 	ASSERT(m_view.IsSelection());
 
 	const size_t       selection = m_view.Selection();
 	const ConstToolPtr original = m_tools.tool(selection);
 
-	HostToolDialog dialog;
+	EditToolDialog dialog;
 
 	dialog.m_tool = *original;
 
@@ -161,7 +161,7 @@ void HostToolsDialog::onEditTool()
 ////////////////////////////////////////////////////////////////////////////////
 //! Delete button handler.
 
-void HostToolsDialog::onDeleteTool()
+void ToolsDialog::onDeleteTool()
 {
 	ASSERT(m_view.IsSelection());
 
@@ -176,7 +176,7 @@ void HostToolsDialog::onDeleteTool()
 ////////////////////////////////////////////////////////////////////////////////
 //! Up button handler.
 
-void HostToolsDialog::onMoveToolUp()
+void ToolsDialog::onMoveToolUp()
 {
 	ASSERT(m_view.IsSelection());
 	ASSERT(m_view.Selection() != 0);
@@ -194,7 +194,7 @@ void HostToolsDialog::onMoveToolUp()
 ////////////////////////////////////////////////////////////////////////////////
 //! Down button handler.
 
-void HostToolsDialog::onMoveToolDown()
+void ToolsDialog::onMoveToolDown()
 {
 	ASSERT(m_view.IsSelection());
 	ASSERT(m_view.Selection() != (m_view.ItemCount()-1));
@@ -212,7 +212,7 @@ void HostToolsDialog::onMoveToolDown()
 ////////////////////////////////////////////////////////////////////////////////
 //! Update the state of the UI.
 
-void HostToolsDialog::updateUi()
+void ToolsDialog::updateUi()
 {
 	const bool isSelection = m_view.IsSelection();
 	const bool maxDefined = (m_view.ItemCount() == MAX_TOOLS);
@@ -231,7 +231,7 @@ void HostToolsDialog::updateUi()
 ////////////////////////////////////////////////////////////////////////////////
 //! Add an item to the view.
 
-void HostToolsDialog::addItemToView(ConstToolPtr tool, bool select)
+void ToolsDialog::addItemToView(ConstToolPtr tool, bool select)
 {
 	const size_t row = m_view.AppendItem(tool->m_name);
 
@@ -244,7 +244,7 @@ void HostToolsDialog::addItemToView(ConstToolPtr tool, bool select)
 ////////////////////////////////////////////////////////////////////////////////
 //! Update an item in the view.
 
-void HostToolsDialog::updateViewItem(size_t row, ConstToolPtr tool)
+void ToolsDialog::updateViewItem(size_t row, ConstToolPtr tool)
 {
 	m_view.ItemText(row, TOOL_NAME,    tool->m_name);
 	m_view.ItemText(row, COMMAND_LINE, tool->m_commandLine);

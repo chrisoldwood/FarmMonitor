@@ -6,7 +6,7 @@
 #include "Common.hpp"
 #include "QueriesDialog.hpp"
 #include "Resource.h"
-#include "QueryDialog.hpp"
+#include "EditQueryDialog.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////
 //! Default constructor.

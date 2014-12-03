@@ -1,11 +1,11 @@
 ////////////////////////////////////////////////////////////////////////////////
-//! \file   HostToolDialog.hpp
-//! \brief  The HostToolDialog class declaration.
+//! \file   EditToolDialog.hpp
+//! \brief  The EditToolDialog class declaration.
 //! \author Chris Oldwood
 
 // Check for previous inclusion
-#ifndef HOSTTOOLDIALOG_HPP
-#define HOSTTOOLDIALOG_HPP
+#ifndef EDITTOOLDIALOG_HPP
+#define EDITTOOLDIALOG_HPP
 
 #if _MSC_VER > 1000
 #pragma once
@@ -18,7 +18,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 //! The dialog used to edit the defintion for a tool.
 
-class HostToolDialog : public CDialog
+class EditToolDialog : public CDialog
 {
 public:
 	//! The set of tool names.
@@ -26,7 +26,7 @@ public:
 
 public:
 	//! Default constructor.
-	HostToolDialog();
+	EditToolDialog();
 	
 	//
 	// Members.
@@ -56,4 +56,4 @@ private:
 	virtual bool OnOk();
 };
 
-#endif // HOSTTOOLDIALOG_HPP
+#endif // EDITTOOLDIALOG_HPP

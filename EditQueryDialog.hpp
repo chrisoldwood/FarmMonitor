@@ -1,11 +1,11 @@
 ////////////////////////////////////////////////////////////////////////////////
-//! \file   QueryDialog.hpp
-//! \brief  The QueryDialog class declaration.
+//! \file   EditQueryDialog.hpp
+//! \brief  The EditQueryDialog class declaration.
 //! \author Chris Oldwood
 
 // Check for previous inclusion
-#ifndef QUERYDIALOG_HPP
-#define QUERYDIALOG_HPP
+#ifndef EDITQUERYDIALOG_HPP
+#define EDITQUERYDIALOG_HPP
 
 #if _MSC_VER > 1000
 #pragma once
@@ -16,11 +16,11 @@
 ////////////////////////////////////////////////////////////////////////////////
 //!
 
-class QueryDialog : public CDialog
+class EditQueryDialog : public CDialog
 {
 public:
 	//! Default constructor.
-	QueryDialog();
+	EditQueryDialog();
 	
 	//
 	// Members.
@@ -46,4 +46,4 @@ private:
 	virtual bool OnOk();
 };
 
-#endif // QUERYDIALOG_HPP
+#endif // EDITQUERYDIALOG_HPP

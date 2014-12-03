@@ -1,15 +1,15 @@
 ////////////////////////////////////////////////////////////////////////////////
-//! \file   HostToolDialog.cpp
-//! \brief  The HostToolDialog class definition.
+//! \file   EditToolDialog.cpp
+//! \brief  The EditToolDialog class definition.
 //! \author Chris Oldwood
 
 #include "Common.hpp"
-#include "HostToolDialog.hpp"
+#include "EditToolDialog.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////
 //! Default constructor.
 
-HostToolDialog::HostToolDialog()
+EditToolDialog::EditToolDialog()
 	: CDialog(IDD_HOST_TOOL)
 	, m_tool()
 {
@@ -22,7 +22,7 @@ HostToolDialog::HostToolDialog()
 ////////////////////////////////////////////////////////////////////////////////
 //! Dialog initialisation handler.
 
-void HostToolDialog::OnInitDialog()
+void EditToolDialog::OnInitDialog()
 {
 	m_cmdLineEditor.Add(TXT("mstsc /f /v ${HOSTNAME}"));
 	m_cmdLineEditor.Add(TXT("explorer \\\\${HOSTNAME}\\Share"));
@@ -41,7 +41,7 @@ void HostToolDialog::OnInitDialog()
 ////////////////////////////////////////////////////////////////////////////////
 //! OK button handler.
 
-bool HostToolDialog::OnOk()
+bool EditToolDialog::OnOk()
 {
 	m_tool.m_name = m_nameEditor.Text();
 	m_tool.m_commandLine = m_cmdLineEditor.Text();

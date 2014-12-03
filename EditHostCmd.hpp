@@ -61,19 +61,19 @@ inline void EditHostCmd::execute()
 {
 	ASSERT(m_appDlg.isHostSelected());
 
-	AddEditHostDlg dlg(AddEditHostDlg::EDIT_HOST);
+	EditHostDialog dialog(EditHostDialog::EDIT_HOST);
 
-	dlg.m_host = *m_appDlg.getSelectedHost();
+	dialog.m_host = *m_appDlg.getSelectedHost();
 
 	for (Hosts::const_iterator it = m_hosts.begin(); it != m_hosts.end(); ++it)
 	{
-		if ((*it)->m_name != dlg.m_host.m_name)
-			dlg.m_hosts.insert((*it)->m_name);
+		if ((*it)->m_name != dialog.m_host.m_name)
+			dialog.m_hosts.insert((*it)->m_name);
 	}
 
-	if (dlg.RunModal(m_appWnd) == IDOK)
+	if (dialog.RunModal(m_appWnd) == IDOK)
 	{
-		m_appDlg.replaceHost(makeHost(dlg.m_host));
+		m_appDlg.replaceHost(makeHost(dialog.m_host));
 
 		m_controller.UpdateUI();
 	}

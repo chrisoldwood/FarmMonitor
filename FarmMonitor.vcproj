@@ -234,12 +234,6 @@
 				RelativePath=".\AboutDlg.hpp">
 			</File>
 			<File
-				RelativePath=".\AddEditHostDlg.cpp">
-			</File>
-			<File
-				RelativePath=".\AddEditHostDlg.hpp">
-			</File>
-			<File
 				RelativePath=".\AppDlg.cpp">
 			</File>
 			<File
@@ -258,16 +252,22 @@
 				RelativePath=".\AppWnd.hpp">
 			</File>
 			<File
-				RelativePath=".\HostToolDialog.cpp">
+				RelativePath=".\EditHostDialog.cpp">
 			</File>
 			<File
-				RelativePath=".\HostToolDialog.hpp">
+				RelativePath=".\EditHostDialog.hpp">
 			</File>
 			<File
-				RelativePath=".\HostToolsDialog.cpp">
+				RelativePath=".\EditQueryDialog.cpp">
 			</File>
 			<File
-				RelativePath=".\HostToolsDialog.hpp">
+				RelativePath=".\EditQueryDialog.hpp">
+			</File>
+			<File
+				RelativePath=".\EditToolDialog.cpp">
+			</File>
+			<File
+				RelativePath=".\EditToolDialog.hpp">
 			</File>
 			<File
 				RelativePath=".\LogonDialog.cpp">
@@ -282,10 +282,10 @@
 				RelativePath=".\QueriesDialog.hpp">
 			</File>
 			<File
-				RelativePath=".\QueryDialog.cpp">
+				RelativePath=".\ToolsDialog.cpp">
 			</File>
 			<File
-				RelativePath=".\QueryDialog.hpp">
+				RelativePath=".\ToolsDialog.hpp">
 			</File>
 		</Filter>
 		<Filter

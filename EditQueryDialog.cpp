@@ -1,16 +1,16 @@
 ////////////////////////////////////////////////////////////////////////////////
-//! \file   QueryDialog.cpp
-//! \brief  The QueryDialog class definition.
+//! \file   EditQueryDialog.cpp
+//! \brief  The EditQueryDialog class definition.
 //! \author Chris Oldwood
 
 #include "Common.hpp"
-#include "QueryDialog.hpp"
+#include "EditQueryDialog.hpp"
 #include "Resource.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 //! Default constructor.
 
-QueryDialog::QueryDialog()
+EditQueryDialog::EditQueryDialog()
 	: CDialog(IDD_QUERY)
 {
 	DEFINE_CTRL_TABLE
@@ -23,14 +23,14 @@ QueryDialog::QueryDialog()
 ////////////////////////////////////////////////////////////////////////////////
 //! Dialog initialisation handler.
 
-void QueryDialog::OnInitDialog()
+void EditQueryDialog::OnInitDialog()
 {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 //! OK button handler.
 
-bool QueryDialog::OnOk()
+bool EditQueryDialog::OnOk()
 {
 	return true;
 }

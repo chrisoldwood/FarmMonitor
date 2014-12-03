@@ -1,11 +1,11 @@
 ////////////////////////////////////////////////////////////////////////////////
-//! \file   AddEditHostDlg.hpp
-//! \brief  The AddEditHostDlg class declaration.
+//! \file   EditHostDialog.hpp
+//! \brief  The EditHostDialog class declaration.
 //! \author Chris Oldwood
 
 // Check for previous inclusion
-#ifndef ADDEDITHOSTDLG_HPP
-#define ADDEDITHOSTDLG_HPP
+#ifndef EDITHOSTDIALOG_HPP
+#define EDITHOSTDIALOG_HPP
 
 #if _MSC_VER > 1000
 #pragma once
@@ -18,7 +18,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 //! The dialog to create and edit a hostname.
 
-class AddEditHostDlg : public CDialog
+class EditHostDialog : public CDialog
 {
 public:
 	// Dialog mode
@@ -29,7 +29,7 @@ public:
 	};
 
 	//! Constructor.
-	AddEditHostDlg(Mode mode);
+	EditHostDialog(Mode mode);
 	
 	//
 	// Members.
@@ -70,4 +70,4 @@ private:
 	void onCheckHost();
 };
 
-#endif // ADDEDITHOSTDLG_HPP
+#endif // EDITHOSTDIALOG_HPP

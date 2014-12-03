@@ -5,7 +5,7 @@
 
 #include "Common.hpp"
 #include "EditToolsCmd.hpp"
-#include "HostToolsDialog.hpp"
+#include "ToolsDialog.hpp"
 #include "AppWnd.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -23,7 +23,7 @@ EditToolsCmd::EditToolsCmd(AppWnd& appWnd, Tools& tools)
 
 void EditToolsCmd::execute()
 {
-	HostToolsDialog dialog;
+	ToolsDialog dialog;
 
 	dialog.m_tools.deepCopy(m_tools);
 
