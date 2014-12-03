@@ -259,6 +259,24 @@ TEST_CASE("Writing an unmodified set of queries should still write to the XML do
 }
 TEST_CASE_END
 
+TEST_CASE("Replacing a query upates the existing item and marks the container as modified")
+{
+	XML::DocumentPtr config = createDocument(SAVED_TITLE, SAVED_WMI_CLASS, SAVED_WMI_PROPERTY,
+												SAVED_FILTER_PROPERTY, SAVED_FILTER_VALUE, SAVED_FORMAT);
+	Queries          queries;
+
+	queries.load(config);
+
+	queries.replace(0, makeQuery(TEST_TITLE, TEST_WMI_CLASS, TEST_WMI_PROPERTY));
+
+	TEST_TRUE(queries.isModified());
+	TEST_TRUE(queries.size() == 1);
+	TEST_TRUE(queries.query(0)->m_title == TEST_TITLE);
+	TEST_TRUE(queries.query(0)->m_wmiClass == TEST_WMI_CLASS);
+	TEST_TRUE(queries.query(0)->m_wmiProperty == TEST_WMI_PROPERTY);
+}
+TEST_CASE_END
+
 TEST_CASE("Removing a query decreses the size and marks the container as modified")
 {
 	XML::DocumentPtr config = createDocument(SAVED_TITLE, SAVED_WMI_CLASS, SAVED_WMI_PROPERTY,

@@ -21,15 +21,8 @@
 class EditHostDialog : public CDialog
 {
 public:
-	// Dialog mode
-	enum Mode
-	{
-		ADD_HOST,
-		EDIT_HOST,
-	};
-
 	//! Constructor.
-	EditHostDialog(Mode mode);
+	EditHostDialog();
 	
 	//
 	// Members.
@@ -42,11 +35,6 @@ public:
 	std::set<tstring> m_hosts;
 
 private:
-	//
-	// Members.
-	//
-	Mode		m_mode;				//!< Dialog configuration.
-
 	//
 	// Controls.
 	//

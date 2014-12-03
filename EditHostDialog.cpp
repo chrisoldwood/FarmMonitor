@@ -13,9 +13,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 //! Constructor.
 
-EditHostDialog::EditHostDialog(Mode mode)
+EditHostDialog::EditHostDialog()
 	: CDialog(IDD_ADDEDIT_HOST)
-	, m_mode(mode)
 {
 	DEFINE_CTRL_TABLE
 		CTRL(IDC_HOST_NAME,   &m_hostnameEditor)
@@ -35,8 +34,6 @@ EditHostDialog::EditHostDialog(Mode mode)
 
 void EditHostDialog::OnInitDialog()
 {
-	Title((m_mode == ADD_HOST) ? TXT("Add Host") : TXT("Edit Host"));
-
 	m_hostnameEditor.Text(m_host.m_name);
 	m_monitorSwitch.Check(m_host.m_monitor);
 	m_logonEditor.Text(m_host.m_logon);
@@ -52,6 +49,7 @@ bool EditHostDialog::OnOk()
 	if (m_hostnameEditor.TextLength() == 0)
 	{
 		AlertMsg(TXT("Please enter the name of the host."));
+		m_hostnameEditor.Focus();
 		return false;
 	}
 
@@ -60,6 +58,7 @@ bool EditHostDialog::OnOk()
 	if (Core::exists(m_hosts, hostname))
 	{
 		AlertMsg(TXT("The host '%s' is already being monitored."), hostname.c_str());
+		m_hostnameEditor.Focus();
 		return false;
 	}
 

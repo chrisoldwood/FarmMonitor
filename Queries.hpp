@@ -62,6 +62,9 @@ public:
 	//! Add a sequence of queries to the collection.
 	void append(const ConstQueryPtr* begin, const ConstQueryPtr* end);
 
+	//! Replace a query in the collection.
+	void replace(size_t index, ConstQueryPtr query);
+
 	//! Remove a query from the collection.
 	void remove(size_t index);
 

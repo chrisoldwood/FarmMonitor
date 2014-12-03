@@ -18,6 +18,12 @@
 #include "ExecuteToolCmd.hpp"
 #include "QueryRunner.hpp"
 #include "LogonDialog.hpp"
+#include <Core/Algorithm.hpp>
+
+////////////////////////////////////////////////////////////////////////////////
+//! Constants.
+
+const tstring LastErrorName = TXT("Last Error");
 
 ////////////////////////////////////////////////////////////////////////////////
 //! Constructor.
@@ -248,9 +254,11 @@ void AppDlg::initialiseHostView()
 	m_hostView.InsertColumn(DESCRIPTION, TXT("Description"), m_hostView.StringWidth(15), LVCFMT_LEFT);
 
 	for (size_t column = 0; column != m_model.m_queries.size(); ++column)
-		m_hostView.InsertColumn(column+TOTAL_MEMORY, m_model.m_queries.query(column)->m_title.c_str(), m_hostView.StringWidth(10), LVCFMT_RIGHT);
+		m_hostView.InsertColumn(column+CUSTOM_BASE, m_model.m_queries.query(column)->m_title, m_hostView.StringWidth(10), LVCFMT_RIGHT);
 
-	m_hostView.InsertColumn(LAST_ERROR,  TXT("Last Error"),  m_hostView.StringWidth(25), LVCFMT_LEFT);
+	const size_t LAST_ERROR = CUSTOM_BASE+m_model.m_queries.size();
+
+	m_hostView.InsertColumn(LAST_ERROR, LastErrorName, m_hostView.StringWidth(25), LVCFMT_LEFT);
 
 	for (size_t i = 0; i != m_model.m_hosts.size(); ++i)
 		addHostToView(i);
@@ -294,6 +302,33 @@ tstring FormatDiskUsage(const WMI::Win32_LogicalDisk& disk)
 
 void AppDlg::rebuildView()
 {
+	typedef std::map<tstring, size_t> NameWidthMap;
+
+	NameWidthMap columnWidths;
+
+	const size_t numColumns = m_hostView.NumColumns();
+
+	for (size_t column = CUSTOM_BASE; column != numColumns; ++column)
+		columnWidths[m_hostView.ColumnName(column)] = m_hostView.ColumnWidth(column);
+
+	NameWidthMap::const_iterator end = columnWidths.end();
+
+	for (size_t column = CUSTOM_BASE; column != numColumns; ++column)
+		m_hostView.DeleteColumn(CUSTOM_BASE);
+
+	const size_t defaultWidth = m_hostView.StringWidth(10);
+
+	for (size_t column = 0; column != m_model.m_queries.size(); ++column)
+	{
+		ConstQueryPtr query = m_model.m_queries.query(column);
+		const size_t  width = Core::findOrDefault(columnWidths, query->m_title, defaultWidth);
+
+		m_hostView.InsertColumn(column+CUSTOM_BASE, query->m_title, width, LVCFMT_RIGHT);
+	}
+
+	const size_t LAST_ERROR = CUSTOM_BASE+m_model.m_queries.size();
+
+	m_hostView.InsertColumn(LAST_ERROR, LastErrorName, columnWidths[LastErrorName], LVCFMT_LEFT);
 }
 	
 ////////////////////////////////////////////////////////////////////////////////
@@ -345,6 +380,8 @@ bool AppDlg::refreshHost(size_t index)
 		}
 	}
 
+	const size_t LAST_ERROR = CUSTOM_BASE+m_model.m_queries.size();
+
 	try
 	{
 		QueryRunner::const_iterator begin = m_model.m_queries.begin();
@@ -363,7 +400,7 @@ bool AppDlg::refreshHost(size_t index)
 		QueryRunner::Results results = QueryRunner::run(connection, begin, end);
 
 		for (size_t column = 0; column != results.size(); ++column)
-			m_hostView.ItemText(index, column+TOTAL_MEMORY, results[column]);
+			m_hostView.ItemText(index, column+CUSTOM_BASE, results[column]);
 
 		m_hostView.ItemImage(index, STATUS_GOOD);
 	}
@@ -381,8 +418,10 @@ bool AppDlg::refreshHost(size_t index)
 
 void AppDlg::clearHost(size_t index)
 {
-	for (size_t column = TOTAL_MEMORY; column != NUM_COLUMNS; ++column)
-		m_hostView.ItemText(index, column+TOTAL_MEMORY, TXT(""));
+	const size_t numColumns = m_hostView.NumColumns();
+
+	for (size_t column = CUSTOM_BASE; column != numColumns; ++column)
+		m_hostView.ItemText(index, column+CUSTOM_BASE, TXT(""));
 
 	m_hostView.ItemImage(index, STATUS_UNKNOWN);
 }

@@ -88,6 +88,17 @@ void Queries::append(const ConstQueryPtr* begin, const ConstQueryPtr* end)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+//! Replace a query in the collection.
+
+void Queries::replace(size_t index, ConstQueryPtr query)
+{
+	ASSERT(index < m_queries.size());
+
+	m_queries[index] = query;
+	m_modified = true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 //! Remove a query from the collection.
 
 void Queries::remove(size_t index)

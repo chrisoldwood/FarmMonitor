@@ -12,12 +12,18 @@
 #endif
 
 #include <WCL/CommonUI.hpp>
+#include "Query.hpp"
+#include <set>
 
 ////////////////////////////////////////////////////////////////////////////////
-//!
+//! The dialog used to edit the defintion for a WMI query.
 
 class EditQueryDialog : public CDialog
 {
+public:
+	//! The set of tool names.
+	typedef std::set<tstring> Titles;
+
 public:
 	//! Default constructor.
 	EditQueryDialog();
@@ -25,15 +31,19 @@ public:
 	//
 	// Members.
 	//
+	Query	m_query;			//!< The query being edited.
+	Titles	m_usedTitles;		//!< The set of query titles already in use.
 
 private:
 	//
-	// Members.
-	//
-	
-	//
 	// Controls.
 	//
+	CEditBox	m_titleEditor;				//!< The query title edit control.
+	CComboBox	m_wmiClassEditor;			//!< The WMI class name editable combo control.
+	CEditBox	m_wmiPropertyEditor;		//!< The WMI class property name edit control.
+	CComboBox	m_formatChoice;				//!< The output format combo box.
+	CEditBox	m_filterPropertyEditor;		//!< The optional property to filter on edit box.
+	CEditBox	m_filterValueEditor;		//!< The optional filter value edit box.
 
 	//
 	// Message handlers.

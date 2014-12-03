@@ -12,7 +12,6 @@
 #define ID_FILE_EXIT                    109
 #define IDD_LOGON                       136
 #define IDD_QUERIES                     137
-#define IDD_DIALOG1                     138
 #define IDD_QUERY                       138
 #define ID_HOST_POPUP                   200
 #define ID_HOST_ADDHOST                 201
@@ -64,6 +63,13 @@
 #define IDC_EDIT2                       1102
 #define IDC_PASSWORD                    1102
 #define IDC_QUERIES                     1102
+#define IDC_TITLE                       1103
+#define IDC_WMI_CLASS                   1104
+#define IDC_WMI_PROPERTY                1105
+#define IDC_FILTER                      1106
+#define IDC_EDIT5                       1107
+#define IDC_VALUE                       1107
+#define IDC_FORMAT                      1108
 #define IDD_MAIN                        5000
 #define IDD_ABOUT                       5001
 #define IDD_ADDEDIT_HOST                5002
@@ -78,7 +84,7 @@
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        139
 #define _APS_NEXT_COMMAND_VALUE         173
-#define _APS_NEXT_CONTROL_VALUE         1103
+#define _APS_NEXT_CONTROL_VALUE         1105
 #define _APS_NEXT_SYMED_VALUE           106
 #endif
 #endif

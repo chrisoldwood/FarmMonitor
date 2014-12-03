@@ -5,6 +5,7 @@
 
 #include "Common.hpp"
 #include "EditToolDialog.hpp"
+#include <Core/Algorithm.hpp>
 
 ////////////////////////////////////////////////////////////////////////////////
 //! Default constructor.
@@ -49,18 +50,21 @@ bool EditToolDialog::OnOk()
 	if (m_tool.m_name.empty())
 	{
 		AlertMsg(TXT("You must provide a title for the tool."));
+		m_nameEditor.Focus();
 		return false;
 	}
 	
-	if (m_usedNames.find(m_tool.m_name) != m_usedNames.end())
+	if (Core::exists(m_usedNames, m_tool.m_name))
 	{
 		AlertMsg(TXT("There is already a tool with that name defined."));
+		m_nameEditor.Focus();
 		return false;
 	}
 	
 	if (m_tool.m_commandLine.empty())
 	{
 		AlertMsg(TXT("You must supply the command line used to execute the tool."));
+		m_cmdLineEditor.Focus();
 		return false;
 	}
 

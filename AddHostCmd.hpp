@@ -59,7 +59,7 @@ inline AddHostCmd::AddHostCmd(AppWnd& appWnd, AppDlg& appDlg, WCL::ICmdControlle
 
 inline void AddHostCmd::execute()
 {
-	EditHostDialog dialog(EditHostDialog::ADD_HOST);
+	EditHostDialog dialog;
 
 	for (Hosts::const_iterator it = m_hosts.begin(); it != m_hosts.end(); ++it)
 		dialog.m_hosts.insert((*it)->m_name);

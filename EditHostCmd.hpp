@@ -61,7 +61,7 @@ inline void EditHostCmd::execute()
 {
 	ASSERT(m_appDlg.isHostSelected());
 
-	EditHostDialog dialog(EditHostDialog::EDIT_HOST);
+	EditHostDialog dialog;
 
 	dialog.m_host = *m_appDlg.getSelectedHost();
 

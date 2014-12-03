@@ -86,20 +86,20 @@ LRESULT QueriesDialog::onQueryDoubleClicked(NMHDR& /*header*/)
 
 void QueriesDialog::onAddQuery()
 {
-/*	QueryDialog dialog;
+	EditQueryDialog dialog;
 
-	for (Tools::const_iterator it = m_tools.begin(); it != m_tools.end(); ++it)
-		dialog.m_usedNames.insert((*it)->m_name);
+	for (Queries::const_iterator it = m_queries.begin(); it != m_queries.end(); ++it)
+		dialog.m_usedTitles.insert((*it)->m_title);
 
 	if (dialog.RunModal(*this) == IDOK)
 	{
-		ConstToolPtr tool = makeTool(dialog.m_tool);
+		ConstQueryPtr query = makeQuery(dialog.m_query);
 
-		m_tools.append(tool);
+		m_queries.append(query);
 
-		addItemToView(tool, true);
+		addItemToView(query, true);
 		updateUi();
-	}*/
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -111,23 +111,23 @@ void QueriesDialog::onCopyQuery()
 
 	const size_t        selection = m_view.Selection();
 	const ConstQueryPtr source = m_queries.query(selection);
-/*
-	QueryDialog dialog;
 
-	dialog.m_tool = *source;
+	EditQueryDialog dialog;
 
-	for (Tools::const_iterator it = m_tools.begin(); it != m_tools.end(); ++it)
-		dialog.m_usedNames.insert((*it)->m_name);
+	dialog.m_query = *source;
+
+	for (Queries::const_iterator it = m_queries.begin(); it != m_queries.end(); ++it)
+		dialog.m_usedTitles.insert((*it)->m_title);
 
 	if (dialog.RunModal(*this) == IDOK)
 	{
-		ConstToolPtr tool = makeTool(dialog.m_tool);
+		ConstQueryPtr query = makeQuery(dialog.m_query);
 
-		m_tools.append(tool);
+		m_queries.append(query);
 
-		addItemToView(tool, true);
+		addItemToView(query, true);
 		updateUi();
-	}*/
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -139,26 +139,26 @@ void QueriesDialog::onEditQuery()
 
 	const size_t        selection = m_view.Selection();
 	const ConstQueryPtr original = m_queries.query(selection);
-/*
-	QueryDialog dialog;
 
-	dialog.m_tool = *original;
+	EditQueryDialog dialog;
 
-	for (Tools::const_iterator it = m_tools.begin(); it != m_tools.end(); ++it)
+	dialog.m_query = *original;
+
+	for (Queries::const_iterator it = m_queries.begin(); it != m_queries.end(); ++it)
 	{
-		if ((*it)->m_name != original->m_name)
-			dialog.m_usedNames.insert((*it)->m_name);
+		if ((*it)->m_title != original->m_title)
+			dialog.m_usedTitles.insert((*it)->m_title);
 	}
 
 	if (dialog.RunModal(*this) == IDOK)
 	{
-		const ConstToolPtr edited = makeTool(dialog.m_tool);
+		const ConstQueryPtr edited = makeQuery(dialog.m_query);
 
-		m_tools.replace(selection, edited);
+		m_queries.replace(selection, edited);
 
 		updateViewItem(selection, edited);
 		updateUi();
-	}*/
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////
