@@ -1,5 +1,9 @@
 Version 0.1
 ===========
 
+- First public release.
+- Support for invoking command-line tools.
+- Simple WMI query support with basic filtering and formatting.
+
 Chris Oldwood
-20th July 2012
+3rd December 2014

@@ -12,7 +12,7 @@ server, e.g. to open an RDP connection to it.
 Documentation
 -------------
 
-None yet.
+There is an HTML based manual - FarmMonitor.html.
 
 Development
 -----------
@@ -26,4 +26,4 @@ Email: gort@cix.co.uk
 Web:   http://www.chrisoldwood.com
 
 Chris Oldwood
-22nd October 2013
+3rd December 2014

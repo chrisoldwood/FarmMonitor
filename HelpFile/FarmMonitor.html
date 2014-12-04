@@ -20,7 +20,214 @@ td		{ font-family: Verdana, Arial; font-size: 10pt; border: 1px solid black; ver
 <h4>Introduction</h4>
 
 <p>
-TODO...
+This utility is a simple monitoring and administration tool for small farms of
+Windows servers. The monitoring aspect uses the Windows Management Instrumentation
+(WMI) interface for retrieving information about the remote servers. For the
+administration side command lines can be configured that can be executed for the
+selected host.
+</p><p>
+<i>NOTE: As you can see from the version number this is still very much a work
+in progress. I have some key features I'd like to add, such as aggregations,
+and so it's probable that a breaking change will still occur before reaching a v1.0
+release. I'll try and maintain the existing file format but can't guarentee it.</i>
+</p>
+
+<a name="Background"></a>
+<h5>Background</h5>
+
+<p>
+The genesis of this tool was almost 10 years ago when I started working in the
+HPC (High Performance Computing) arena. We had a number of environments that
+consisted of application servers for orchestration and blades for raw computation
+duties. Although the Sysinternals tools like PsExec, PsList, etc. are great for
+automation and ad-hoc command line use there was still a fair amount of other
+ad-hoc monitoring and administration to do which involved flicking between
+servers. This was especially true outside the production environment where there
+was no company-wide monitoring running.
+</p><p>
+Naturally time has moved on <i>a lot</i> since then. At that time there were
+very few free tools available that exposed WMI, especially on Windows 2000. My
+own command-line tool called WMI Command was the first phase of this project as
+it allowed me to wrap the COM based WMI library in C++ and explore it.
+</p><p>
+With PowerShell now more readily available it is even easier to consume WMI
+based content, and there is therefore more knowledge of it too, which is great for
+ad-hoc querying. However I still thought a GUI based approach was still viable
+once you'd worked out what sort of queries you wanted to run continuously, hence
+this tool was born.
+</p>
+
+<a name="Hosts"></a>
+<h4>Hosts</h4>
+
+<p>
+When the application starts for the first time the main view will be configured
+with a single host - the local one. More hosts can be added, renamed and
+removed from the main view. They can also be reordered so that hosts can be
+grouped according to environment, role, or whatever. Each host has both a
+specific "environment" attribute and a more general purpose "description"
+attribute to aid with grouping and identification.
+</p>
+
+<a name="Tools"></a>
+<h4>Tools</h4>
+
+<p>
+For administration purposes a number of external tools can be configured which are
+accessible from the context menu (right-click) of a host. Each tool is configured
+as a command-line where the selected host name will be substituted for the
+<code>${HOSTNAME}</code> token on execution.
+</p><p>
+Out-of-the-box there are a couple of default tools configured: one to open a
+remote desktop via the <code>MSTSC</code> tool and another to continuously
+<code>PING</code> the host.
+</p>
+
+<a name="WMIQueries"></a>
+<h4>WMI Queries</h4>
+
+<p>
+The main view is used to display information about the configured hosts via WMI
+queries. The monitoring is currently done manually by using the "View | Refresh"
+option (or hitting F5) and will sequentially poll each server in turn to update
+the data. Hosts which are temporarily off-line or that you do not want to
+monitor can be marked from the host details dialog.
+</p><p>
+The icon next to a hostname displays its current status. It starts off as a
+question mark to show that its status is unknown. When the view is refreshed and
+the WMI queries are run it will update to either a green or red circle depending on
+whether or not the host was contactable to service the queries.
+</p>
+<p>
+The default WMI queries are just examples of what can be used and should work fine
+against most hosts. They show the total and free memory available, the total and free
+disk space for drive C:, and the date/time when the machine was last rebooted.
+The final column, "Last Error", will show any major error that occurred trying
+to connect to the host, such as if authentication failed. Errors that only
+occur for some queries, e.g. no E: drive exists, will be reported in the specific
+column as <code>#N/A</code>.
+</p><p>
+If a host requires different credentials to attach to it, then they can be
+configured in the host details dialog. Alternate credentials will only be
+prompted for once and then cached indefinitely.
+</p>
+
+<a name="QueryAttributes"></a>
+<h5>Query Attributes</h5>
+
+<p>
+From the "View | Queries..." dialog you can manage the queries that are
+executed against every host marked for monitoring. The following fields are used
+to define a query:
+</p>
+<table id="QueryFields">
+<tr>
+  <th>Field</th>
+  <th>Description</th>
+</tr>
+<tr>
+  <td>Column Heading</td>
+  <td>The text to use in the column heading of the main view.</td>
+</tr>
+<tr>
+  <td>WMI Class</td>
+  <td>The name of the WMI class to query on. By default FarmMonitor only queries
+      for objects under the <code>\root\cimv2</code> name space.</td>
+</tr>
+<tr>
+  <td>WMI Property</td>
+  <td>The name of the property from the WMI class specified above that you
+      want to display.</td>
+</tr>
+<tr>
+  <td>Formatting</td>
+  <td>Choose how the value of the WMI property should be displayed. The various
+      options are explained below in <a href="#FormattingValues">Formatting Values</a></td>
+</tr>
+<tr>
+  <td>Filter Property</td>
+  <td>The name of an optional WMI property on which to filter for a specific
+      object in the set.</td>
+</tr>
+<tr>
+  <td>Filter Property Value</td>
+  <td>The value to match the above optional Filter Property on, if specified.</td>
+</tr>
+</table>
+<p>
+A query will by default display only the first object in the result set. For
+classes like <code>Win32_OperatingSystem</code> where there is only a single
+object it doesn't matter. But for objects like disk drives, which are queried
+using <code>Win32_LogicalDisk</code>, it matters as you need to pick the specific
+drive you're interested in. This is done with the optional Filter Property/Value
+fields described at the bottom. For example, to pick disk drive <code>C:</code>
+you would want to match on a Filter Property of "<code>DeviceID</code>" and a
+Filter Value of "<code>C:</code>".
+</p><p>
+To find out what WMI classes and properties are available you'd need to consult
+the MSDN. I normally use a tool like WMI Command or PowerShell to explore the
+query first and then I know what I want to configure for monitoring.
+</p>
+
+<a name="FormattingValues"></a>
+<h5>Formatting Values</h5>
+
+<p>
+Although the WMI interface is COM based not all values come through using the
+most natural COM types. For example really big numbers, like the amount of memory
+in bytes, is not passed as a 64-bit integer, but as a string. Date/times are
+another example of values passed as strings. As such you need to provide a hint
+to the query about how the value needs formatting.
+</p><p>
+The default format for any value is a simple string as most other types can be
+coerced into that by the COM runtime. However there are some custom formats
+that can be used to scale and add units to make values more readable. In particular
+some larger values are represented in kilobytes, rather than bytes, and therefore
+need to be scaled differently. This difference in scale is not automatically
+detectable.
+</p>
+<table id="Formats">
+<tr>
+  <th>Code</th>
+  <th>Description</th>
+</tr>
+<tr>
+  <td>%s</td>
+  <td>Display the value as a simple string.</td>
+</tr>
+<tr>
+  <td>%t</td>
+  <td>Interpret the value as a WMI format date/time and display in the local
+      date &amp; time format.</td>
+</tr>
+<tr>
+  <td>B</td>
+  <td>Display the value in bytes as a whole number of bytes.</td>
+</tr>
+<tr>
+  <td>KB</td>
+  <td>Display the value in bytes as a whole number of kilobytes.</td>
+</tr>
+<tr>
+  <td>MB</td>
+  <td>Display the value in bytes as a whole number of megabytes.</td>
+</tr>
+<tr>
+  <td>GB</td>
+  <td>Display the value in bytes as a whole number of gigabytes.</td>
+</tr>
+<tr>
+  <td>KB2MB</td>
+  <td>Display the value in kilobytes as a whole number of megabytes.</td>
+</tr>
+<tr>
+  <td>KB2GB</td>
+  <td>Display the value in kilobytes as a whole number of gigabytes.</td>
+</tr>
+</table>
+<p>
+<i>NOTE: At present the internal format symbols are listed as the proper UI has
+not been hooked up. In future you will only see sensible descriptions listed.</i>
 </p>
 
 <hr>
@@ -48,10 +255,10 @@ The "Help | About" dialog also contains my contact details. Please check the web
 site for updates.
 </p><p>
 Email: <a href="mailto://gort@cix.co.uk">gort@cix.co.uk</a><br>
-Web: <a href="http://www.cix.co.uk/~gort">www.cix.co.uk/~gort</a><br>
+Web: <a href="http://www.chrisoldwood.com">www.chrisoldwood.com</a><br>
 </p><p>
 Chris Oldwood<br>
-20th July 2012<br>
+3rd December 2014<br>
 </p>
 
 </body>

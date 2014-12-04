@@ -3,3 +3,7 @@
 - Configurable monitoring interval.
 
 - Support different user names for each host.
+
+- Switch Format combo to something user-friendly.
+
+- Add some query templates

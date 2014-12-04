@@ -378,6 +378,12 @@
 			</File>
 		</Filter>
 		<File
+			RelativePath=".\FarmMonitor.wxl">
+		</File>
+		<File
+			RelativePath=".\FarmMonitor.wxs">
+		</File>
+		<File
 			RelativePath=".\ReadMe.txt">
 		</File>
 		<File
