@@ -233,6 +233,8 @@ LRESULT AppDlg::onRightClick(NMHDR& /*header*/)
 	menu.EnableCmd(ID_HOST_UP, isMoveable && isSelection && !isFirstSelected);
 	menu.EnableCmd(ID_HOST_DOWN, isMoveable && isSelection && !isLastSelected);
 	menu.EnableCmd(ID_HOST_COPYHOST, isSelection);
+	menu.EnableCmd(ID_HOST_SERVICES, isSelection);
+	menu.EnableCmd(ID_HOST_PROCESSES, isSelection);
 
 	ExecuteToolCmd::buildToolsContextMenu(m_model.m_tools, menu, isSelection);
 

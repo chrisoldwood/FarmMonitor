@@ -156,6 +156,9 @@
 				RelativePath=".\Resource.h">
 			</File>
 			<File
+				RelativePath=".\ServiceIcons.bmp">
+			</File>
+			<File
 				RelativePath=".\Toolbar.bmp">
 			</File>
 		</Filter>
@@ -207,6 +210,18 @@
 			</File>
 			<File
 				RelativePath=".\ExitAppCmd.hpp">
+			</File>
+			<File
+				RelativePath=".\ManageProcessesCmd.cpp">
+			</File>
+			<File
+				RelativePath=".\ManageProcessesCmd.hpp">
+			</File>
+			<File
+				RelativePath=".\ManageServicesCmd.cpp">
+			</File>
+			<File
+				RelativePath=".\ManageServicesCmd.hpp">
 			</File>
 			<File
 				RelativePath=".\MoveHostDownCmd.hpp">
@@ -276,10 +291,22 @@
 				RelativePath=".\LogonDialog.hpp">
 			</File>
 			<File
+				RelativePath=".\ProcessesDialog.cpp">
+			</File>
+			<File
+				RelativePath=".\ProcessesDialog.hpp">
+			</File>
+			<File
 				RelativePath=".\QueriesDialog.cpp">
 			</File>
 			<File
 				RelativePath=".\QueriesDialog.hpp">
+			</File>
+			<File
+				RelativePath=".\ServicesDialog.cpp">
+			</File>
+			<File
+				RelativePath=".\ServicesDialog.hpp">
 			</File>
 			<File
 				RelativePath=".\ToolsDialog.cpp">

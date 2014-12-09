@@ -77,6 +77,8 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "&Copy Host to Clipboard",     ID_HOST_COPYHOST
         MENUITEM SEPARATOR
+        MENUITEM "&Services",                   ID_HOST_SERVICES
+        MENUITEM "&Processes",                  ID_HOST_PROCESSES
     END
     POPUP "&View"
     BEGIN
@@ -106,6 +108,8 @@ BEGIN
         MENUITEM "Move &Down",                  ID_HOST_DOWN
         MENUITEM SEPARATOR
         MENUITEM "&Copy Host to Clipboard",     ID_HOST_COPYHOST
+        MENUITEM "&Services",                   ID_HOST_SERVICES
+        MENUITEM "&Processes",                  ID_HOST_PROCESSES
         MENUITEM SEPARATOR
     END
 END
@@ -258,6 +262,26 @@ BEGIN
     PUSHBUTTON      "Cancel",IDCANCEL,110,195,50,14
 END
 
+IDD_SERVICES DIALOGEX 0, 0, 186, 95
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | 
+    WS_SYSMENU
+CAPTION "Services"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,75,75,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,130,75,50,14
+END
+
+IDD_PROCESSES DIALOGEX 0, 0, 186, 95
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | 
+    WS_SYSMENU
+CAPTION "Processes"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,75,75,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,130,75,50,14
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -266,6 +290,7 @@ END
 
 IDR_APPTOOLBAR          BITMAP                  "Toolbar.bmp"
 IDB_HOST_ICONS          BITMAP                  "HostIcons.bmp"
+IDB_SERVICE_ICONS       BITMAP                  "ServiceIcons.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -319,6 +344,22 @@ BEGIN
         RIGHTMARGIN, 165
         TOPMARGIN, 7
         BOTTOMMARGIN, 214
+    END
+
+    IDD_SERVICES, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 179
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 88
+    END
+
+    IDD_PROCESSES, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 179
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 88
     END
 END
 #endif    // APSTUDIO_INVOKED
@@ -386,6 +427,7 @@ BEGIN
     ID_HOST_UP              "Move the host up the list\nMove Up"
     ID_HOST_DOWN            "Move the host down the list\nMove Down"
     ID_HOST_COPYHOST        "Copy the host name to the clipboard"
+    ID_HOST_SERVICES        "Manage the services on the host\nManage Services"
 END
 
 STRINGTABLE 
@@ -396,6 +438,7 @@ END
 
 STRINGTABLE 
 BEGIN
+    ID_HOST_PROCESSES       "Manage the processes running on the host\nManage Processes"
     ID_HOST_INVOKE_TOOL_1   "Invoke the tool for the selected host"
     ID_HOST_INVOKE_TOOL_2   "Invoke the tool for the selected host"
     ID_HOST_INVOKE_TOOL_3   "Invoke the tool for the selected host"

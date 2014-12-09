@@ -1,0 +1,36 @@
+////////////////////////////////////////////////////////////////////////////////
+//! \file   ProcessesDialog.cpp
+//! \brief  The ProcessesDialog class definition.
+//! \author Chris Oldwood
+
+#include "Common.hpp"
+#include "ProcessesDialog.hpp"
+#include "Resource.h"
+
+////////////////////////////////////////////////////////////////////////////////
+//! Default constructor.
+
+ProcessesDialog::ProcessesDialog()
+	: CDialog(IDD_PROCESSES)
+{
+	DEFINE_CTRL_TABLE
+	END_CTRL_TABLE
+
+	DEFINE_CTRLMSG_TABLE
+	END_CTRLMSG_TABLE
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! Dialog initialisation handler.
+
+void ProcessesDialog::OnInitDialog()
+{
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! OK button handler.
+
+bool ProcessesDialog::OnOk()
+{
+	return true;
+}

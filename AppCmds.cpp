@@ -19,6 +19,8 @@
 #include "RefreshViewCmd.hpp"
 #include "EditQueriesCmd.hpp"
 #include "Model.hpp"
+#include "ManageServicesCmd.hpp"
+#include "ManageProcessesCmd.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////
 //! Constructor.
@@ -36,6 +38,8 @@ AppCmds::AppCmds(AppWnd& appWnd, AppDlg& appDlg, Model& model)
 		WCL_EXTCMD_ENTRY(new MoveHostUpCmd(appWnd, appDlg, *this, model.m_hosts))
 		WCL_EXTCMD_ENTRY(new MoveHostDownCmd(appWnd, appDlg, *this, model.m_hosts))
 		WCL_EXTCMD_ENTRY(new CopyHostCmd(appWnd, appDlg))
+		WCL_EXTCMD_ENTRY(new ManageServicesCmd(appWnd, appDlg))
+		WCL_EXTCMD_ENTRY(new ManageProcessesCmd(appWnd, appDlg))
 
 		for (size_t i = 0, end = ID_HOST_INVOKE_TOOL_19-ID_HOST_INVOKE_TOOL_1+1; i != end; ++i)
 		{

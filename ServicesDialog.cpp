@@ -1,0 +1,36 @@
+////////////////////////////////////////////////////////////////////////////////
+//! \file   ServicesDialog.cpp
+//! \brief  The ServicesDialog class definition.
+//! \author Chris Oldwood
+
+#include "Common.hpp"
+#include "ServicesDialog.hpp"
+#include "Resource.h"
+
+////////////////////////////////////////////////////////////////////////////////
+//! Default constructor.
+
+ServicesDialog::ServicesDialog()
+	: CDialog(IDD_SERVICES)
+{
+	DEFINE_CTRL_TABLE
+	END_CTRL_TABLE
+
+	DEFINE_CTRLMSG_TABLE
+	END_CTRLMSG_TABLE
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! Dialog initialisation handler.
+
+void ServicesDialog::OnInitDialog()
+{
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! OK button handler.
+
+bool ServicesDialog::OnOk()
+{
+	return true;
+}
