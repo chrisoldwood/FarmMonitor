@@ -14,26 +14,32 @@
 #include <WCL/CommonUI.hpp>
 
 ////////////////////////////////////////////////////////////////////////////////
-//!
+//! The dialog used to manage the services on a host.
 
 class ServicesDialog : public CDialog
 {
 public:
-	//! Default constructor.
-	ServicesDialog();
+	//! Constructor.
+	ServicesDialog(const tstring& host);
 	
-	//
-	// Members.
-	//
-
 private:
+	//! The view columns
+	enum Column
+	{
+		NAME,
+		STATE,
+		START_MODE,
+	};
+
 	//
 	// Members.
 	//
+	tstring		m_host;		//!< The host to manage.
 	
 	//
 	// Controls.
 	//
+	CListView	m_view;		//!< The services view.
 
 	//
 	// Message handlers.
@@ -42,8 +48,8 @@ private:
 	//! Dialog initialisation handler.
 	virtual void OnInitDialog();
 
-	//! OK button handler.
-	virtual bool OnOk();
+	//! Refresh button handler.
+	void onRefreshView();
 };
 
 #endif // SERVICESDIALOG_HPP

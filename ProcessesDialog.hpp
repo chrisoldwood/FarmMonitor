@@ -14,26 +14,32 @@
 #include <WCL/CommonUI.hpp>
 
 ////////////////////////////////////////////////////////////////////////////////
-//!
+//! The dialog used to manage the processes on a host.
 
 class ProcessesDialog : public CDialog
 {
 public:
-	//! Default constructor.
-	ProcessesDialog();
+	//! Constructor.
+	ProcessesDialog(const tstring& host);
 	
-	//
-	// Members.
-	//
-
 private:
+	//! The view columns
+	enum Column
+	{
+		NAME,
+		THREADS,
+		HANDLES,
+	};
+
 	//
 	// Members.
 	//
+	tstring		m_host;		//!< The host to manage.
 	
 	//
 	// Controls.
 	//
+	CListView	m_view;		//!< The processes view.
 
 	//
 	// Message handlers.
@@ -42,8 +48,8 @@ private:
 	//! Dialog initialisation handler.
 	virtual void OnInitDialog();
 
-	//! OK button handler.
-	virtual bool OnOk();
+	//! Refresh button handler.
+	void onRefreshView();
 };
 
 #endif // PROCESSESDIALOG_HPP

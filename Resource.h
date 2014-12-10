@@ -68,7 +68,9 @@
 #define IDC_TITLE                       1103
 #define IDC_WMI_CLASS                   1104
 #define IDC_WMI_PROPERTY                1105
+#define IDC_SERVICES                    1105
 #define IDC_FILTER                      1106
+#define IDC_PROCESSES                   1106
 #define IDC_EDIT5                       1107
 #define IDC_VALUE                       1107
 #define IDC_FORMAT                      1108
@@ -89,7 +91,7 @@
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        142
 #define _APS_NEXT_COMMAND_VALUE         175
-#define _APS_NEXT_CONTROL_VALUE         1105
+#define _APS_NEXT_CONTROL_VALUE         1108
 #define _APS_NEXT_SYMED_VALUE           106
 #endif
 #endif

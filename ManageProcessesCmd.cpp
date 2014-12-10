@@ -23,7 +23,11 @@ ManageProcessesCmd::ManageProcessesCmd(AppWnd& appWnd, AppDlg& appDlg)
 
 void ManageProcessesCmd::execute()
 {
-	ProcessesDialog dialog;
+	ASSERT(m_appDlg.isHostSelected());
+
+	const tstring hostname = m_appDlg.getSelectedHost()->m_name;
+
+	ProcessesDialog dialog(hostname);
 
 	dialog.RunModal(m_appWnd);
 }

@@ -23,7 +23,11 @@ ManageServicesCmd::ManageServicesCmd(AppWnd& appWnd, AppDlg& appDlg)
 
 void ManageServicesCmd::execute()
 {
-	ServicesDialog dialog;
+	ASSERT(m_appDlg.isHostSelected());
+
+	const tstring hostname = m_appDlg.getSelectedHost()->m_name;
+
+	ServicesDialog dialog(hostname);
 
 	dialog.RunModal(m_appWnd);
 }
