@@ -23,8 +23,10 @@ namespace
 const tchar* PUBLISHER = TXT("Chris Oldwood");
 //! The configuration data application name.
 const tchar* APPLICATION = TXT("Farm Monitor");
+//! The configuration data format version 0.1.
+const tchar* CONFIG_VERSION_01 = TXT("0.1");
 //! The configuration data format version.
-const tchar* CONFIG_VERSION = TXT("0.1");
+const tchar* LATEST_CONFIG_VERSION = TXT("1");
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -88,10 +90,14 @@ bool FarmMonitor::loadConfig()
 	{
 		WCL::AppConfig appConfig(PUBLISHER, APPLICATION);
 
-		const tstring version = appConfig.readString(appConfig.DEFAULT_SECTION, TXT("Version"), CONFIG_VERSION);
+		const tstring version = appConfig.readString(appConfig.DEFAULT_SECTION, TXT("Version"), LATEST_CONFIG_VERSION);
 
-		if (version != CONFIG_VERSION)
-			throw Core::ConfigurationException(Core::fmt(TXT("The configuration data is incompatible - '%s'"), version.c_str()));
+		if ( (version != LATEST_CONFIG_VERSION) && (version != CONFIG_VERSION_01) )
+		{
+			throw Core::ConfigurationException(Core::fmt(
+				TXT("The configuration data version is incompatible - expected '%s', found '%s'"),
+				LATEST_CONFIG_VERSION, version.c_str()));
+		}
 
 		m_startPosition = appConfig.readValue<CRect>(TXT("UI"), TXT("MainWindow"), m_startPosition);
 		appConfig.readList<size_t>(TXT("UI"), TXT("ColumnWidths"), m_startWidths, m_startWidths);
@@ -106,7 +112,7 @@ bool FarmMonitor::loadConfig()
 	}
 	catch (const Core::Exception& e)
 	{
-		FatalMsg(TXT("Failed to load the application configuration:-\n\n%s"), e.twhat());
+		FatalMsg(TXT("Failed to load the application configuration:\n\n%s"), e.twhat());
 		return false;
 	}
 
@@ -122,7 +128,7 @@ void FarmMonitor::saveConfig()
 	{
 		WCL::AppConfig appConfig(PUBLISHER, APPLICATION);
 
-		appConfig.writeString(appConfig.DEFAULT_SECTION, TXT("Version"), CONFIG_VERSION);
+		appConfig.writeString(appConfig.DEFAULT_SECTION, TXT("Version"), LATEST_CONFIG_VERSION);
 
 		appConfig.writeValue<CRect>(TXT("UI"), TXT("MainWindow"), m_appWnd.FinalPlacement());
 		appConfig.writeList<size_t>(TXT("UI"), TXT("ColumnWidths"), m_appWnd.m_mainDlg.getFinalColumnWidths());
@@ -131,7 +137,7 @@ void FarmMonitor::saveConfig()
 	}
 	catch (const Core::Exception& e)
 	{
-		FatalMsg(TXT("Failed to save the application configuration:-\n\n%s"), e.twhat());
+		FatalMsg(TXT("Failed to save the application configuration:\n\n%s"), e.twhat());
 	}
 }
 

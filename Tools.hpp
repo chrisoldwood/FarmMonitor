@@ -14,13 +14,6 @@
 #include "Tool.hpp"
 #include <XML/Document.hpp>
 
-// Forward declarations.
-namespace WCL
-{
-class IAppConfigReader;
-class IAppConfigWriter;
-}
-
 ////////////////////////////////////////////////////////////////////////////////
 //! The container type for the collection of invocable tools.
 
@@ -74,12 +67,6 @@ public:
 
 	//! Swap two tools in the collection by index.
 	void swap(size_t first, size_t second);
-
-	//! Load the set of tools from the application config.
-	void load(WCL::IAppConfigReader& config);
-
-	//! Save the set of tools to the application config.
-	void save(WCL::IAppConfigWriter& config);
 
 	//! Load the set of tools from the XML document.
 	void load(const XML::DocumentPtr config);

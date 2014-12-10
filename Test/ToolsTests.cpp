@@ -6,7 +6,6 @@
 #include "Common.hpp"
 #include <Core/UnitTest.hpp>
 #include "Tools.hpp"
-#include <WCL/AppConfig.hpp>
 #include <XML/XPathIterator.hpp>
 #include <XML/TextNode.hpp>
 #include "DataDocument.hpp"
@@ -16,49 +15,6 @@ namespace
 
 tstring SAVED_TOOL_NAME = TXT("saved tool name");
 tstring SAVED_CMD_LINE  = TXT("saved cmd line");
-
-class FakeAppConfigReader : public WCL::IAppConfigReader
-{
-public:
-	virtual tstring readString(const tstring& sectionName, const tstring& keyName, const tstring& defaultValue) const
-	{
-		if ( (sectionName == TXT("Tools")) && (keyName == TXT("Count")) )
-			return TXT("1");
-
-		if ( (sectionName == TXT("Tools")) && (keyName == TXT("ToolName[0]")) )
-			return SAVED_TOOL_NAME;
-
-		if ( (sectionName == TXT("Tools")) && (keyName == TXT("CmdLine[0]")) )
-			return SAVED_CMD_LINE;
-
-		return defaultValue;
-	}
-
-	virtual void readStringList(const tstring& /*sectionName*/, const tstring& /*keyName*/, const tstring& /*defaultValue*/, StringArray& /*list*/) const
-	{
-	}
-};
-
-class FakeAppConfigWriter : public WCL::IAppConfigWriter
-{
-public:
-	virtual void writeString(const tstring& /*sectionName*/, const tstring& /*keyName*/, const tstring& value)
-	{
-		m_values.push_back(value);
-	}
-
-	virtual void writeStringList(const tstring& /*sectionName*/, const tstring& /*keyName*/, const StringArray& /*list*/)
-	{
-	}
-
-	virtual void deleteSection(const tstring& sectionName)
-	{
-		m_deletions.push_back(sectionName);
-	}
-
-	std::vector<tstring>	m_values;
-	std::vector<tstring>	m_deletions;
-};
 
 XML::DocumentPtr createDocument()
 {
@@ -101,20 +57,6 @@ TEST_CASE("By default the container has no items and is not modified")
 }
 TEST_CASE_END
 
-TEST_CASE("A set of tools can be loaded from an app config provider")
-{
-	FakeAppConfigReader reader;
-	Tools               tools;
-
-	tools.load(reader);
-
-	TEST_FALSE(tools.isModified());
-	TEST_TRUE(tools.size() == 1);
-	TEST_TRUE(tools.tool(0)->m_name == SAVED_TOOL_NAME);
-	TEST_TRUE(tools.tool(0)->m_commandLine == SAVED_CMD_LINE);
-}
-TEST_CASE_END
-
 TEST_CASE("A set of tools can be loaded from an XML document")
 {
 	XML::DocumentPtr config = createDocument(SAVED_TOOL_NAME, SAVED_CMD_LINE);
@@ -150,23 +92,6 @@ TEST_CASE("Loading a tool with no command line throws")
 	XML::DocumentPtr config = createDocument(SAVED_TOOL_NAME, EMPTY_CMD_LINE);
 
 	TEST_THROWS(tools.load(config));
-}
-TEST_CASE_END
-
-TEST_CASE("Loading a set of tools from an app config provider replaces the existing set")
-{
-	FakeAppConfigReader reader;
-	Tools               tools;
-
-	tools.append(makeTool(TXT("tool 1"), TXT("cmd line 1")));
-	tools.append(makeTool(TXT("tool 2"), TXT("cmd line 2")));
-
-	tools.load(reader);
-
-	TEST_FALSE(tools.isModified());
-	TEST_TRUE(tools.size() == 1);
-	TEST_TRUE(tools.tool(0)->m_name == SAVED_TOOL_NAME);
-	TEST_TRUE(tools.tool(0)->m_commandLine == SAVED_CMD_LINE);
 }
 TEST_CASE_END
 
@@ -220,21 +145,6 @@ TEST_CASE("Loading a set of hosts throws when a duplicate name is encountered")
 }
 TEST_CASE_END
 
-TEST_CASE("A set of tools can be saved to an app config provider")
-{
-	FakeAppConfigWriter writer;
-	Tools               tools;
-
-	tools.append(makeTool(TEST_TOOL_NAME, TEST_CMD_LINE));
-
-	tools.save(writer);
-
-	TEST_TRUE(writer.m_values.size() == 0);
-	TEST_TRUE(writer.m_deletions.size() == 1);
-	TEST_TRUE(writer.m_deletions[0] == TXT("Tools"));
-}
-TEST_CASE_END
-
 TEST_CASE("A set of tools can be saved to an XML document")
 {
 	XML::DocumentPtr config = createDocument();
@@ -275,24 +185,6 @@ TEST_CASE("A set of tools can be saved to an XML document")
 }
 TEST_CASE_END
 
-TEST_CASE("Writing an unmodified set of tools should still write to the app config provider")
-{
-	FakeAppConfigReader reader;
-	Tools               tools;
-
-	tools.load(reader);
-
-	TEST_FALSE(tools.isModified());
-
-	FakeAppConfigWriter writer;
-
-	tools.save(writer);
-
-	TEST_TRUE(writer.m_values.size() == 0);
-	TEST_TRUE(writer.m_deletions.size() == 1);
-}
-TEST_CASE_END
-
 TEST_CASE("Writing an unmodified set of tools should still write to the XML document")
 {
 	Tools tools;
@@ -326,10 +218,9 @@ TEST_CASE_END
 
 TEST_CASE("Replacing a tool upates the existing item and marks the container as modified")
 {
-	FakeAppConfigReader reader;
-	Tools               tools;
+	Tools tools;
 
-	tools.load(reader);
+	tools.load(createDocument(SAVED_TOOL_NAME, SAVED_CMD_LINE));
 
 	tools.replace(0, makeTool(TEST_TOOL_NAME, TEST_CMD_LINE));
 
@@ -342,10 +233,9 @@ TEST_CASE_END
 
 TEST_CASE("Removing a tool decreses the size and marks the container as modified")
 {
-	FakeAppConfigReader reader;
-	Tools               tools;
+	Tools tools;
 
-	tools.load(reader);
+	tools.load(createDocument(SAVED_TOOL_NAME, SAVED_CMD_LINE));
 	tools.remove(0);
 
 	TEST_TRUE(tools.isModified());

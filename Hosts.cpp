@@ -5,13 +5,12 @@
 
 #include "Common.hpp"
 #include "Hosts.hpp"
-#include <WCL/IAppConfigReader.hpp>
-#include <WCL/IAppConfigWriter.hpp>
 #include <XML/XPathIterator.hpp>
 #include <XML/TextNode.hpp>
 #include <Core/ConfigurationException.hpp>
 #include <set>
 #include <Core/Algorithm.hpp>
+#include <Core/StringUtils.hpp>
 
 ////////////////////////////////////////////////////////////////////////////////
 //! Default constructor.
@@ -69,39 +68,6 @@ Hosts::const_iterator Hosts::begin() const
 Hosts::const_iterator Hosts::end() const
 {
 	return m_hosts.end();
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//! Load the set of hosts from the application config.
-
-void Hosts::load(WCL::IAppConfigReader& config)
-{
-	Collection hosts;
-
-	const size_t count = config.readValue<size_t>(TXT("Hosts"), TXT("Count"), 0);
-
-	for (size_t i = 0; i != count; ++i)
-	{
-		const tstring host = config.readString(TXT("Hosts"), Core::fmt(TXT("Host[%u]"), i), TXT(""));
-
-		if (host.empty())
-			throw Core::ConfigurationException(TXT("The name for a host cannot be empty"));
-		
-		hosts.push_back(makeHost(host));
-	}
-
-	std::swap(m_hosts, hosts);
-	m_modified = false;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//! Save the set of hosts to the application config.
-//! Note: This is purely for backwards compatibility as settings were originally
-//! stored in the registry.
-
-void Hosts::save(WCL::IAppConfigWriter& config)
-{
-	config.deleteSection(TXT("Hosts"));
 }
 
 ////////////////////////////////////////////////////////////////////////////////

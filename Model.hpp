@@ -62,12 +62,6 @@ private:
 	// Internal methods.
 	//
 
-	//! Load the application settings from the app config store.
-	void loadConfigFromAppConfig();
-
-	//! Save the application settings to the app config store.
-	void saveConfigToAppConfig();
-
 	//! Load the application settings from the default XML file.
 	void loadConfigFromXmlFile(const CPath& configFile);
 

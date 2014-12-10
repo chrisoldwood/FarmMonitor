@@ -14,13 +14,6 @@
 #include "Host.hpp"
 #include <XML/Document.hpp>
 
-// Forward declarations.
-namespace WCL
-{
-class IAppConfigReader;
-class IAppConfigWriter;
-}
-
 ////////////////////////////////////////////////////////////////////////////////
 //! The container of hosts being monitored.
 
@@ -62,12 +55,6 @@ public:
 	//
 	// Methods.
 	//
-
-	//! Load the set of hosts from the application config.
-	void load(WCL::IAppConfigReader& config);
-
-	//! Save the set of hosts to the application config.
-	void save(WCL::IAppConfigWriter& config);
 
 	//! Load the set of hosts from the XML document.
 	void load(const XML::DocumentPtr config);

@@ -5,7 +5,6 @@
 
 #include "Common.hpp"
 #include "Tools.hpp"
-#include <WCL/AppConfig.hpp>
 #include <XML/XPathIterator.hpp>
 #include <XML/TextNode.hpp>
 #include <Core/ConfigurationException.hpp>
@@ -113,44 +112,6 @@ void Tools::swap(size_t first, size_t second)
 	m_tools[first] = m_tools[second];
 	m_tools[second] = temp;
 	m_modified = true;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//! Load the set of tools.
-
-void Tools::load(WCL::IAppConfigReader& config)
-{
-	Collection tools;
-
-	const size_t count = config.readValue<size_t>(TXT("Tools"), TXT("Count"), 0);
-
-	for (size_t i = 0; i != count; ++i)
-	{
-		const tstring toolName = config.readString(TXT("Tools"), Core::fmt(TXT("ToolName[%u]"), i), TXT(""));
-
-		if (toolName.empty())
-			throw Core::ConfigurationException(TXT("The name for a tool cannot be empty"));
-
-		const tstring cmdLine  = config.readString(TXT("Tools"), Core::fmt(TXT("CmdLine[%u]"),  i), TXT(""));
-
-		if (cmdLine.empty())
-			throw Core::ConfigurationException(TXT("The command line for a tool cannot be empty"));
-
-		tools.push_back(makeTool(toolName, cmdLine));
-	}
-
-	std::swap(m_tools, tools);
-	m_modified = false;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//! Save the set of tools.
-//! Note: This is purely for backwards compatibility as settings were originally
-//! stored in the registry.
-
-void Tools::save(WCL::IAppConfigWriter& config)
-{
-	config.deleteSection(TXT("Tools"));
 }
 
 ////////////////////////////////////////////////////////////////////////////////

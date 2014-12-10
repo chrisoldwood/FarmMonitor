@@ -18,10 +18,6 @@
 
 namespace
 {
-//! The configuration data publisher name.
-const tchar* PUBLISHER = TXT("Chris Oldwood");
-//! The configuration data application name.
-const tchar* APPLICATION = TXT("Farm Monitor");
 //! The configuration data format version.
 const tchar* CONFIG_VERSION = TXT("1");
 //! The default config file folder.
@@ -62,16 +58,11 @@ bool Model::configFileExists()
 
 void Model::loadConfig()
 {
-	loadConfigFromAppConfig();
+	const CPath configFile = CPath::SpecialDir(CSIDL_APPDATA) / DEFAULT_CONFIG_FOLDER / DEFAULT_CONFIG_FILE;
 
-	if ((m_hosts.size() == 0) && (m_tools.size() == 0))
+	if (configFile.Exists())
 	{
-		const CPath configFile = CPath::SpecialDir(CSIDL_APPDATA) / DEFAULT_CONFIG_FOLDER / DEFAULT_CONFIG_FILE;
-
-		if (configFile.Exists())
-		{
-			loadConfigFromXmlFile(configFile);
-		}
+		loadConfigFromXmlFile(configFile);
 	}
 }
 
@@ -92,8 +83,6 @@ void Model::saveConfig()
 {
 	if (m_hosts.isModified() || m_tools.isModified() || m_queries.isModified())
 	{
-		saveConfigToAppConfig();
-
 		const CPath userDataFolder = CPath::SpecialDir(CSIDL_APPDATA);
 
 		if (!userDataFolder.Exists())
@@ -133,30 +122,6 @@ void Model::saveConfig(XML::DocumentPtr config)
 	m_hosts.save(config);
 	m_tools.save(config);
 	m_queries.save(config);
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//! Load the application settings from the app config store.
-//! Note: This is purely for backwards compatibility as settings were originally
-//! stored in the registry.
-
-void Model::loadConfigFromAppConfig()
-{
-	WCL::AppConfig appConfig(PUBLISHER, APPLICATION);
-
-	m_hosts.load(appConfig);
-	m_tools.load(appConfig);
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//! Save the application settings to the app config store.
-
-void Model::saveConfigToAppConfig()
-{
-	WCL::AppConfig appConfig(PUBLISHER, APPLICATION);
-
-	m_hosts.save(appConfig);
-	m_tools.save(appConfig);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
