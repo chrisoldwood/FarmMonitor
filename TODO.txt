@@ -6,8 +6,6 @@
 
 - Switch Format combo to something user-friendly.
 
-- Add some query templates.
-
 - View Services to start/stop them.
 
 - View processes to kill them.

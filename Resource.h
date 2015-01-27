@@ -74,6 +74,9 @@
 #define IDC_EDIT5                       1107
 #define IDC_VALUE                       1107
 #define IDC_FORMAT                      1108
+#define IDC_TEMPLATES                   1109
+#define IDC_BUTTON1                     1110
+#define IDC_APPLY                       1110
 #define IDD_MAIN                        5000
 #define IDD_ABOUT                       5001
 #define IDD_ADDEDIT_HOST                5002
@@ -91,7 +94,7 @@
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        142
 #define _APS_NEXT_COMMAND_VALUE         175
-#define _APS_NEXT_CONTROL_VALUE         1108
+#define _APS_NEXT_CONTROL_VALUE         1111
 #define _APS_NEXT_SYMED_VALUE           106
 #endif
 #endif
