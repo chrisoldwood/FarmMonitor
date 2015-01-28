@@ -78,6 +78,12 @@ private:
 
 	//! Populate the set of WMI query templates.
 	void populateTemplates();
+
+	//! Populate the set of value formats.
+	void populateFormats();
+
+	//! Display the query details.
+	void displayQuery(const Query& query);
 };
 
 #endif // EDITQUERYDIALOG_HPP

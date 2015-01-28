@@ -38,18 +38,6 @@ public:
 	tstring		m_filterProperty;	//!< The (optional) property to filter on.
 	tstring		m_filterValue;		//!< The (optional) property value to match.
 	tstring		m_format;			//!< The format to use to display the value.
-
-	//
-	// Constants.
-	//
-
-	//! The format for any value as a string.
-	static const tstring STRING_FORMAT;
-	//! The format for a datetime value.
-	static const tstring DATETIME_FORMAT;
-
-	//! The default format for a value.
-	static const tstring DEFAULT_FORMAT;
 };
 
 //! The default Query const smart pointer type.

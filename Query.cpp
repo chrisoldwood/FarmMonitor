@@ -5,13 +5,7 @@
 
 #include "Common.hpp"
 #include "Query.hpp"
-
-////////////////////////////////////////////////////////////////////////////////
-//! Constants.
-
-const tstring Query::STRING_FORMAT = TXT("%s");
-const tstring Query::DATETIME_FORMAT = TXT("%t");
-const tstring Query::DEFAULT_FORMAT = STRING_FORMAT;
+#include "Formats.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////
 //! Default constructor.
@@ -22,7 +16,7 @@ Query::Query()
 	, m_wmiProperty()
 	, m_filterProperty()
 	, m_filterValue()
-	, m_format(DEFAULT_FORMAT)
+	, m_format(Formats::DEFAULT)
 {
 }
 
@@ -35,7 +29,7 @@ Query::Query(const tstring& title, const tstring& wmiClass, const tstring& wmiPr
 	, m_wmiProperty(wmiProperty)
 	, m_filterProperty()
 	, m_filterValue()
-	, m_format(DEFAULT_FORMAT)
+	, m_format(Formats::DEFAULT)
 {
 }
 

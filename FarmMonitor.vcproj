@@ -380,6 +380,12 @@
 				RelativePath=".\FarmMonitor.hpp">
 			</File>
 			<File
+				RelativePath=".\Formats.cpp">
+			</File>
+			<File
+				RelativePath=".\Formats.hpp">
+			</File>
+			<File
 				RelativePath=".\Logon.hpp">
 			</File>
 			<File

@@ -8,6 +8,7 @@
 #include <Core/StringUtils.hpp>
 #include <WMI/Connection.hpp>
 #include <WMI/DateTime.hpp>
+#include "Formats.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////
 //! Execute the queries for a host.
@@ -141,46 +142,46 @@ tstring QueryRunner::formatValue(const WCL::Variant& value, const tstring& forma
 	{
 		tstring formattedValue = TXT("<unknown format>");
 
-		if (format == Query::STRING_FORMAT)
+		if (format == Formats::STRING)
 		{
 			formattedValue = value.format();
 		}
-		else if (format == Query::DATETIME_FORMAT)
+		else if (format == Formats::DATETIME)
 		{
 			if (!tryConvertDateTime(WCL::getValue<tstring>(value), formattedValue))
 				formattedValue = TXT("<non-datetime value>");
 		}	
-		else if (format == TXT("B"))
+		else if (format == Formats::BYTES)
 		{
 			WCL::Variant uint64Value(value, VT_UI8);
 
 			formattedValue = formatIntegerValue(V_UI8(&uint64Value)) + TXT(" B");
 		}
-		else if (format == TXT("KB"))
+		else if (format == Formats::K_BYTES)
 		{
 			WCL::Variant uint64Value(value, VT_UI8);
 
 			formattedValue = formatIntegerValue(V_UI8(&uint64Value) / 1024u) + TXT(" KB");
 		}
-		else if (format == TXT("MB"))
+		else if (format == Formats::M_BYTES)
 		{
 			WCL::Variant uint64Value(value, VT_UI8);
 
 			formattedValue = formatIntegerValue(V_UI8(&uint64Value) / (1024u*1024u)) + TXT(" MB");
 		}
-		else if (format == TXT("GB"))
+		else if (format == Formats::G_BYTES)
 		{
 			WCL::Variant uint64Value(value, VT_UI8);
 
 			formattedValue = formatIntegerValue(V_UI8(&uint64Value) / (1024u*1024u*1024u)) + TXT(" GB");
 		}
-		else if (format == TXT("KB2MB"))
+		else if (format == Formats::KB_AS_MB)
 		{
 			WCL::Variant uint64Value(value, VT_UI8);
 
 			formattedValue = formatIntegerValue(V_UI8(&uint64Value) / 1024u) + TXT(" MB");
 		}
-		else if (format == TXT("KB2GB"))
+		else if (format == Formats::KB_AS_GB)
 		{
 			WCL::Variant uint64Value(value, VT_UI8);
 

@@ -7,6 +7,7 @@
 #include "FarmMonitor.hpp"
 #include <WCL/AppConfig.hpp>
 #include <Core/ConfigurationException.hpp>
+#include "Formats.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////
 // Global variables.
@@ -153,11 +154,11 @@ void FarmMonitor::applyDefaultConfiguration()
 
 	ConstQueryPtr queries[] =
 	{
-		makeQuery(TXT("Total Mem"), TXT("Win32_LogicalMemoryConfiguration"), TXT("TotalPhysicalMemory"),    TXT(""),         TXT(""),   TXT("KB2MB")),
-		makeQuery(TXT("Free Mem"),  TXT("Win32_LogicalMemoryConfiguration"), TXT("AvailableVirtualMemory"), TXT(""),         TXT(""),   TXT("KB2MB")),
-		makeQuery(TXT("C: Size"),   TXT("Win32_LogicalDisk"),                TXT("Size"),                   TXT("DeviceID"), TXT("C:"), TXT("GB")),
-		makeQuery(TXT("C: Free"),   TXT("Win32_LogicalDisk"),                TXT("FreeSpace"),              TXT("DeviceID"), TXT("C:"), TXT("GB")),
-		makeQuery(TXT("Rebooted"),  TXT("Win32_OperatingSystem"),            TXT("LastBootUpTime"),         TXT(""),         TXT(""),   Query::DATETIME_FORMAT),
+		makeQuery(TXT("Total Mem"), TXT("Win32_LogicalMemoryConfiguration"), TXT("TotalPhysicalMemory"),    TXT(""),         TXT(""),   Formats::KB_AS_MB),
+		makeQuery(TXT("Free Mem"),  TXT("Win32_LogicalMemoryConfiguration"), TXT("AvailableVirtualMemory"), TXT(""),         TXT(""),   Formats::KB_AS_MB),
+		makeQuery(TXT("C: Size"),   TXT("Win32_LogicalDisk"),                TXT("Size"),                   TXT("DeviceID"), TXT("C:"), Formats::G_BYTES),
+		makeQuery(TXT("C: Free"),   TXT("Win32_LogicalDisk"),                TXT("FreeSpace"),              TXT("DeviceID"), TXT("C:"), Formats::G_BYTES),
+		makeQuery(TXT("Rebooted"),  TXT("Win32_OperatingSystem"),            TXT("LastBootUpTime"),         TXT(""),         TXT(""),   Formats::DATETIME),
 	};
 
 	m_model.m_queries.append(queries, queries+ARRAY_SIZE(queries));

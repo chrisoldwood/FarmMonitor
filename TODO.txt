@@ -4,8 +4,6 @@
 
 - Support different user names for each host.
 
-- Switch Format combo to something user-friendly.
-
 - View Services to start/stop them.
 
 - View processes to kill them.

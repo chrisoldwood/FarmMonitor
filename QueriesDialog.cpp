@@ -7,6 +7,7 @@
 #include "QueriesDialog.hpp"
 #include "Resource.h"
 #include "EditQueryDialog.hpp"
+#include "Formats.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////
 //! Default constructor.
@@ -40,7 +41,7 @@ void QueriesDialog::OnInitDialog()
 	m_view.InsertColumn(WMI_PROPERTY,    TXT("WMI Property"),    m_view.StringWidth(20));
 	m_view.InsertColumn(FILTER_PROPERTY, TXT("Filter Property"), m_view.StringWidth(20));
 	m_view.InsertColumn(FILTER_VALUE,    TXT("Filter Value"),    m_view.StringWidth(15));
-	m_view.InsertColumn(FORMAT,          TXT("Format"),          m_view.StringWidth(10));
+	m_view.InsertColumn(FORMAT,          TXT("Format"),          m_view.StringWidth(15));
 
 	for (Queries::const_iterator it = m_queries.begin(); it != m_queries.end(); ++it)
 		addItemToView(*it, (it == m_queries.begin()));
@@ -253,5 +254,5 @@ void QueriesDialog::updateViewItem(size_t row, ConstQueryPtr query)
 	m_view.ItemText(row, WMI_PROPERTY,    query->m_wmiProperty);
 	m_view.ItemText(row, FILTER_PROPERTY, query->m_filterProperty);
 	m_view.ItemText(row, FILTER_VALUE,    query->m_filterValue);
-	m_view.ItemText(row, FORMAT,          query->m_format);
+	m_view.ItemText(row, FORMAT,          Formats::g_default.getDisplayName(query->m_format));
 }

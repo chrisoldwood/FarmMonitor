@@ -10,6 +10,7 @@
 #include <WMI/Connection.hpp>
 #include <WMI/Win32_OperatingSystem.hpp>
 #include <WMI/Win32_LogicalDisk.hpp>
+#include "Formats.hpp"
 
 TEST_SET(QueryRunner)
 {
@@ -106,7 +107,7 @@ TEST_CASE("a query returns the value from the matching item when the result set 
 
 	ConstQueryPtr queries[] =
 	{
-		makeQuery(TXT("title"), TXT("Win32_LogicalDisk"), TXT("DeviceID"), TXT("DeviceID"), nonFirstDevice, Query::DEFAULT_FORMAT)
+		makeQuery(TXT("title"), TXT("Win32_LogicalDisk"), TXT("DeviceID"), TXT("DeviceID"), nonFirstDevice, Formats::DEFAULT)
 	};
 
 	QueryRunner::Results results = QueryRunner::run(connection, queries, queries+ARRAY_SIZE(queries));
@@ -120,7 +121,7 @@ TEST_CASE("a query returns an empty value when the result set is empty")
 {
 	ConstQueryPtr queries[] =
 	{
-		makeQuery(TXT("title"), TXT("Win32_LogicalDisk"), TXT("DeviceID"), TXT("DeviceID"), TXT("invalid device id"), Query::DEFAULT_FORMAT)
+		makeQuery(TXT("title"), TXT("Win32_LogicalDisk"), TXT("DeviceID"), TXT("DeviceID"), TXT("invalid device id"), Formats::DEFAULT)
 	};
 
 	QueryRunner::Results results = QueryRunner::run(connection, queries, queries+ARRAY_SIZE(queries));
@@ -156,11 +157,10 @@ TEST_CASE_END
 
 TEST_CASE("'%s' explicitly formats the value as a simple string")
 {
-	const tstring      STRING_FORMAT = TXT("%s");
 	const tstring      expected = TXT("test value");
 	const WCL::Variant value(T2W(expected));
 
-	const tstring actual = QueryRunner::formatValue(value, STRING_FORMAT);
+	const tstring actual = QueryRunner::formatValue(value, Formats::STRING);
 
 	TEST_TRUE(actual == expected);
 }
@@ -168,10 +168,9 @@ TEST_CASE_END
 
 TEST_CASE("'%t' formats the value as a date/time")
 {
-	const tstring      DATETIME_FORMAT = TXT("%t");
 	const WCL::Variant value(L"20010203040506.375000+123");
 
-	const tstring actual = QueryRunner::formatValue(value, DATETIME_FORMAT);
+	const tstring actual = QueryRunner::formatValue(value, Formats::DATETIME);
 
 	TEST_TRUE(actual == TXT("03/02/2001 04:05:06 +123"));
 }
@@ -179,10 +178,9 @@ TEST_CASE_END
 
 TEST_CASE("'%t' formats an error when the value is not a WMI datetime")
 {
-	const tstring      DATETIME_FORMAT = TXT("%t");
 	const WCL::Variant value(L"invalid datetime");
 
-	const tstring actual = QueryRunner::formatValue(value, DATETIME_FORMAT);
+	const tstring actual = QueryRunner::formatValue(value, Formats::DATETIME);
 
 	TEST_TRUE(actual == TXT("<non-datetime value>"));
 }
@@ -190,10 +188,9 @@ TEST_CASE_END
 
 TEST_CASE("'B' formats the value as a whole number of bytes")
 {
-	const tstring      BYTES_FORMAT = TXT("B");
 	const WCL::Variant value((uint32)12345);
 
-	const tstring actual = QueryRunner::formatValue(value, BYTES_FORMAT);
+	const tstring actual = QueryRunner::formatValue(value, Formats::BYTES);
 
 	TEST_TRUE(actual == TXT("12,345 B"));
 }
@@ -201,10 +198,9 @@ TEST_CASE_END
 
 TEST_CASE("'KB' formats the value as a whole number of kilobytes")
 {
-	const tstring      KILOBYTES_FORMAT = TXT("KB");
 	const WCL::Variant value((uint32)4u*1024u);
 
-	const tstring actual = QueryRunner::formatValue(value, KILOBYTES_FORMAT);
+	const tstring actual = QueryRunner::formatValue(value, Formats::K_BYTES);
 
 	TEST_TRUE(actual == TXT("4 KB"));
 }
@@ -212,10 +208,9 @@ TEST_CASE_END
 
 TEST_CASE("'MB' formats the value as a whole number of megabytes")
 {
-	const tstring      MEGABYTES_FORMAT = TXT("MB");
 	const WCL::Variant value((uint32)8u*1024u*1024u);
 
-	const tstring actual = QueryRunner::formatValue(value, MEGABYTES_FORMAT);
+	const tstring actual = QueryRunner::formatValue(value, Formats::M_BYTES);
 
 	TEST_TRUE(actual == TXT("8 MB"));
 }
@@ -223,10 +218,9 @@ TEST_CASE_END
 
 TEST_CASE("'GB' formats the value as a whole number of gigabytes")
 {
-	const tstring      GIGABYTES_FORMAT = TXT("GB");
 	const WCL::Variant value((uint64)16u*1024u*1024u*1024u);
 
-	const tstring actual = QueryRunner::formatValue(value, GIGABYTES_FORMAT);
+	const tstring actual = QueryRunner::formatValue(value, Formats::G_BYTES);
 
 	TEST_TRUE(actual == TXT("16 GB"));
 }
@@ -234,10 +228,9 @@ TEST_CASE_END
 
 TEST_CASE("'KB2MB' formats the value in KB as a whole number of megabytes")
 {
-	const tstring      KB2MB_FORMAT = TXT("KB2MB");
 	const WCL::Variant value((uint32)8u*1024u);
 
-	const tstring actual = QueryRunner::formatValue(value, KB2MB_FORMAT);
+	const tstring actual = QueryRunner::formatValue(value, Formats::KB_AS_MB);
 
 	TEST_TRUE(actual == TXT("8 MB"));
 }
@@ -245,10 +238,9 @@ TEST_CASE_END
 
 TEST_CASE("'KB2GB' formats the value in KB as a whole number of gigabytes")
 {
-	const tstring      KB2GB_FORMAT = TXT("KB2GB");
 	const WCL::Variant value((uint32)16u*1024u*1024u);
 
-	const tstring actual = QueryRunner::formatValue(value, KB2GB_FORMAT);
+	const tstring actual = QueryRunner::formatValue(value, Formats::KB_AS_GB);
 
 	TEST_TRUE(actual == TXT("16 GB"));
 }
@@ -259,7 +251,7 @@ TEST_CASE("An error is returned if the value cannot be coerced")
 	const tstring      BYTES_FORMAT = TXT("B");
 	const WCL::Variant value(L"text value");
 
-	const tstring actual = QueryRunner::formatValue(value, BYTES_FORMAT);
+	const tstring actual = QueryRunner::formatValue(value, Formats::BYTES);
 
 	TEST_TRUE(actual == TXT("#ERR"));
 }
