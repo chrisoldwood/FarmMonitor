@@ -75,8 +75,11 @@
 #define IDC_VALUE                       1107
 #define IDC_FORMAT                      1108
 #define IDC_TEMPLATES                   1109
-#define IDC_BUTTON1                     1110
 #define IDC_APPLY                       1110
+#define IDC_START                       1111
+#define IDC_BUTTON2                     1112
+#define IDC_RESTART                     1112
+#define IDC_STOP                        1113
 #define IDD_MAIN                        5000
 #define IDD_ABOUT                       5001
 #define IDD_ADDEDIT_HOST                5002
@@ -94,7 +97,7 @@
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        142
 #define _APS_NEXT_COMMAND_VALUE         175
-#define _APS_NEXT_CONTROL_VALUE         1111
+#define _APS_NEXT_CONTROL_VALUE         1114
 #define _APS_NEXT_SYMED_VALUE           106
 #endif
 #endif

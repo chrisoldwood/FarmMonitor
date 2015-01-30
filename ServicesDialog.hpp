@@ -12,6 +12,7 @@
 #endif
 
 #include <WCL/CommonUI.hpp>
+#include <WMI/Win32_Service.hpp>
 
 ////////////////////////////////////////////////////////////////////////////////
 //! The dialog used to manage the services on a host.
@@ -23,6 +24,9 @@ public:
 	ServicesDialog(const tstring& host);
 	
 private:
+	//! A collection of services.
+	typedef std::vector<WMI::Win32_Service> Services;
+
 	//! The view columns
 	enum Column
 	{
@@ -34,12 +38,13 @@ private:
 	//
 	// Members.
 	//
-	tstring		m_host;		//!< The host to manage.
+	tstring		m_host;			//!< The host to manage.
+	Services	m_services;		//!< The WMI proxies to the services.
 	
 	//
 	// Controls.
 	//
-	CListView	m_view;		//!< The services view.
+	CListView	m_view;			//!< The services view.
 
 	//
 	// Message handlers.
@@ -48,8 +53,27 @@ private:
 	//! Dialog initialisation handler.
 	virtual void OnInitDialog();
 
+	//! Services view selection change handler.
+	LRESULT onServiceSelected(NMHDR& header);
+
 	//! Refresh button handler.
 	void onRefreshView();
+
+	//! Start the selected service.
+	void onStartService();
+
+	//! Stop the selected service.
+	void onStopService();
+
+	//! Restart the selected service.
+	void onRestartService();
+
+	//
+	// Internal methods.
+	//
+
+	//! Update the state of the UI.
+	void updateUi();
 };
 
 #endif // SERVICESDIALOG_HPP

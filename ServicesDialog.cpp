@@ -9,7 +9,6 @@
 #include <WCL/BusyCursor.hpp>
 #include <WMI/Connection.hpp>
 #include <WMI/Exception.hpp>
-#include <WMI/Win32_Service.hpp>
 
 ////////////////////////////////////////////////////////////////////////////////
 //! Default constructor.
@@ -17,13 +16,18 @@
 ServicesDialog::ServicesDialog(const tstring& host)
 	: CDialog(IDD_SERVICES)
 	, m_host(host)
+	, m_services()
 {
 	DEFINE_CTRL_TABLE
 		CTRL(IDC_SERVICES, &m_view)
 	END_CTRL_TABLE
 
 	DEFINE_CTRLMSG_TABLE
-		CMD_CTRLMSG(IDC_REFRESH, BN_CLICKED, &ServicesDialog::onRefreshView)
+		NFY_CTRLMSG(IDC_SERVICES, LVN_ITEMCHANGED, &ServicesDialog::onServiceSelected)
+		CMD_CTRLMSG(IDC_REFRESH,  BN_CLICKED,      &ServicesDialog::onRefreshView)
+		CMD_CTRLMSG(IDC_START,    BN_CLICKED,      &ServicesDialog::onStartService)
+		CMD_CTRLMSG(IDC_STOP,     BN_CLICKED,      &ServicesDialog::onStopService)
+		CMD_CTRLMSG(IDC_RESTART,  BN_CLICKED,      &ServicesDialog::onRestartService)
 	END_CTRLMSG_TABLE
 }
 
@@ -38,6 +42,8 @@ void ServicesDialog::OnInitDialog()
 	m_view.InsertColumn(NAME,       TXT("Name"),       m_view.StringWidth(40));
 	m_view.InsertColumn(STATE,      TXT("State"),      m_view.StringWidth(15));
 	m_view.InsertColumn(START_MODE, TXT("Start Mode"), m_view.StringWidth(15));
+
+	updateUi();
 
 	PostCtrlMsg(BN_CLICKED, IDC_REFRESH, CtrlHandle(IDC_REFRESH));
 }
@@ -60,14 +66,30 @@ static size_t DetermineImage(const WMI::Win32_Service& service)
 } 
 
 ////////////////////////////////////////////////////////////////////////////////
+//! Services view selection change handler.
+
+LRESULT ServicesDialog::onServiceSelected(NMHDR& header)
+{
+	const NMLISTVIEW& message = reinterpret_cast<const NMLISTVIEW&>(header);
+
+	if (message.uChanged & LVIF_STATE)
+		updateUi();
+
+	return 0;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 //! Refresh button handler.
 
 void ServicesDialog::onRefreshView()
 {
 	CBusyCursor waitCursor;
 
+	size_t selection = m_view.Selection();
+
 	m_view.Redraw(false);
 	m_view.DeleteAllItems();
+	m_services.clear();
 
 	try
 	{
@@ -81,11 +103,14 @@ void ServicesDialog::onRefreshView()
 		WMI::Win32_Service::Iterator end;
 		WMI::Win32_Service::Iterator it = WMI::Win32_Service::select(connection);
 
-		for (; it != end; ++it)
+		for (size_t i = 0; it != end; ++it, ++i)
 		{
+			m_services.push_back(*it);
+
 			size_t index = m_view.AppendItem(it->DisplayName(), DetermineImage(*it));
 			m_view.ItemText(index, STATE,      it->State());
 			m_view.ItemText(index, START_MODE, it->StartMode());
+			m_view.ItemData(index, i);
 		}
 	}
 	catch (WMI::Exception& e)
@@ -94,6 +119,100 @@ void ServicesDialog::onRefreshView()
 				 m_host.c_str(), e.twhat());
 	}
 
+	ASSERT(m_services.size() == m_view.ItemCount());
+
+	if (selection != Core::npos)
+	{
+		m_view.Select(selection);
+		m_view.MakeItemVisible(selection);
+	}
+
 	m_view.Redraw(true);
 	m_view.RepaintNow();
+	updateUi();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! Start the selected service.
+
+void ServicesDialog::onStartService()
+{
+	ASSERT(m_view.IsSelection());
+
+	try
+	{
+		CBusyCursor waitCursor;
+
+		size_t selection = m_view.ItemData(m_view.Selection());
+		WMI::Win32_Service service = m_services[selection];
+
+		uint32 result = service.StartService();
+
+		if (result != 0)
+			AlertMsg(TXT("Failed to start the service:\n\nStartService returned: %u"), result);
+	}
+	catch (const WMI::Exception& e)
+	{
+		AlertMsg(TXT("Failed to start the service:\n\n%s"), e.twhat());
+	}
+
+	onRefreshView();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! Stop the selected service.
+
+void ServicesDialog::onStopService()
+{
+	ASSERT(m_view.IsSelection());
+
+	try
+	{
+		CBusyCursor waitCursor;
+
+		size_t selection = m_view.ItemData(m_view.Selection());
+		WMI::Win32_Service service = m_services[selection];
+
+		uint32 result = service.StopService();
+
+		if (result != 0)
+			AlertMsg(TXT("Failed to stop the service:\n\nStopService returned: %u"), result);
+	}
+	catch (const WMI::Exception& e)
+	{
+		AlertMsg(TXT("Failed to stop the service:\n\n%s"), e.twhat());
+	}
+
+	onRefreshView();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! Restart the selected service.
+
+void ServicesDialog::onRestartService()
+{
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! Update the state of the UI.
+
+void ServicesDialog::updateUi()
+{
+	if (!m_view.IsSelection())
+	{
+		Control(IDC_START).Enable(false);
+		Control(IDC_STOP).Enable(false);
+		Control(IDC_RESTART).Enable(false);
+	}
+	else
+	{
+		size_t selection = m_view.ItemData(m_view.Selection());
+		WMI::Win32_Service service = m_services[selection];
+		bool   stopped = service.State() == TXT("Stopped");
+		bool   running = service.State() == TXT("Running");
+		
+		Control(IDC_START).Enable(stopped);
+		Control(IDC_STOP).Enable(running);
+		Control(IDC_RESTART).Enable(false/*running*/);
+	}
 }

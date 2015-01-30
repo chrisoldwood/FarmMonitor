@@ -1,9 +1,15 @@
-- Customisable values to monitor.
+For v0.2
+========
 
-- Configurable monitoring interval.
+- Implement restart button for services.
+
+- Implement terminate button to kill processes.
+
+For Later
+=========
 
 - Support different user names for each host.
 
-- View Services to start/stop them.
+- Customisable values to monitor.
 
-- View processes to kill them.
+- Configurable monitoring interval.

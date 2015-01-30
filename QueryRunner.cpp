@@ -9,6 +9,7 @@
 #include <WMI/Connection.hpp>
 #include <WMI/DateTime.hpp>
 #include "Formats.hpp"
+#include <WMI/ObjectIterator.hpp>
 
 ////////////////////////////////////////////////////////////////////////////////
 //! Execute the queries for a host.
