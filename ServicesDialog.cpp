@@ -9,6 +9,8 @@
 #include <WCL/BusyCursor.hpp>
 #include <WMI/Connection.hpp>
 #include <WMI/Exception.hpp>
+#include <WCL/ContextMenu.hpp>
+#include <WCL/App.hpp>
 
 ////////////////////////////////////////////////////////////////////////////////
 //! Default constructor.
@@ -24,6 +26,7 @@ ServicesDialog::ServicesDialog(const tstring& host)
 
 	DEFINE_CTRLMSG_TABLE
 		NFY_CTRLMSG(IDC_SERVICES, LVN_ITEMCHANGED, &ServicesDialog::onServiceSelected)
+		NFY_CTRLMSG(IDC_SERVICES, NM_RCLICK,       &ServicesDialog::onRightClick)
 		CMD_CTRLMSG(IDC_REFRESH,  BN_CLICKED,      &ServicesDialog::onRefreshView)
 		CMD_CTRLMSG(IDC_START,    BN_CLICKED,      &ServicesDialog::onStartService)
 		CMD_CTRLMSG(IDC_STOP,     BN_CLICKED,      &ServicesDialog::onStopService)
@@ -79,13 +82,39 @@ LRESULT ServicesDialog::onServiceSelected(NMHDR& header)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+//! Handle a right-click on the view.
+
+LRESULT ServicesDialog::onRightClick(NMHDR& header)
+{
+	WCL::ContextMenu menu(IDR_SERVICES);
+
+	const size_t selection = m_view.ItemData(m_view.Selection());
+	const WMI::Win32_Service service = m_services[selection];
+	const bool stopped = service.State() == TXT("Stopped");
+	const bool running = service.State() == TXT("Running");
+	
+	menu.EnableCmd(IDC_START, stopped);
+	menu.EnableCmd(IDC_STOP, running);
+	menu.EnableCmd(IDC_RESTART, false/*running*/);
+
+	const NMITEMACTIVATE& message = reinterpret_cast<NMITEMACTIVATE&>(header);
+	const CPoint position = m_view.calcMsgMousePos(message);
+	const uint   command = menu.TrackMenu(m_view, position);
+
+	if (command != 0)
+		PostCtrlMsg(BN_CLICKED, command, CtrlHandle(command));
+
+	return 0;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 //! Refresh button handler.
 
 void ServicesDialog::onRefreshView()
 {
 	CBusyCursor waitCursor;
 
-	size_t selection = m_view.Selection();
+	const size_t selection = m_view.Selection();
 
 	m_view.Redraw(false);
 	m_view.DeleteAllItems();
@@ -143,10 +172,10 @@ void ServicesDialog::onStartService()
 	{
 		CBusyCursor waitCursor;
 
-		size_t selection = m_view.ItemData(m_view.Selection());
+		const size_t       selection = m_view.ItemData(m_view.Selection());
 		WMI::Win32_Service service = m_services[selection];
 
-		uint32 result = service.StartService();
+		const uint32 result = service.StartService();
 
 		if (result != 0)
 			AlertMsg(TXT("Failed to start the service:\n\nStartService returned: %u"), result);
@@ -170,10 +199,10 @@ void ServicesDialog::onStopService()
 	{
 		CBusyCursor waitCursor;
 
-		size_t selection = m_view.ItemData(m_view.Selection());
+		const size_t       selection = m_view.ItemData(m_view.Selection());
 		WMI::Win32_Service service = m_services[selection];
 
-		uint32 result = service.StopService();
+		const uint32 result = service.StopService();
 
 		if (result != 0)
 			AlertMsg(TXT("Failed to stop the service:\n\nStopService returned: %u"), result);
@@ -206,10 +235,10 @@ void ServicesDialog::updateUi()
 	}
 	else
 	{
-		size_t selection = m_view.ItemData(m_view.Selection());
-		WMI::Win32_Service service = m_services[selection];
-		bool   stopped = service.State() == TXT("Stopped");
-		bool   running = service.State() == TXT("Running");
+		const size_t selection = m_view.ItemData(m_view.Selection());
+		const WMI::Win32_Service service = m_services[selection];
+		const bool stopped = (service.State() == TXT("Stopped"));
+		const bool running = (service.State() == TXT("Running"));
 		
 		Control(IDC_START).Enable(stopped);
 		Control(IDC_STOP).Enable(running);

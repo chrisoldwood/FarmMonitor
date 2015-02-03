@@ -114,6 +114,16 @@ BEGIN
     END
 END
 
+IDR_SERVICES MENU 
+BEGIN
+    POPUP "Services"
+    BEGIN
+        MENUITEM "&Start",                      IDC_START
+        MENUITEM "S&top",                       IDC_STOP
+        MENUITEM "&Restart",                    IDC_RESTART
+    END
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //

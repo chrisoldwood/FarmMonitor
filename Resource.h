@@ -12,8 +12,8 @@
 #define ID_FILE_POPUP                   100
 #define ID_FILE_EXIT                    109
 #define IDD_SERVICES                    140
-#define IDD_DIALOG2                     141
 #define IDD_PROCESSES                   141
+#define IDR_SERVICES                    142
 #define ID_HOST_POPUP                   200
 #define ID_HOST_ADDHOST                 201
 #define ID_HOST_EDITHOST                202
@@ -71,13 +71,11 @@
 #define IDC_SERVICES                    1105
 #define IDC_FILTER                      1106
 #define IDC_PROCESSES                   1106
-#define IDC_EDIT5                       1107
 #define IDC_VALUE                       1107
 #define IDC_FORMAT                      1108
 #define IDC_TEMPLATES                   1109
 #define IDC_APPLY                       1110
 #define IDC_START                       1111
-#define IDC_BUTTON2                     1112
 #define IDC_RESTART                     1112
 #define IDC_STOP                        1113
 #define IDD_MAIN                        5000
@@ -95,8 +93,8 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
-#define _APS_NEXT_RESOURCE_VALUE        142
-#define _APS_NEXT_COMMAND_VALUE         175
+#define _APS_NEXT_RESOURCE_VALUE        143
+#define _APS_NEXT_COMMAND_VALUE         181
 #define _APS_NEXT_CONTROL_VALUE         1114
 #define _APS_NEXT_SYMED_VALUE           106
 #endif

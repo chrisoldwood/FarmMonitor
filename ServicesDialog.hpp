@@ -56,6 +56,9 @@ private:
 	//! Services view selection change handler.
 	LRESULT onServiceSelected(NMHDR& header);
 
+	//! Handle a right-click on the view.
+	LRESULT onRightClick(NMHDR& header);
+
 	//! Refresh button handler.
 	void onRefreshView();
 
