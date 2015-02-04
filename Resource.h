@@ -14,6 +14,8 @@
 #define IDD_SERVICES                    140
 #define IDD_PROCESSES                   141
 #define IDR_SERVICES                    142
+#define IDR_MENU1                       143
+#define IDR_PROCESSES                   143
 #define ID_HOST_POPUP                   200
 #define ID_HOST_ADDHOST                 201
 #define ID_HOST_EDITHOST                202
@@ -78,6 +80,7 @@
 #define IDC_START                       1111
 #define IDC_RESTART                     1112
 #define IDC_STOP                        1113
+#define IDC_TERMINATE                   1114
 #define IDD_MAIN                        5000
 #define IDD_ABOUT                       5001
 #define IDD_ADDEDIT_HOST                5002
@@ -93,9 +96,9 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
-#define _APS_NEXT_RESOURCE_VALUE        143
-#define _APS_NEXT_COMMAND_VALUE         181
-#define _APS_NEXT_CONTROL_VALUE         1114
+#define _APS_NEXT_RESOURCE_VALUE        144
+#define _APS_NEXT_COMMAND_VALUE         182
+#define _APS_NEXT_CONTROL_VALUE         1115
 #define _APS_NEXT_SYMED_VALUE           106
 #endif
 #endif

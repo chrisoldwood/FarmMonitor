@@ -76,9 +76,9 @@ BEGIN
         MENUITEM "Move &Down",                  ID_HOST_DOWN
         MENUITEM SEPARATOR
         MENUITEM "&Copy Host to Clipboard",     ID_HOST_COPYHOST
-        MENUITEM SEPARATOR
         MENUITEM "&Services",                   ID_HOST_SERVICES
         MENUITEM "&Processes",                  ID_HOST_PROCESSES
+        MENUITEM SEPARATOR
     END
     POPUP "&View"
     BEGIN
@@ -121,6 +121,14 @@ BEGIN
         MENUITEM "&Start",                      IDC_START
         MENUITEM "S&top",                       IDC_STOP
         MENUITEM "&Restart",                    IDC_RESTART
+    END
+END
+
+IDR_PROCESSES MENU 
+BEGIN
+    POPUP "Processes"
+    BEGIN
+        MENUITEM "&Terminate",                  IDC_TERMINATE
     END
 END
 
@@ -306,6 +314,7 @@ BEGIN
                     WS_TABSTOP,5,5,300,200,WS_EX_CLIENTEDGE
     PUSHBUTTON      "&Refresh",IDC_REFRESH,5,210,50,14
     PUSHBUTTON      "Close",IDCANCEL,255,210,50,14
+    PUSHBUTTON      "&Terminate",IDC_TERMINATE,65,210,50,14
 END
 
 

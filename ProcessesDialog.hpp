@@ -12,6 +12,7 @@
 #endif
 
 #include <WCL/CommonUI.hpp>
+#include <WMI/Win32_Process.hpp>
 
 ////////////////////////////////////////////////////////////////////////////////
 //! The dialog used to manage the processes on a host.
@@ -23,6 +24,9 @@ public:
 	ProcessesDialog(const tstring& host);
 	
 private:
+	//! A collection of processes.
+	typedef std::vector<WMI::Win32_Process> Processes;
+
 	//! The view columns
 	enum Column
 	{
@@ -34,12 +38,13 @@ private:
 	//
 	// Members.
 	//
-	tstring		m_host;		//!< The host to manage.
+	tstring		m_host;			//!< The host to manage.
+	Processes	m_processes;	//!< The WMI proxies to the processes.
 	
 	//
 	// Controls.
 	//
-	CListView	m_view;		//!< The processes view.
+	CListView	m_view;			//!< The processes view.
 
 	//
 	// Message handlers.
@@ -48,8 +53,24 @@ private:
 	//! Dialog initialisation handler.
 	virtual void OnInitDialog();
 
+	//! View selection change handler.
+	LRESULT onProcessSelected(NMHDR& header);
+
+	//! Handle a right-click on the view.
+	LRESULT onRightClick(NMHDR& header);
+
 	//! Refresh button handler.
 	void onRefreshView();
+
+	//! Terminate the selected process.
+	void onTerminateProcess();
+
+	//
+	// Internal methods.
+	//
+
+	//! Update the state of the UI.
+	void updateUi();
 };
 
 #endif // PROCESSESDIALOG_HPP

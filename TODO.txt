@@ -3,7 +3,7 @@ For v0.2
 
 - Implement restart button for services.
 
-- Implement terminate button to kill processes.
+- Add more columns to processes view, e.g. memory footprint, PID.
 
 For Later
 =========

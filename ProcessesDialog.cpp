@@ -9,8 +9,8 @@
 #include <WCL/BusyCursor.hpp>
 #include <WMI/Connection.hpp>
 #include <WMI/Exception.hpp>
-#include <WMI/Win32_Process.hpp>
 #include <Core/StringUtils.hpp>
+#include <WCL/ContextMenu.hpp>
 
 ////////////////////////////////////////////////////////////////////////////////
 //! Default constructor.
@@ -18,13 +18,17 @@
 ProcessesDialog::ProcessesDialog(const tstring& host)
 	: CDialog(IDD_PROCESSES)
 	, m_host(host)
+	, m_processes()
 {
 	DEFINE_CTRL_TABLE
 		CTRL(IDC_PROCESSES, &m_view)
 	END_CTRL_TABLE
 
 	DEFINE_CTRLMSG_TABLE
-		CMD_CTRLMSG(IDC_REFRESH, BN_CLICKED, &ProcessesDialog::onRefreshView)
+		NFY_CTRLMSG(IDC_PROCESSES, LVN_ITEMCHANGED, &ProcessesDialog::onProcessSelected)
+		NFY_CTRLMSG(IDC_PROCESSES, NM_RCLICK,       &ProcessesDialog::onRightClick)
+		CMD_CTRLMSG(IDC_REFRESH,   BN_CLICKED,      &ProcessesDialog::onRefreshView)
+		CMD_CTRLMSG(IDC_TERMINATE, BN_CLICKED,      &ProcessesDialog::onTerminateProcess)
 	END_CTRLMSG_TABLE
 }
 
@@ -39,7 +43,44 @@ void ProcessesDialog::OnInitDialog()
 	m_view.InsertColumn(THREADS, TXT("Threads"), m_view.StringWidth(10), LVCFMT_RIGHT);
 	m_view.InsertColumn(HANDLES, TXT("Handles"), m_view.StringWidth(10), LVCFMT_RIGHT);
 
+	updateUi();
+
 	PostCtrlMsg(BN_CLICKED, IDC_REFRESH, CtrlHandle(IDC_REFRESH));
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! View selection change handler.
+
+LRESULT ProcessesDialog::onProcessSelected(NMHDR& header)
+{
+	const NMLISTVIEW& message = reinterpret_cast<const NMLISTVIEW&>(header);
+
+	if (message.uChanged & LVIF_STATE)
+		updateUi();
+
+	return 0;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! Handle a right-click on the view.
+
+LRESULT ProcessesDialog::onRightClick(NMHDR& header)
+{
+	if (m_view.IsSelection())
+	{
+		WCL::ContextMenu menu(IDR_PROCESSES);
+
+		menu.EnableCmd(IDC_TERMINATE, true);
+
+		const NMITEMACTIVATE& message = reinterpret_cast<NMITEMACTIVATE&>(header);
+		const CPoint position = m_view.calcMsgMousePos(message);
+		const uint   command = menu.TrackMenu(m_view, position);
+
+		if (command != 0)
+			PostCtrlMsg(BN_CLICKED, command, CtrlHandle(command));
+	}
+
+	return 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -49,8 +90,11 @@ void ProcessesDialog::onRefreshView()
 {
 	CBusyCursor waitCursor;
 
+	const size_t selection = m_view.Selection();
+
 	m_view.Redraw(false);
 	m_view.DeleteAllItems();
+	m_processes.clear();
 
 	try
 	{
@@ -64,11 +108,15 @@ void ProcessesDialog::onRefreshView()
 		WMI::Win32_Process::Iterator end;
 		WMI::Win32_Process::Iterator it = WMI::Win32_Process::select(connection);
 
-		for (; it != end; ++it)
+		for (size_t i = 0; it != end; ++it, ++i)
 		{
+			m_processes.push_back(*it);
+
 			size_t index = m_view.AppendItem(it->Name());
 			m_view.ItemText(index, THREADS, Core::format(it->ThreadCount()));
 			m_view.ItemText(index, HANDLES, Core::format(it->HandleCount()));
+			m_view.ItemData(index, i);
+
 		}
 	}
 	catch (WMI::Exception& e)
@@ -77,6 +125,50 @@ void ProcessesDialog::onRefreshView()
 				 m_host.c_str(), e.twhat());
 	}
 
+	ASSERT(m_processes.size() == m_view.ItemCount());
+
+	if (selection != Core::npos)
+	{
+		m_view.Select(selection);
+		m_view.MakeItemVisible(selection);
+	}
+
 	m_view.Redraw(true);
 	m_view.RepaintNow();
+	updateUi();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! Terminate the selected process.
+
+void ProcessesDialog::onTerminateProcess()
+{
+	ASSERT(m_view.IsSelection());
+
+	try
+	{
+		CBusyCursor waitCursor;
+
+		const size_t       selection = m_view.ItemData(m_view.Selection());
+		WMI::Win32_Process process = m_processes[selection];
+
+		const uint32 result = process.Terminate(0);
+
+		if (result != 0)
+			AlertMsg(TXT("Failed to terminate the process:\n\nTerminate returned: %u"), result);
+	}
+	catch (const WMI::Exception& e)
+	{
+		AlertMsg(TXT("Failed to terminate the process:\n\n%s"), e.twhat());
+	}
+
+	onRefreshView();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! Update the state of the UI.
+
+void ProcessesDialog::updateUi()
+{
+	Control(IDC_TERMINATE).Enable(m_view.IsSelection());
 }

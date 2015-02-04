@@ -10,7 +10,6 @@
 #include <WMI/Connection.hpp>
 #include <WMI/Exception.hpp>
 #include <WCL/ContextMenu.hpp>
-#include <WCL/App.hpp>
 
 ////////////////////////////////////////////////////////////////////////////////
 //! Default constructor.
@@ -86,23 +85,26 @@ LRESULT ServicesDialog::onServiceSelected(NMHDR& header)
 
 LRESULT ServicesDialog::onRightClick(NMHDR& header)
 {
-	WCL::ContextMenu menu(IDR_SERVICES);
+	if (m_view.IsSelection())
+	{
+		WCL::ContextMenu menu(IDR_SERVICES);
 
-	const size_t selection = m_view.ItemData(m_view.Selection());
-	const WMI::Win32_Service service = m_services[selection];
-	const bool stopped = service.State() == TXT("Stopped");
-	const bool running = service.State() == TXT("Running");
-	
-	menu.EnableCmd(IDC_START, stopped);
-	menu.EnableCmd(IDC_STOP, running);
-	menu.EnableCmd(IDC_RESTART, false/*running*/);
+		const size_t selection = m_view.ItemData(m_view.Selection());
+		const WMI::Win32_Service service = m_services[selection];
+		const bool stopped = service.State() == TXT("Stopped");
+		const bool running = service.State() == TXT("Running");
+		
+		menu.EnableCmd(IDC_START, stopped);
+		menu.EnableCmd(IDC_STOP, running);
+		menu.EnableCmd(IDC_RESTART, false/*running*/);
 
-	const NMITEMACTIVATE& message = reinterpret_cast<NMITEMACTIVATE&>(header);
-	const CPoint position = m_view.calcMsgMousePos(message);
-	const uint   command = menu.TrackMenu(m_view, position);
+		const NMITEMACTIVATE& message = reinterpret_cast<NMITEMACTIVATE&>(header);
+		const CPoint position = m_view.calcMsgMousePos(message);
+		const uint   command = menu.TrackMenu(m_view, position);
 
-	if (command != 0)
-		PostCtrlMsg(BN_CLICKED, command, CtrlHandle(command));
+		if (command != 0)
+			PostCtrlMsg(BN_CLICKED, command, CtrlHandle(command));
+	}
 
 	return 0;
 }
