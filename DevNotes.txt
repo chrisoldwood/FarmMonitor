@@ -8,8 +8,10 @@ this:-
 | +-Test
 +-Lib
 | +-Core
+| +-NCL
 | +-WCL
 | +-WMI
+| +-XML
 +-Scripts
 
 The following commands will create that structure by cloning the various
@@ -19,8 +21,10 @@ C:\> mkdir Win32
 C:\> git clone https://github.com/chrisoldwood/FarmMonitor.git Win32\FarmMonitor
 C:\> mkdir Win32\Lib
 C:\> git clone https://github.com/chrisoldwood/Core.git Win32\Lib\Core
+C:\> git clone https://github.com/chrisoldwood/NCL.git Win32\Lib\NCL
 C:\> git clone https://github.com/chrisoldwood/WCL.git Win32\Lib\WCL
 C:\> git clone https://github.com/chrisoldwood/WMI.git Win32\Lib\WMI
+C:\> git clone https://github.com/chrisoldwood/XML.git Win32\Lib\XML
 <optional>
 C:\> git clone https://github.com/chrisoldwood/Scripts.git Win32\Scripts
 
@@ -37,5 +41,9 @@ There is also one for upgrading to a later version of Visual C++:-
 C:\> Win32\Scripts\SetVars vc100
 C:\> Win32\Scripts\Upgrade Win32\FarmMonitor\FarmMonitor.sln
 
+Once built you can then run the unit test suite:
+
+C:\> Win32\FarmMonitor\Test\Debug\Test.exe -q
+
 Chris Oldwood 
-13th November 2013
+11th February 2015
