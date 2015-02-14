@@ -7,7 +7,7 @@
 #include "Model.hpp"
 #include <WCL/AppConfig.hpp>
 #include <WCL/Path.hpp>
-#include <shfolder.h>
+#include <shlobj.h>
 #include <XML/Reader.hpp>
 #include <XML/Writer.hpp>
 #include <WCL/File.hpp>
