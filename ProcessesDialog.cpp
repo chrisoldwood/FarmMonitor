@@ -111,7 +111,7 @@ void ProcessesDialog::onRefreshView()
 //			connection.open(m_host->m_name, m_logon->m_user, m_logon->m_password);
 
 		WMI::Win32_Process::Iterator end;
-		WMI::Win32_Process::Iterator it = WMI::Win32_Process::select(connection);
+		WMI::Win32_Process::Iterator it = WMI::Win32_Process::selectAll(connection);
 
 		for (size_t i = 0; it != end; ++it, ++i)
 		{

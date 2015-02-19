@@ -24,7 +24,7 @@ TEST_CASE("a query returns the value from the only item of a single item result 
 	tstring expected;
 
 {
-	const WMI::Win32_OperatingSystem::Iterator it = WMI::Win32_OperatingSystem::select(connection);
+	const WMI::Win32_OperatingSystem::Iterator it = WMI::Win32_OperatingSystem::selectAll(connection);
 
 	expected = it->Name();
 }
@@ -46,7 +46,7 @@ TEST_CASE("multiple queries returns one value per query in the order defined")
 	tstring expected;
 
 {
-	const WMI::Win32_OperatingSystem::Iterator it = WMI::Win32_OperatingSystem::select(connection);
+	const WMI::Win32_OperatingSystem::Iterator it = WMI::Win32_OperatingSystem::selectAll(connection);
 
 	expected = it->Name();
 }
@@ -72,7 +72,7 @@ TEST_CASE("a query returns the value from the first item of the result set")
 	tstring expected;
 
 {
-	const WMI::Win32_LogicalDisk::Iterator it = WMI::Win32_LogicalDisk::select(connection);
+	const WMI::Win32_LogicalDisk::Iterator it = WMI::Win32_LogicalDisk::selectAll(connection);
 
 	expected = it->DeviceID();
 }
@@ -94,7 +94,7 @@ TEST_CASE("a query returns the value from the matching item when the result set 
 	std::vector<tstring> devices;
 
 {
-	WMI::Win32_LogicalDisk::Iterator it = WMI::Win32_LogicalDisk::select(connection);
+	WMI::Win32_LogicalDisk::Iterator it = WMI::Win32_LogicalDisk::selectAll(connection);
 	WMI::Win32_LogicalDisk::Iterator end;
 
 	for (;it != end; ++it)

@@ -137,7 +137,7 @@ void ServicesDialog::onRefreshView()
 //			connection.open(m_host->m_name, m_logon->m_user, m_logon->m_password);
 
 		WMI::Win32_Service::Iterator end;
-		WMI::Win32_Service::Iterator it = WMI::Win32_Service::select(connection);
+		WMI::Win32_Service::Iterator it = WMI::Win32_Service::selectAll(connection);
 
 		for (size_t i = 0; it != end; ++it, ++i)
 		{
