@@ -31,8 +31,13 @@ private:
 	enum Column
 	{
 		NAME,
-		THREADS,
-		HANDLES,
+		ID,
+		THREAD_COUNT,
+		HANDLE_COUNT,
+		WORKING_SET,
+		PRIVATE_PAGES,
+		VIRTUAL_SIZE,
+		COMMAND_LINE,
 	};
 
 	//

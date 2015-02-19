@@ -1,10 +1,6 @@
 For v0.2
 ========
 
-- Implement restart button for services.
-
-- Add more columns to processes view, e.g. memory footprint, PID.
-
 For Later
 =========
 

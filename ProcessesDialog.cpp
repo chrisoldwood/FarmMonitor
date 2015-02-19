@@ -39,9 +39,14 @@ void ProcessesDialog::OnInitDialog()
 {
 	m_view.FullRowSelect(true);
 
-	m_view.InsertColumn(NAME,    TXT("Name"),    m_view.StringWidth(25));
-	m_view.InsertColumn(THREADS, TXT("Threads"), m_view.StringWidth(10), LVCFMT_RIGHT);
-	m_view.InsertColumn(HANDLES, TXT("Handles"), m_view.StringWidth(10), LVCFMT_RIGHT);
+	m_view.InsertColumn(NAME,          TXT("Name"),         m_view.StringWidth(25), LVCFMT_LEFT);
+	m_view.InsertColumn(ID,	           TXT("ID"),           m_view.StringWidth(10), LVCFMT_RIGHT);
+	m_view.InsertColumn(THREAD_COUNT,  TXT("Threads"),      m_view.StringWidth(10), LVCFMT_RIGHT);
+	m_view.InsertColumn(HANDLE_COUNT,  TXT("Handles"),      m_view.StringWidth(10), LVCFMT_RIGHT);
+	m_view.InsertColumn(WORKING_SET,   TXT("Work. Set"),    m_view.StringWidth(10), LVCFMT_RIGHT);
+	m_view.InsertColumn(PRIVATE_PAGES, TXT("Priv. Size"),   m_view.StringWidth(10), LVCFMT_RIGHT);
+	m_view.InsertColumn(VIRTUAL_SIZE,  TXT("Virt. Size"),   m_view.StringWidth(10), LVCFMT_RIGHT);
+	m_view.InsertColumn(COMMAND_LINE,  TXT("Command Line"), m_view.StringWidth(20), LVCFMT_LEFT);
 
 	updateUi();
 
@@ -113,8 +118,13 @@ void ProcessesDialog::onRefreshView()
 			m_processes.push_back(*it);
 
 			size_t index = m_view.AppendItem(it->Name());
-			m_view.ItemText(index, THREADS, Core::format(it->ThreadCount()));
-			m_view.ItemText(index, HANDLES, Core::format(it->HandleCount()));
+			m_view.ItemText(index, ID,            Core::format(it->ProcessId()));
+			m_view.ItemText(index, THREAD_COUNT,  Core::format(it->ThreadCount()));
+			m_view.ItemText(index, HANDLE_COUNT,  Core::format(it->HandleCount()));
+			m_view.ItemText(index, WORKING_SET,   Core::format(it->WorkingSetSize() / (1024*1024)) + TXT(" MB"));
+			m_view.ItemText(index, PRIVATE_PAGES, Core::format(it->PrivatePageCount() / (1024*1024)) + TXT(" MB"));
+			m_view.ItemText(index, VIRTUAL_SIZE,  Core::format(it->VirtualSize() / (1024*1024)) + TXT(" MB"));
+			m_view.ItemText(index, COMMAND_LINE,  it->CommandLine());
 			m_view.ItemData(index, i);
 
 		}
