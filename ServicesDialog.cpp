@@ -12,6 +12,11 @@
 #include <WCL/ContextMenu.hpp>
 
 ////////////////////////////////////////////////////////////////////////////////
+//! Constants.
+
+const DWORD DEFAULT_TIMEOUT = 30000;
+
+////////////////////////////////////////////////////////////////////////////////
 //! Default constructor.
 
 ServicesDialog::ServicesDialog(const tstring& host)
@@ -96,7 +101,7 @@ LRESULT ServicesDialog::onRightClick(NMHDR& header)
 		
 		menu.EnableCmd(IDC_START, stopped);
 		menu.EnableCmd(IDC_STOP, running);
-		menu.EnableCmd(IDC_RESTART, false/*running*/);
+		menu.EnableCmd(IDC_RESTART, running);
 
 		const NMITEMACTIVATE& message = reinterpret_cast<NMITEMACTIVATE&>(header);
 		const CPoint position = m_view.calcMsgMousePos(message);
@@ -164,30 +169,94 @@ void ServicesDialog::onRefreshView()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+//! Start the service.
+
+bool StartService(WMI::Win32_Service& service, CWnd& dialog)
+{
+	try
+	{
+		CBusyCursor waitCursor;
+
+		const uint32 result = service.StartService();
+
+		if (result != 0)
+			dialog.AlertMsg(TXT("Failed to start the service:\n\nStartService returned: %u"), result);
+
+		DWORD       timeNow = ::GetTickCount();
+		const DWORD maxWaitTime = timeNow + DEFAULT_TIMEOUT;
+		tstring     state = service.State();
+
+		while ( (state != TXT("Running")) && (timeNow < maxWaitTime) )
+		{
+			service.refresh();
+			state = service.State();
+			timeNow = ::GetTickCount();
+		}
+
+		if (state == TXT("Running"))
+			return true;
+
+		dialog.AlertMsg(TXT("The service failed to start within the time allowed"));
+	}
+	catch (const WMI::Exception& e)
+	{
+		dialog.AlertMsg(TXT("Failed to start the service:\n\n%s"), e.twhat());
+	}
+
+	return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 //! Start the selected service.
 
 void ServicesDialog::onStartService()
 {
 	ASSERT(m_view.IsSelection());
 
+	const size_t       selection = m_view.ItemData(m_view.Selection());
+	WMI::Win32_Service service = m_services[selection];
+
+	StartService(service, *this);
+
+	onRefreshView();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//! Stop the service.
+
+bool StopService(WMI::Win32_Service& service, CWnd& dialog)
+{
 	try
 	{
 		CBusyCursor waitCursor;
 
-		const size_t       selection = m_view.ItemData(m_view.Selection());
-		WMI::Win32_Service service = m_services[selection];
-
-		const uint32 result = service.StartService();
+		const uint32 result = service.StopService();
 
 		if (result != 0)
-			AlertMsg(TXT("Failed to start the service:\n\nStartService returned: %u"), result);
+			dialog.AlertMsg(TXT("Failed to stop the service:\n\nStopService returned: %u"), result);
+
+		DWORD       timeNow = ::GetTickCount();
+		const DWORD maxWaitTime = timeNow + DEFAULT_TIMEOUT;
+		tstring     state = service.State();
+
+		while ( (state != TXT("Stopped")) && (timeNow < maxWaitTime) )
+		{
+			service.refresh();
+			state = service.State();
+			timeNow = ::GetTickCount();
+		}
+
+		if (state == TXT("Stopped"))
+			return true;
+
+		dialog.AlertMsg(TXT("The service failed to stop within the time allowed"));
 	}
 	catch (const WMI::Exception& e)
 	{
-		AlertMsg(TXT("Failed to start the service:\n\n%s"), e.twhat());
+		dialog.AlertMsg(TXT("Failed to stop the service:\n\n%s"), e.twhat());
 	}
 
-	onRefreshView();
+	return false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -197,22 +266,10 @@ void ServicesDialog::onStopService()
 {
 	ASSERT(m_view.IsSelection());
 
-	try
-	{
-		CBusyCursor waitCursor;
+	const size_t       selection = m_view.ItemData(m_view.Selection());
+	WMI::Win32_Service service = m_services[selection];
 
-		const size_t       selection = m_view.ItemData(m_view.Selection());
-		WMI::Win32_Service service = m_services[selection];
-
-		const uint32 result = service.StopService();
-
-		if (result != 0)
-			AlertMsg(TXT("Failed to stop the service:\n\nStopService returned: %u"), result);
-	}
-	catch (const WMI::Exception& e)
-	{
-		AlertMsg(TXT("Failed to stop the service:\n\n%s"), e.twhat());
-	}
+	StopService(service, *this);
 
 	onRefreshView();
 }
@@ -222,6 +279,15 @@ void ServicesDialog::onStopService()
 
 void ServicesDialog::onRestartService()
 {
+	ASSERT(m_view.IsSelection());
+
+	const size_t       selection = m_view.ItemData(m_view.Selection());
+	WMI::Win32_Service service = m_services[selection];
+
+	if (StopService(service, *this))
+		StartService(service, *this);
+
+	onRefreshView();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -244,6 +310,6 @@ void ServicesDialog::updateUi()
 		
 		Control(IDC_START).Enable(stopped);
 		Control(IDC_STOP).Enable(running);
-		Control(IDC_RESTART).Enable(false/*running*/);
+		Control(IDC_RESTART).Enable(running);
 	}
 }
