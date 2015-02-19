@@ -60,13 +60,13 @@ void ServicesDialog::OnInitDialog()
 
 static size_t DetermineImage(const WMI::Win32_Service& service)
 {
-	if (service.StartMode() == TXT("Disabled"))
+	if (service.IsDisabled())
 		return 0;
 
-	if (service.State() == TXT("Running"))
+	if (service.IsRunning())
 		return 1;
 
-	if ( (service.StartMode() == TXT("Auto")) && (service.State() != TXT("Running")) )
+	if (service.IsAutomatic() && !service.IsRunning())
 		return 3;
 
 	return 2;
@@ -96,8 +96,8 @@ LRESULT ServicesDialog::onRightClick(NMHDR& header)
 
 		const size_t selection = m_view.ItemData(m_view.Selection());
 		const WMI::Win32_Service service = m_services[selection];
-		const bool stopped = service.State() == TXT("Stopped");
-		const bool running = service.State() == TXT("Running");
+		const bool stopped = service.IsStopped();
+		const bool running = service.IsRunning();
 		
 		menu.EnableCmd(IDC_START, stopped);
 		menu.EnableCmd(IDC_STOP, running);
@@ -184,16 +184,14 @@ bool StartService(WMI::Win32_Service& service, CWnd& dialog)
 
 		DWORD       timeNow = ::GetTickCount();
 		const DWORD maxWaitTime = timeNow + DEFAULT_TIMEOUT;
-		tstring     state = service.State();
 
-		while ( (state != TXT("Running")) && (timeNow < maxWaitTime) )
+		while ( (!service.IsRunning()) && (timeNow < maxWaitTime) )
 		{
 			service.refresh();
-			state = service.State();
 			timeNow = ::GetTickCount();
 		}
 
-		if (state == TXT("Running"))
+		if (service.IsRunning())
 			return true;
 
 		dialog.AlertMsg(TXT("The service failed to start within the time allowed"));
@@ -237,16 +235,14 @@ bool StopService(WMI::Win32_Service& service, CWnd& dialog)
 
 		DWORD       timeNow = ::GetTickCount();
 		const DWORD maxWaitTime = timeNow + DEFAULT_TIMEOUT;
-		tstring     state = service.State();
 
-		while ( (state != TXT("Stopped")) && (timeNow < maxWaitTime) )
+		while ( (!service.IsStopped()) && (timeNow < maxWaitTime) )
 		{
 			service.refresh();
-			state = service.State();
 			timeNow = ::GetTickCount();
 		}
 
-		if (state == TXT("Stopped"))
+		if (service.IsStopped())
 			return true;
 
 		dialog.AlertMsg(TXT("The service failed to stop within the time allowed"));
@@ -305,8 +301,8 @@ void ServicesDialog::updateUi()
 	{
 		const size_t selection = m_view.ItemData(m_view.Selection());
 		const WMI::Win32_Service service = m_services[selection];
-		const bool stopped = (service.State() == TXT("Stopped"));
-		const bool running = (service.State() == TXT("Running"));
+		const bool stopped = service.IsStopped();
+		const bool running = service.IsRunning();
 		
 		Control(IDC_START).Enable(stopped);
 		Control(IDC_STOP).Enable(running);
