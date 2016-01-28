@@ -1,429 +1,581 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="7.10"
+	Version="9.00"
 	Name="FarmMonitor"
 	ProjectGUID="{6609D72E-4FDE-403D-A286-004013C03E67}"
-	Keyword="Win32Proj">
+	Keyword="Win32Proj"
+	TargetFrameworkVersion="131072"
+	>
 	<Platforms>
 		<Platform
-			Name="Win32"/>
+			Name="Win32"
+		/>
 	</Platforms>
+	<ToolFiles>
+	</ToolFiles>
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
 			OutputDirectory="Debug"
 			IntermediateDirectory="Debug"
 			ConfigurationType="1"
-			CharacterSet="1">
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
+			CharacterSet="1"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/EHa"
 				Optimization="0"
 				AdditionalIncludeDirectories="../Lib"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
-				MinimalRebuild="TRUE"
-				ExceptionHandling="FALSE"
+				MinimalRebuild="true"
+				ExceptionHandling="0"
 				BasicRuntimeChecks="3"
-				SmallerTypeCheck="TRUE"
+				SmallerTypeCheck="true"
 				RuntimeLibrary="1"
-				TreatWChar_tAsBuiltInType="TRUE"
-				ForceConformanceInForLoopScope="TRUE"
-				RuntimeTypeInfo="TRUE"
-				UsePrecompiledHeader="3"
+				TreatWChar_tAsBuiltInType="true"
+				ForceConformanceInForLoopScope="true"
+				RuntimeTypeInfo="true"
+				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="Common.hpp"
 				WarningLevel="4"
-				WarnAsError="TRUE"
-				DebugInformationFormat="3"/>
+				WarnAsError="true"
+				DebugInformationFormat="3"
+			/>
 			<Tool
-				Name="VCCustomBuildTool"/>
-			<Tool
-				Name="VCLinkerTool"
-				GenerateDebugInformation="TRUE"
-				SubSystem="2"
-				TargetMachine="1"/>
-			<Tool
-				Name="VCMIDLTool"/>
-			<Tool
-				Name="VCPostBuildEventTool"/>
-			<Tool
-				Name="VCPreBuildEventTool"/>
-			<Tool
-				Name="VCPreLinkEventTool"/>
+				Name="VCManagedResourceCompilerTool"
+			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				AdditionalIncludeDirectories="../Lib"/>
+				AdditionalIncludeDirectories="../Lib"
+			/>
 			<Tool
-				Name="VCWebServiceProxyGeneratorTool"/>
+				Name="VCPreLinkEventTool"
+			/>
 			<Tool
-				Name="VCXMLDataGeneratorTool"/>
+				Name="VCLinkerTool"
+				GenerateDebugInformation="true"
+				SubSystem="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
+				TargetMachine="1"
+			/>
 			<Tool
-				Name="VCWebDeploymentTool"/>
+				Name="VCALinkTool"
+			/>
 			<Tool
-				Name="VCManagedWrapperGeneratorTool"/>
+				Name="VCManifestTool"
+			/>
 			<Tool
-				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
 			OutputDirectory="Release"
 			IntermediateDirectory="Release"
 			ConfigurationType="1"
-			CharacterSet="1">
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
+			CharacterSet="1"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/EHa"
 				AdditionalIncludeDirectories="../Lib"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
-				StringPooling="TRUE"
-				ExceptionHandling="FALSE"
+				StringPooling="true"
+				ExceptionHandling="0"
 				RuntimeLibrary="0"
-				TreatWChar_tAsBuiltInType="TRUE"
-				ForceConformanceInForLoopScope="TRUE"
-				RuntimeTypeInfo="TRUE"
-				UsePrecompiledHeader="3"
+				TreatWChar_tAsBuiltInType="true"
+				ForceConformanceInForLoopScope="true"
+				RuntimeTypeInfo="true"
+				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="Common.hpp"
 				WarningLevel="4"
-				WarnAsError="TRUE"
-				DebugInformationFormat="3"/>
+				WarnAsError="true"
+				DebugInformationFormat="3"
+			/>
 			<Tool
-				Name="VCCustomBuildTool"/>
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				AdditionalIncludeDirectories="../Lib"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
 			<Tool
 				Name="VCLinkerTool"
-				GenerateDebugInformation="TRUE"
+				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
-				TargetMachine="1"/>
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
+				TargetMachine="1"
+			/>
 			<Tool
-				Name="VCMIDLTool"/>
+				Name="VCALinkTool"
+			/>
 			<Tool
-				Name="VCPostBuildEventTool"/>
+				Name="VCManifestTool"
+			/>
 			<Tool
-				Name="VCPreBuildEventTool"/>
+				Name="VCXDCMakeTool"
+			/>
 			<Tool
-				Name="VCPreLinkEventTool"/>
+				Name="VCBscMakeTool"
+			/>
 			<Tool
-				Name="VCResourceCompilerTool"
-				AdditionalIncludeDirectories="../Lib"/>
+				Name="VCFxCopTool"
+			/>
 			<Tool
-				Name="VCWebServiceProxyGeneratorTool"/>
+				Name="VCAppVerifierTool"
+			/>
 			<Tool
-				Name="VCXMLDataGeneratorTool"/>
-			<Tool
-				Name="VCWebDeploymentTool"/>
-			<Tool
-				Name="VCManagedWrapperGeneratorTool"/>
-			<Tool
-				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
+				Name="VCPostBuildEventTool"
+			/>
 		</Configuration>
 	</Configurations>
 	<References>
 		<ProjectReference
 			ReferencedProjectIdentifier="{790BC113-52FB-4565-8968-79B8B011C520}"
-			Name="Core"/>
+		/>
 		<ProjectReference
 			ReferencedProjectIdentifier="{FAB8D717-85EC-4896-B5DC-FDF0A0B67C92}"
-			Name="NCL"/>
+		/>
 		<ProjectReference
 			ReferencedProjectIdentifier="{9B0335B6-93BE-4604-8497-27431874D758}"
-			Name="Wcl"/>
+		/>
 		<ProjectReference
 			ReferencedProjectIdentifier="{6497EA41-2782-4A79-8840-6854E22EC4F4}"
-			Name="WMI"/>
+		/>
 		<ProjectReference
 			ReferencedProjectIdentifier="{2BF56C15-FDAD-480B-9C25-951E43773ED6}"
-			Name="XML"/>
+		/>
 	</References>
 	<Files>
 		<Filter
 			Name="Resource Files"
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx"
-			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}">
+			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
+			>
 			<File
-				RelativePath=".\App.ico">
+				RelativePath=".\App.ico"
+				>
 			</File>
 			<File
-				RelativePath=".\App.rc">
+				RelativePath=".\App.rc"
+				>
 			</File>
 			<File
-				RelativePath=".\App.rcv">
+				RelativePath=".\App.rcv"
+				>
 			</File>
 			<File
-				RelativePath=".\HostIcons.bmp">
+				RelativePath=".\HostIcons.bmp"
+				>
 			</File>
 			<File
-				RelativePath=".\Resource.h">
+				RelativePath=".\Resource.h"
+				>
 			</File>
 			<File
-				RelativePath=".\ServiceIcons.bmp">
+				RelativePath=".\ServiceIcons.bmp"
+				>
 			</File>
 			<File
-				RelativePath=".\Toolbar.bmp">
+				RelativePath=".\Toolbar.bmp"
+				>
 			</File>
 		</Filter>
 		<Filter
 			Name="HelpFile"
-			Filter="">
+			>
 			<File
-				RelativePath=".\HelpFile\FarmMonitor.html">
+				RelativePath=".\HelpFile\FarmMonitor.html"
+				>
 			</File>
 		</Filter>
 		<Filter
 			Name="Commands"
-			Filter="">
+			>
 			<File
-				RelativePath=".\AboutAppCmd.hpp">
+				RelativePath=".\AboutAppCmd.hpp"
+				>
 			</File>
 			<File
-				RelativePath=".\AddHostCmd.hpp">
+				RelativePath=".\AddHostCmd.hpp"
+				>
 			</File>
 			<File
-				RelativePath=".\AppCmds.cpp">
+				RelativePath=".\AppCmds.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\AppCmds.hpp">
+				RelativePath=".\AppCmds.hpp"
+				>
 			</File>
 			<File
-				RelativePath=".\CopyHostCmd.hpp">
+				RelativePath=".\CopyHostCmd.hpp"
+				>
 			</File>
 			<File
-				RelativePath=".\EditHostCmd.hpp">
+				RelativePath=".\EditHostCmd.hpp"
+				>
 			</File>
 			<File
-				RelativePath=".\EditQueriesCmd.cpp">
+				RelativePath=".\EditQueriesCmd.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\EditQueriesCmd.hpp">
+				RelativePath=".\EditQueriesCmd.hpp"
+				>
 			</File>
 			<File
-				RelativePath=".\EditToolsCmd.cpp">
+				RelativePath=".\EditToolsCmd.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\EditToolsCmd.hpp">
+				RelativePath=".\EditToolsCmd.hpp"
+				>
 			</File>
 			<File
-				RelativePath=".\ExecuteToolCmd.cpp">
+				RelativePath=".\ExecuteToolCmd.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\ExecuteToolCmd.hpp">
+				RelativePath=".\ExecuteToolCmd.hpp"
+				>
 			</File>
 			<File
-				RelativePath=".\ExitAppCmd.hpp">
+				RelativePath=".\ExitAppCmd.hpp"
+				>
 			</File>
 			<File
-				RelativePath=".\ManageProcessesCmd.cpp">
+				RelativePath=".\ManageProcessesCmd.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\ManageProcessesCmd.hpp">
+				RelativePath=".\ManageProcessesCmd.hpp"
+				>
 			</File>
 			<File
-				RelativePath=".\ManageServicesCmd.cpp">
+				RelativePath=".\ManageServicesCmd.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\ManageServicesCmd.hpp">
+				RelativePath=".\ManageServicesCmd.hpp"
+				>
 			</File>
 			<File
-				RelativePath=".\MoveHostDownCmd.hpp">
+				RelativePath=".\MoveHostDownCmd.hpp"
+				>
 			</File>
 			<File
-				RelativePath=".\MoveHostUpCmd.hpp">
+				RelativePath=".\MoveHostUpCmd.hpp"
+				>
 			</File>
 			<File
-				RelativePath=".\RefreshViewCmd.hpp">
+				RelativePath=".\RefreshViewCmd.hpp"
+				>
 			</File>
 			<File
-				RelativePath=".\RemoveHostCmd.hpp">
+				RelativePath=".\RemoveHostCmd.hpp"
+				>
 			</File>
 			<File
-				RelativePath=".\ShowManualCmd.hpp">
+				RelativePath=".\ShowManualCmd.hpp"
+				>
 			</File>
 		</Filter>
 		<Filter
 			Name="UI"
-			Filter="">
+			>
 			<File
-				RelativePath=".\AboutDlg.cpp">
+				RelativePath=".\AboutDlg.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\AboutDlg.hpp">
+				RelativePath=".\AboutDlg.hpp"
+				>
 			</File>
 			<File
-				RelativePath=".\AppDlg.cpp">
+				RelativePath=".\AppDlg.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\AppDlg.hpp">
+				RelativePath=".\AppDlg.hpp"
+				>
 			</File>
 			<File
-				RelativePath=".\AppToolbar.cpp">
+				RelativePath=".\AppToolbar.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\AppToolbar.hpp">
+				RelativePath=".\AppToolbar.hpp"
+				>
 			</File>
 			<File
-				RelativePath=".\AppWnd.cpp">
+				RelativePath=".\AppWnd.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\AppWnd.hpp">
+				RelativePath=".\AppWnd.hpp"
+				>
 			</File>
 			<File
-				RelativePath=".\EditHostDialog.cpp">
+				RelativePath=".\EditHostDialog.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\EditHostDialog.hpp">
+				RelativePath=".\EditHostDialog.hpp"
+				>
 			</File>
 			<File
-				RelativePath=".\EditQueryDialog.cpp">
+				RelativePath=".\EditQueryDialog.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\EditQueryDialog.hpp">
+				RelativePath=".\EditQueryDialog.hpp"
+				>
 			</File>
 			<File
-				RelativePath=".\EditToolDialog.cpp">
+				RelativePath=".\EditToolDialog.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\EditToolDialog.hpp">
+				RelativePath=".\EditToolDialog.hpp"
+				>
 			</File>
 			<File
-				RelativePath=".\LogonDialog.cpp">
+				RelativePath=".\LogonDialog.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\LogonDialog.hpp">
+				RelativePath=".\LogonDialog.hpp"
+				>
 			</File>
 			<File
-				RelativePath=".\ProcessesDialog.cpp">
+				RelativePath=".\ProcessesDialog.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\ProcessesDialog.hpp">
+				RelativePath=".\ProcessesDialog.hpp"
+				>
 			</File>
 			<File
-				RelativePath=".\QueriesDialog.cpp">
+				RelativePath=".\QueriesDialog.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\QueriesDialog.hpp">
+				RelativePath=".\QueriesDialog.hpp"
+				>
 			</File>
 			<File
-				RelativePath=".\ServicesDialog.cpp">
+				RelativePath=".\ServicesDialog.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\ServicesDialog.hpp">
+				RelativePath=".\ServicesDialog.hpp"
+				>
 			</File>
 			<File
-				RelativePath=".\ToolsDialog.cpp">
+				RelativePath=".\ToolsDialog.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\ToolsDialog.hpp">
+				RelativePath=".\ToolsDialog.hpp"
+				>
 			</File>
 		</Filter>
 		<Filter
 			Name="Model"
-			Filter="">
+			>
 			<File
-				RelativePath=".\Host.cpp">
+				RelativePath=".\Host.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\Host.hpp">
+				RelativePath=".\Host.hpp"
+				>
 			</File>
 			<File
-				RelativePath=".\Hosts.cpp">
+				RelativePath=".\Hosts.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\Hosts.hpp">
+				RelativePath=".\Hosts.hpp"
+				>
 			</File>
 			<File
-				RelativePath=".\Model.cpp">
+				RelativePath=".\Model.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\Model.hpp">
+				RelativePath=".\Model.hpp"
+				>
 			</File>
 			<File
-				RelativePath=".\Queries.cpp">
+				RelativePath=".\Queries.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\Queries.hpp">
+				RelativePath=".\Queries.hpp"
+				>
 			</File>
 			<File
-				RelativePath=".\Query.cpp">
+				RelativePath=".\Query.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\Query.hpp">
+				RelativePath=".\Query.hpp"
+				>
 			</File>
 			<File
-				RelativePath=".\Tool.cpp">
+				RelativePath=".\Tool.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\Tool.hpp">
+				RelativePath=".\Tool.hpp"
+				>
 			</File>
 			<File
-				RelativePath=".\Tools.cpp">
+				RelativePath=".\Tools.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\Tools.hpp">
+				RelativePath=".\Tools.hpp"
+				>
 			</File>
 		</Filter>
 		<Filter
 			Name="App"
-			Filter="">
+			>
 			<File
-				RelativePath=".\Common.hpp">
+				RelativePath=".\Common.hpp"
+				>
 			</File>
 			<File
-				RelativePath=".\Credentials.cpp">
+				RelativePath=".\Credentials.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\Credentials.hpp">
+				RelativePath=".\Credentials.hpp"
+				>
 			</File>
 			<File
-				RelativePath=".\FarmMonitor.cpp">
+				RelativePath=".\FarmMonitor.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\FarmMonitor.hpp">
+				RelativePath=".\FarmMonitor.hpp"
+				>
 			</File>
 			<File
-				RelativePath=".\Formats.cpp">
+				RelativePath=".\Formats.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\Formats.hpp">
+				RelativePath=".\Formats.hpp"
+				>
 			</File>
 			<File
-				RelativePath=".\Logon.hpp">
+				RelativePath=".\Logon.hpp"
+				>
 			</File>
 			<File
-				RelativePath=".\pch.cpp">
+				RelativePath=".\pch.cpp"
+				>
 				<FileConfiguration
-					Name="Debug|Win32">
+					Name="Debug|Win32"
+					>
 					<Tool
 						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="1"/>
+						UsePrecompiledHeader="1"
+					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release|Win32">
+					Name="Release|Win32"
+					>
 					<Tool
 						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="1"/>
+						UsePrecompiledHeader="1"
+					/>
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\QueryRunner.cpp">
+				RelativePath=".\QueryRunner.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\QueryRunner.hpp">
+				RelativePath=".\QueryRunner.hpp"
+				>
 			</File>
 		</Filter>
 		<File
-			RelativePath=".\FarmMonitor.wxl">
+			RelativePath=".\FarmMonitor.wxl"
+			>
 		</File>
 		<File
-			RelativePath=".\FarmMonitor.wxs">
+			RelativePath=".\FarmMonitor.wxs"
+			>
 		</File>
 		<File
-			RelativePath=".\ReadMe.txt">
+			RelativePath=".\ReadMe.txt"
+			>
 		</File>
 		<File
-			RelativePath=".\RelNotes.txt">
+			RelativePath=".\RelNotes.txt"
+			>
 		</File>
 		<File
-			RelativePath=".\TODO.txt">
+			RelativePath=".\TODO.txt"
+			>
 		</File>
 	</Files>
 	<Globals>
