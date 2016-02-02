@@ -129,7 +129,7 @@ void ProcessesDialog::onRefreshView()
 
 		}
 	}
-	catch (WMI::Exception& e)
+	catch (const WMI::Exception& e)
 	{
 		FatalMsg(TXT("Failed to query for the processes on '%s':\n\n%s"),
 				 m_host.c_str(), e.twhat());

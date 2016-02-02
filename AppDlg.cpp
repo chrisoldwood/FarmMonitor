@@ -406,7 +406,7 @@ bool AppDlg::refreshHost(size_t index)
 
 		m_hostView.ItemImage(index, STATUS_GOOD);
 	}
-	catch (WMI::Exception& e)
+	catch (const WMI::Exception& e)
 	{
 		m_hostView.ItemText(index, LAST_ERROR, e.twhat());
 		m_hostView.ItemImage(index, STATUS_BAD);

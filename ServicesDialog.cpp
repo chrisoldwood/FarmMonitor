@@ -149,7 +149,7 @@ void ServicesDialog::onRefreshView()
 			m_view.ItemData(index, i);
 		}
 	}
-	catch (WMI::Exception& e)
+	catch (const WMI::Exception& e)
 	{
 		FatalMsg(TXT("Failed to query for the services on '%s':\n\n%s"),
 				 m_host.c_str(), e.twhat());
