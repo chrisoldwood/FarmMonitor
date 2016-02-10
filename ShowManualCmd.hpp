@@ -63,7 +63,7 @@ inline void ShowManualCmd::execute()
 		return;
 	}
 
-	::ShellExecute(NULL, NULL, manual.c_str(), NULL, NULL, SW_SHOW);
+	::ShellExecute(nullptr, nullptr, manual.c_str(), nullptr, nullptr, SW_SHOW);
 }
 
 #endif // APP_SHOWMANUALCMD_HPP
