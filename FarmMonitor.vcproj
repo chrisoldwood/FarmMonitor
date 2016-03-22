@@ -566,6 +566,10 @@
 			</File>
 		</Filter>
 		<File
+			RelativePath=".\DevNotes.txt"
+			>
+		</File>
+		<File
 			RelativePath=".\FarmMonitor.wxl"
 			>
 		</File>

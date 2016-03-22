@@ -1,3 +1,9 @@
+Version 0.2
+===========
+
+- Added some template WMI queries for the most popular ones.
+- Added support for managing the services and processes on a host.
+
 Version 0.1
 ===========
 
@@ -6,4 +12,4 @@ Version 0.1
 - Simple WMI query support with basic filtering and formatting.
 
 Chris Oldwood
-3rd December 2014
+22nd March 2016
