@@ -11,3 +11,5 @@ For Later
 - Customisable values to monitor.
 
 - Configurable monitoring interval.
+
+- Investigate large values in processes view.

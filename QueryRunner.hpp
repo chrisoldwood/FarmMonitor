@@ -41,6 +41,9 @@ public:
 	// Methods.
 	//
 
+	//! Execute a single query against a host.
+	static tstring run(WMI::Connection& connection, const ConstQueryPtr& query);
+
 	//! Execute the queries for a host.
 	static Results run(WMI::Connection& connection, const ConstQueryPtr* begin, const ConstQueryPtr* end);
 

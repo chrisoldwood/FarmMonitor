@@ -130,7 +130,7 @@ TEST_CASE("a query returns an empty value when the result set is empty")
 }
 TEST_CASE_END
 
-TEST_CASE("a query returns an error when the property does not exist")
+TEST_CASE("a query returns an error value when the property does not exist")
 {
 	ConstQueryPtr queries[] =
 	{
@@ -144,7 +144,21 @@ TEST_CASE("a query returns an error when the property does not exist")
 }
 TEST_CASE_END
 
-TEST_CASE("an unsupported format returns the value as an error message")
+TEST_CASE("a query returns an error value when the query cannot be executed")
+{
+	ConstQueryPtr queries[] =
+	{
+		makeQuery(TXT("title"), TXT("Win32_UnsupportedObjectType"), TXT("Unsupported Property Name")),
+	};
+
+	QueryRunner::Results results = QueryRunner::run(connection, queries, queries+ARRAY_SIZE(queries));
+	
+	TEST_TRUE(results.size() == ARRAY_SIZE(queries));
+	TEST_TRUE(results[0] == TXT("#ERR"));
+}
+TEST_CASE_END
+
+TEST_CASE("an unsupported format returns an error message for the value")
 {
 	const tstring      INVALID_FORMAT = TXT("invalid format");
 	const WCL::Variant value(L"test value");
@@ -253,7 +267,7 @@ TEST_CASE("An error is returned if the value cannot be coerced")
 
 	const tstring actual = QueryRunner::formatValue(value, Formats::BYTES);
 
-	TEST_TRUE(actual == TXT("#ERR"));
+	TEST_TRUE(actual == TXT("#VAL"));
 }
 TEST_CASE_END
 

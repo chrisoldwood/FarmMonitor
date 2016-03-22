@@ -10,6 +10,52 @@
 #include <WMI/DateTime.hpp>
 #include "Formats.hpp"
 #include <WMI/ObjectIterator.hpp>
+#include <WMI/Exception.hpp>
+
+////////////////////////////////////////////////////////////////////////////////
+//! Execute a single query against a host.
+
+tstring QueryRunner::run(WMI::Connection& connection, const ConstQueryPtr& query)
+{
+	tstring formattedValue;
+
+	try
+	{
+		WMI::ObjectIterator end;
+
+		tstring text = Core::fmt(TXT("SELECT * FROM %s"), query->m_wmiClass.c_str());
+
+		if (!query->m_filterProperty.empty())
+		{
+			text += Core::fmt(TXT(" WHERE %s = '%s'"), query->m_filterProperty.c_str(),
+														query->m_filterValue.c_str());
+		}
+
+		WMI::ObjectIterator it = connection.execQuery(text.c_str());
+
+		if (it != end)
+		{
+			if (it->hasProperty(query->m_wmiProperty))
+			{
+				WCL::Variant value;
+
+				it->getProperty(query->m_wmiProperty, value);
+
+				formattedValue = formatValue(value, query->m_format);
+			}
+			else
+			{
+				formattedValue = TXT("#N/A");
+			}
+		}
+	}
+	catch (const WMI::Exception& /*e*/)
+	{
+		formattedValue = TXT("#ERR");
+	}
+
+	return formattedValue;
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 //! Execute the queries for a host.
@@ -26,42 +72,10 @@ QueryRunner::Results QueryRunner::run(WMI::Connection& connection, const ConstQu
 
 QueryRunner::Results QueryRunner::run(WMI::Connection& connection, const_iterator begin, const_iterator end)
 {
-	WMI::ObjectIterator resultsEnd;
-	Results             results;
+	Results results;
 
-	for (const_iterator queryIt = begin; queryIt != end; ++queryIt)
-	{
-		const ConstQueryPtr& query = *queryIt;
-
-		tstring text = Core::fmt(TXT("SELECT * FROM %s"), query->m_wmiClass.c_str());
-
-		if (!query->m_filterProperty.empty())
-		{
-			text += Core::fmt(TXT(" WHERE %s = '%s'"), query->m_filterProperty.c_str(),
-														query->m_filterValue.c_str());
-		}
-
-		WMI::ObjectIterator resultsIt = connection.execQuery(text.c_str());
-		tstring             formattedValue = TXT("");
-
-		if (resultsIt != resultsEnd)
-		{
-			if (resultsIt->hasProperty(query->m_wmiProperty))
-			{
-				WCL::Variant value;
-
-				resultsIt->getProperty(query->m_wmiProperty, value);
-
-				formattedValue = formatValue(value, query->m_format);
-			}
-			else
-			{
-				formattedValue = TXT("#N/A");
-			}
-		}
-
-		results.push_back(formattedValue);
-	}
+	for (const_iterator it = begin; it != end; ++it)
+		results.push_back(run(connection, *it));
 
 	return results;
 }
@@ -193,6 +207,6 @@ tstring QueryRunner::formatValue(const WCL::Variant& value, const tstring& forma
 	}
 	catch (const WCL::ComException& /*e*/)
 	{
-		return TXT("#ERR");
+		return TXT("#VAL");
 	}
 }
