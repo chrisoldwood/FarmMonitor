@@ -1,7 +1,5 @@
-For v0.2
+For vN+1
 ========
-
-- Fix default WMI queries for Windows 7+.
 
 For Later
 =========

@@ -41,7 +41,6 @@ void EditQueryDialog::OnInitDialog()
 	populateFormats();
 
 	m_wmiClassEditor.Add(TXT("Win32_OperatingSystem"));
-	m_wmiClassEditor.Add(TXT("Win32_LogicalMemoryConfiguration"));
 	m_wmiClassEditor.Add(TXT("Win32_LogicalDisk"));
 
 	displayQuery(m_query);
@@ -113,11 +112,11 @@ void EditQueryDialog::buildTemplates()
 	ASSERT(m_queryTemplates.empty());
 
 	m_queryTemplates.push_back(QueryTemplate(
-		TXT("Total Memory"), makeQuery(TXT("Total Mem"), TXT("Win32_LogicalMemoryConfiguration"), TXT("TotalPhysicalMemory"), TXT(""), TXT(""), Formats::KB_AS_MB)
+		TXT("Total Memory"), makeQuery(TXT("Total Mem"), TXT("Win32_OperatingSystem"), TXT("TotalVisibleMemorySize"), TXT(""), TXT(""), Formats::KB_AS_MB)
 	));
 
 	m_queryTemplates.push_back(QueryTemplate(
-		TXT("Free Memory"), makeQuery(TXT("Free Mem"), TXT("Win32_LogicalMemoryConfiguration"), TXT("AvailableVirtualMemory"), TXT(""), TXT(""), Formats::KB_AS_MB)
+		TXT("Free Memory"), makeQuery(TXT("Free Mem"), TXT("Win32_OperatingSystem"), TXT("FreePhysicalMemory"), TXT(""), TXT(""), Formats::KB_AS_MB)
 	));
 
 	m_queryTemplates.push_back(QueryTemplate(
