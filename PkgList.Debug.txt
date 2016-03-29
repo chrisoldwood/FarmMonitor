@@ -1,0 +1,4 @@
+.\ReadMe.txt
+.\RelNotes.txt
+.\Debug\FarmMonitor.exe
+.\HelpFile\FarmMonitor.html
