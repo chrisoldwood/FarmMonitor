@@ -1,15 +1,18 @@
-Version 0.2
-===========
+29/03/16: v0.2
+==============
 
-- Added some template WMI queries for the most popular ones.
+- Fixed the default queries and templates as Win32_LogicalMemoryConfiguration no longer exists.
+- Fixed the query handling so WMI query failures produce #ERR instead.
+- Replaced the formatting codes with human-readable names.
+- Added some template WMI queries for the most popular properties.
 - Added support for managing the services and processes on a host.
 
-Version 0.1
-===========
+04/12/14: v0.1
+==============
 
 - First public release.
 - Support for invoking command-line tools.
 - Simple WMI query support with basic filtering and formatting.
 
 Chris Oldwood
-22nd March 2016
+29th March 2016
