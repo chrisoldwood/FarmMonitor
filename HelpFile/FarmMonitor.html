@@ -2,7 +2,7 @@
 <html>
 
 <head>
-<title>Farm Monitor v0.1 Manual</title>
+<title>Farm Monitor v0.2 Manual</title>
 <meta name="author" content="Chris Oldwood">
 <style>
 body	{ font-family: Verdana, Arial; font-size: 10pt }
@@ -14,7 +14,7 @@ td		{ font-family: Verdana, Arial; font-size: 10pt; border: 1px solid black; ver
 
 <body>
 
-<h3 align="center">Farm Monitor v0.1</h3>
+<h3 align="center">Farm Monitor v0.2</h3>
 
 <a name="Introduction"></a>
 <h4>Introduction</h4>
@@ -23,7 +23,7 @@ td		{ font-family: Verdana, Arial; font-size: 10pt; border: 1px solid black; ver
 This utility is a simple monitoring and administration tool for small farms of
 Windows servers. The monitoring aspect uses the Windows Management Instrumentation
 (WMI) interface for retrieving information about the remote servers. For the
-administration side command lines can be configured that can be executed for the
+administration side, command lines can be configured to be executed for the
 selected host.
 </p><p>
 <i>NOTE: As you can see from the version number this is still very much a work
@@ -39,7 +39,8 @@ release. I'll try and maintain the existing file format but can't guarentee it.<
 The genesis of this tool was almost 10 years ago when I started working in the
 HPC (High Performance Computing) arena. We had a number of environments that
 consisted of application servers for orchestration and blades for raw computation
-duties. Although the Sysinternals tools like PsExec, PsList, etc. are great for
+duties. Although the Sysinternals tools like <code>PsExec</code>,
+<code>PsList</code>, etc. are great for
 automation and ad-hoc command line use there was still a fair amount of other
 ad-hoc monitoring and administration to do which involved flicking between
 servers. This was especially true outside the production environment where there
@@ -47,14 +48,13 @@ was no company-wide monitoring running.
 </p><p>
 Naturally time has moved on <i>a lot</i> since then. At that time there were
 very few free tools available that exposed WMI, especially on Windows 2000. My
-own command-line tool called WMI Command was the first phase of this project as
+own command-line tool, WMI Command, was the first phase of this project as
 it allowed me to wrap the COM based WMI library in C++ and explore it.
 </p><p>
-With PowerShell now more readily available it is even easier to consume WMI
-based content, and there is therefore more knowledge of it too, which is great for
-ad-hoc querying. However I still thought a GUI based approach was still viable
-once you'd worked out what sort of queries you wanted to run continuously, hence
-this tool was born.
+With PowerShell now more readily available and well known it is even easier to
+consume WMI based content, which is great for ad-hoc querying. However I still
+thought a GUI based approach was still viable once you'd worked out what sort
+of queries you wanted to run continuously, hence this tool was born.
 </p>
 
 <a name="Hosts"></a>
@@ -66,7 +66,41 @@ with a single host - the local one. More hosts can be added, renamed and
 removed from the main view. They can also be reordered so that hosts can be
 grouped according to environment, role, or whatever. Each host has both a
 specific "environment" attribute and a more general purpose "description"
-attribute to aid with grouping and identification.
+attribute to aid with grouping and identification. Right-clicking on a host
+shows the context menu with these options, along with copying the host's name to
+the clipboard, and showing installed services and running processes.
+</p><p>
+When entering the details for a host, these are the fields:
+</p>
+<table id="EditHostFields">
+<tr>
+  <th>Field</th>
+  <th>Description</th>
+</tr>
+<tr>
+  <td>Host name</td>
+  <td>The name (or IP address) for the host.</td>
+</tr>
+<tr>
+  <td>Monitor?</td>
+  <td>Tick this box if you want the host to be queried.</td>
+</tr>
+<tr>
+  <td>Alternate logon</td>
+  <td>The alternate credentials to use when querying the host.</td>
+</tr>
+<tr>
+  <td>Environment</td>
+  <td>The name of the environment the host belongs to.</td>
+</tr>
+<tr>
+  <td>Description</td>
+  <td>A short description of the host, such as its role.</td>
+</tr>
+</table>
+<p>
+<i>Note: You can use the "Check" button to run a DNS query against the host
+name to help validate it.</i>
 </p>
 
 <a name="Tools"></a>
@@ -76,11 +110,13 @@ attribute to aid with grouping and identification.
 For administration purposes a number of external tools can be configured which are
 accessible from the context menu (right-click) of a host. Each tool is configured
 as a command-line where the selected host name will be substituted for the
-<code>${HOSTNAME}</code> token on execution.
-</p><p>
+<code>${HOSTNAME}</code> token on execution, e.g.
+</p><pre>
+mstsc /f /v ${HOSTNAME}
+</pre><p>
 Out-of-the-box there are a couple of default tools configured: one to open a
-remote desktop via the <code>MSTSC</code> tool and another to continuously
-<code>PING</code> the host.
+full-scren remote desktop via the <code>MSTSC</code> tool, and another to
+continuously <code>PING</code> the host, which is useful when restarting it.
 </p>
 
 <a name="WMIQueries"></a>
@@ -89,9 +125,9 @@ remote desktop via the <code>MSTSC</code> tool and another to continuously
 <p>
 The main view is used to display information about the configured hosts via WMI
 queries. The monitoring is currently done manually by using the "View | Refresh"
-option (or hitting F5) and will sequentially poll each server in turn to update
+option (or hitting F5) and will sequentially poll each server in-turn to update
 the data. Hosts which are temporarily off-line or that you do not want to
-monitor can be marked from the host details dialog.
+monitor can be marked as such from the host details dialog.
 </p><p>
 The icon next to a hostname displays its current status. It starts off as a
 question mark to show that its status is unknown. When the view is refreshed and
@@ -105,7 +141,7 @@ disk space for drive C:, and the date/time when the machine was last rebooted.
 The final column, "Last Error", will show any major error that occurred trying
 to connect to the host, such as if authentication failed. Errors that only
 occur for some queries, e.g. no E: drive exists, will be reported in the specific
-column as <code>#N/A</code>.
+column as <code>#N/A</code> or <code>#ERR</code>.
 </p><p>
 If a host requires different credentials to attach to it, then they can be
 configured in the host details dialog. Alternate credentials will only be
@@ -117,13 +153,20 @@ prompted for once and then cached indefinitely.
 
 <p>
 From the "View | Queries..." dialog you can manage the queries that are
-executed against every host marked for monitoring. The following fields are used
-to define a query:
+executed against every host marked for monitoring. You can add, copy, update or
+remove quries along with re-ordering them. Double-clicking the title is another
+way of launching the editor for the selected query.
+</p><p>
+When creating or editing a query the following fields are used to define it:
 </p>
 <table id="QueryFields">
 <tr>
   <th>Field</th>
   <th>Description</th>
+</tr>
+<tr>
+  <td>Query Template</td>
+  <td>A selection of common pre-defined queries.</td>
 </tr>
 <tr>
   <td>Column Heading</td>
@@ -160,13 +203,14 @@ classes like <code>Win32_OperatingSystem</code> where there is only a single
 object it doesn't matter. But for objects like disk drives, which are queried
 using <code>Win32_LogicalDisk</code>, it matters as you need to pick the specific
 drive you're interested in. This is done with the optional Filter Property/Value
-fields described at the bottom. For example, to pick disk drive <code>C:</code>
+fields available at the bottom. For example, to pick disk drive <code>C:</code>
 you would want to match on a Filter Property of "<code>DeviceID</code>" and a
 Filter Value of "<code>C:</code>".
 </p><p>
 To find out what WMI classes and properties are available you'd need to consult
 the MSDN. I normally use a tool like WMI Command or PowerShell to explore the
-query first and then I know what I want to configure for monitoring.
+query first, and then I know what I want to configure for monitoring in Farm
+Monitor.
 </p>
 
 <a name="FormattingValues"></a>
@@ -188,47 +232,43 @@ detectable.
 </p>
 <table id="Formats">
 <tr>
-  <th>Code</th>
+  <th>Name</th>
   <th>Description</th>
 </tr>
 <tr>
-  <td>%s</td>
+  <td>String</td>
   <td>Display the value as a simple string.</td>
 </tr>
 <tr>
-  <td>%t</td>
+  <td>Date & Time</td>
   <td>Interpret the value as a WMI format date/time and display in the local
       date &amp; time format.</td>
 </tr>
 <tr>
-  <td>B</td>
-  <td>Display the value in bytes as a whole number of bytes.</td>
+  <td>Bytes</td>
+  <td>Display the value (specified in bytes) as a whole number of bytes.</td>
 </tr>
 <tr>
-  <td>KB</td>
-  <td>Display the value in bytes as a whole number of kilobytes.</td>
+  <td>Kilobytes</td>
+  <td>Display the value (specified in bytes) as a whole number of kilobytes.</td>
 </tr>
 <tr>
-  <td>MB</td>
-  <td>Display the value in bytes as a whole number of megabytes.</td>
+  <td>Megabytes</td>
+  <td>Display the value (specified in bytes) as a whole number of megabytes.</td>
 </tr>
 <tr>
-  <td>GB</td>
-  <td>Display the value in bytes as a whole number of gigabytes.</td>
+  <td>Gigabytes</td>
+  <td>Display the value (specified in bytes) as a whole number of gigabytes.</td>
 </tr>
 <tr>
-  <td>KB2MB</td>
-  <td>Display the value in kilobytes as a whole number of megabytes.</td>
+  <td>KB as MB</td>
+  <td>Display the value (specified in kilobytes) as a whole number of megabytes.</td>
 </tr>
 <tr>
-  <td>KB2GB</td>
-  <td>Display the value in kilobytes as a whole number of gigabytes.</td>
+  <td>KB as GB</td>
+  <td>Display the value (specified in kilobytes) as a whole number of gigabytes.</td>
 </tr>
 </table>
-<p>
-<i>NOTE: At present the internal format symbols are listed as the proper UI has
-not been hooked up. In future you will only see sensible descriptions listed.</i>
-</p>
 
 <hr>
 
@@ -258,7 +298,7 @@ Email: <a href="mailto://gort@cix.co.uk">gort@cix.co.uk</a><br>
 Web: <a href="http://www.chrisoldwood.com">www.chrisoldwood.com</a><br>
 </p><p>
 Chris Oldwood<br>
-3rd December 2014<br>
+24th March 2016<br>
 </p>
 
 </body>
