@@ -4,6 +4,7 @@
 	Version="9.00"
 	Name="Test"
 	ProjectGUID="{91FBBA3F-1046-4A65-B619-94F6D7964B05}"
+	RootNamespace="Test"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="131072"
 	>
@@ -47,7 +48,6 @@
 				MinimalRebuild="true"
 				ExceptionHandling="0"
 				BasicRuntimeChecks="3"
-				SmallerTypeCheck="true"
 				RuntimeLibrary="1"
 				TreatWChar_tAsBuiltInType="true"
 				ForceConformanceInForLoopScope="true"
@@ -182,15 +182,19 @@
 	<References>
 		<ProjectReference
 			ReferencedProjectIdentifier="{790BC113-52FB-4565-8968-79B8B011C520}"
+			RelativePathToProject="..\Lib\Core\Core.vcproj"
 		/>
 		<ProjectReference
 			ReferencedProjectIdentifier="{9B0335B6-93BE-4604-8497-27431874D758}"
+			RelativePathToProject="..\Lib\WCL\Wcl.vcproj"
 		/>
 		<ProjectReference
 			ReferencedProjectIdentifier="{6497EA41-2782-4A79-8840-6854E22EC4F4}"
+			RelativePathToProject="..\Lib\WMI\WMI.vcproj"
 		/>
 		<ProjectReference
 			ReferencedProjectIdentifier="{2BF56C15-FDAD-480B-9C25-951E43773ED6}"
+			RelativePathToProject="..\Lib\XML\XML.vcproj"
 		/>
 	</References>
 	<Files>
