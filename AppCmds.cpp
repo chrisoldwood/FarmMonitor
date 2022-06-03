@@ -41,7 +41,7 @@ AppCmds::AppCmds(AppWnd& appWnd, AppDlg& appDlg, Model& model)
 		WCL_EXTCMD_ENTRY(new ManageServicesCmd(appWnd, appDlg))
 		WCL_EXTCMD_ENTRY(new ManageProcessesCmd(appWnd, appDlg))
 
-		for (size_t i = 0, end = ID_HOST_INVOKE_TOOL_19-ID_HOST_INVOKE_TOOL_1+1; i != end; ++i)
+		for (uint i = 0, end = ID_HOST_INVOKE_TOOL_19-ID_HOST_INVOKE_TOOL_1+1; i != end; ++i)
 		{
 			WCL_EXTCMD_ENTRY(new ExecuteToolCmd(model.m_tools, i, appWnd, appDlg))
 		}
