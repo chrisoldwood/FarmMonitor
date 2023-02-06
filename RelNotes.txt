@@ -1,3 +1,8 @@
+??/??/??: v1.0
+==============
+
+- Fixed a bug on some Windows editions when displaying the services on a host.
+
 29/03/16: v0.2
 ==============
 
