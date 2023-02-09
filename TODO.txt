@@ -1,6 +1,10 @@
 For vN+1
 ========
 
+- Add Chocolatey package.
+
+- Separate 32-bit and 64-bit packages.
+
 For Later
 =========
 
@@ -12,4 +16,20 @@ For Later
 
 - Investigate large values in processes view.
 
-- Tools can be configured to require confirmation first, e.g. restart
+- Tools can be configured to require confirmation first, e.g. restart.
+
+- Allow queries to configure how NULL / #VAL is handled, e.g. CD-ROM drive with no disk mounted.
+
+- Handle arrays, e.g. IPAddress from Win32_NetworkAdapterConfiguration.
+
+- Refresh automatically after editing the queries.
+
+- Support aggregate queries, e.g. count of processes matching name X.
+
+- Allow for simple AND/OR filters, e.g MediaType AND Device ID for HDDs.
+
+- Conditional formatting to highlight issues, e.g. low disk space.
+
+- Minimise to the notification tray for background monitoring.
+
+- Provide balloon alerts / icon changes when minimised to the notification tray

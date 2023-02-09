@@ -2,6 +2,7 @@
 ==============
 
 - Fixed a bug on some Windows editions when displaying the services on a host.
+- Added native support for 64-bit Windows.
 
 29/03/16: v0.2
 ==============
