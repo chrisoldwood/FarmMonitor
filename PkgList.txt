@@ -1,4 +1,4 @@
 .\ReadMe.txt
 .\RelNotes.txt
-.\Debug\FarmMonitor.exe
+.\${BUILD}\${PLATFORM}\FarmMonitor.exe
 .\HelpFile\FarmMonitor.html
