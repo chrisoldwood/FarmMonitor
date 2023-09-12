@@ -19,6 +19,7 @@ const tstring Formats::M_BYTES = TXT("MB");
 const tstring Formats::G_BYTES = TXT("GB");
 const tstring Formats::KB_AS_MB = TXT("KB2MB");
 const tstring Formats::KB_AS_GB = TXT("KB2GB");
+const tstring Formats::MB_AS_GB = TXT("MB2GB");
 
 const tstring Formats::DEFAULT = STRING;
 
@@ -42,6 +43,7 @@ Formats::Formats()
 	m_collection.push_back(FormatMapping( TXT("GB"),    TXT("Gigabytes (GB)") ));
 	m_collection.push_back(FormatMapping( TXT("KB2MB"), TXT("KB as MB")       ));
 	m_collection.push_back(FormatMapping( TXT("KB2GB"), TXT("KB as GB")       ));
+	m_collection.push_back(FormatMapping( TXT("MB2GB"), TXT("MB as GB")       ));
 }
 
 ////////////////////////////////////////////////////////////////////////////////

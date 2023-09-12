@@ -202,6 +202,12 @@ tstring QueryRunner::formatValue(const WCL::Variant& value, const tstring& forma
 
 			formattedValue = formatIntegerValue(V_UI8(&uint64Value) / (1024u*1024u)) + TXT(" GB");
 		}
+		else if (format == Formats::MB_AS_GB)
+		{
+			WCL::Variant uint64Value(value, VT_UI8);
+
+			formattedValue = formatIntegerValue(V_UI8(&uint64Value) / 1024u) + TXT(" GB");
+		}
 
 		return formattedValue;
 	}

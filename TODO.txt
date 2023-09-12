@@ -36,8 +36,6 @@ For Later
 
 - Add Template for PageFile usage - Get-WmiObject Win32_PageFileUsage | select Name,PeakUsage.
 
-- Add formatting option for MB as GB, e.g. Win32_PageFileUsage.
-
 - Document what the #VAL error means.
 
 - Add test option when defining a new query.

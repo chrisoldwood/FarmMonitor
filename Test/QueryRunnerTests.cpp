@@ -260,6 +260,16 @@ TEST_CASE("'KB2GB' formats the value in KB as a whole number of gigabytes")
 }
 TEST_CASE_END
 
+TEST_CASE("'MB2GB' formats the value in MB as a whole number of gigabytes")
+{
+	const WCL::Variant value((uint32)16u*1024u);
+
+	const tstring actual = QueryRunner::formatValue(value, Formats::MB_AS_GB);
+
+	TEST_TRUE(actual == TXT("16 GB"));
+}
+TEST_CASE_END
+
 TEST_CASE("An error is returned if the value cannot be coerced")
 {
 	const tstring      BYTES_FORMAT = TXT("B");

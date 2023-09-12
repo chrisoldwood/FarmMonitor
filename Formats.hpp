@@ -74,6 +74,8 @@ public:
 	static const tstring Formats::KB_AS_MB;
 	//! Format the kilobyte count as gigabytes.
 	static const tstring Formats::KB_AS_GB;
+	//! Format the megabyte count as gigabytes.
+	static const tstring Formats::MB_AS_GB;
 
 	//! The default format.
 	static const tstring DEFAULT;
