@@ -130,6 +130,18 @@ void EditQueryDialog::buildTemplates()
 	m_queryTemplates.push_back(QueryTemplate(
 		TXT("Time Rebooted"), makeQuery(TXT("Rebooted"), TXT("Win32_OperatingSystem"), TXT("LastBootUpTime"), TXT(""), TXT(""), Formats::DATETIME)
 	));
+
+	m_queryTemplates.push_back(QueryTemplate(
+		TXT("PageFile"), makeQuery(TXT("PageFile"), TXT("Win32_PageFileUsage"), TXT("Name"), TXT(""), TXT(""), Formats::STRING)
+	));
+
+	m_queryTemplates.push_back(QueryTemplate(
+		TXT("PageFile Used"), makeQuery(TXT("PageFile Used"), TXT("Win32_PageFileUsage"), TXT("CurrentUsage"), TXT(""), TXT(""), Formats::MB_AS_GB)
+	));
+
+	m_queryTemplates.push_back(QueryTemplate(
+		TXT("PageFile Peak"), makeQuery(TXT("PageFile Peak"), TXT("Win32_PageFileUsage"), TXT("PeakUsage"), TXT(""), TXT(""), Formats::MB_AS_GB)
+	));
 }
 
 ////////////////////////////////////////////////////////////////////////////////

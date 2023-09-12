@@ -24,7 +24,9 @@ For Later
 
 - Refresh automatically after editing the queries.
 
-- Support aggregate queries, e.g. count of processes matching name X.
+- Support aggregate queries, e.g. count of processes matching name X or sum of Win32_Processor
+
+- Existence query, e.g. Win32_PageFileSetting for a fixed pagefile. (Boolean display value)
 
 - Allow for simple AND/OR filters, e.g MediaType AND Device ID for HDDs.
 
@@ -33,8 +35,6 @@ For Later
 - Minimise to the notification tray for background monitoring.
 
 - Provide balloon alerts / icon changes when minimised to the notification tray.
-
-- Add Template for PageFile usage - Get-WmiObject Win32_PageFileUsage | select Name,PeakUsage.
 
 - Document what the #VAL error means.
 
