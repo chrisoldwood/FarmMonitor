@@ -38,10 +38,6 @@ For Later
 
 - Add formatting option for MB as GB, e.g. Win32_PageFileUsage.
 
-- Add non-full screen remote desktop template "mstsc /w 1440 /h 900 /v ${HOSTNAME}"
-
-- Add PowerShell remote template "powershell/pwsh -NoExit -C Enter-PSSession ${HOSTNAME}"
-
 - Document what the #VAL error means.
 
 - Add test option when defining a new query.

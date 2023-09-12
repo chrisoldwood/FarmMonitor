@@ -149,8 +149,11 @@ void FarmMonitor::applyDefaultConfiguration()
 {
 	m_model.m_hosts.add(makeHost(TXT("localhost")));
 
-	m_model.m_tools.append(makeTool(TXT("Remote Desktop"), TXT("mstsc /f /v ${HOSTNAME}")));
 	m_model.m_tools.append(makeTool(TXT("Ping Host"), TXT("ping -t ${HOSTNAME}")));
+	m_model.m_tools.append(makeTool(TXT("Remote Desktop (Full Screen)"), TXT("mstsc /f /v ${HOSTNAME}")));
+	m_model.m_tools.append(makeTool(TXT("Remote Desktop (Windowed)"), TXT("mstsc /w 1024 /h 768 /v ${HOSTNAME}")));
+	m_model.m_tools.append(makeTool(TXT("Remote PowerShell Session"), TXT("powershell -NoExit -C Enter-PSSession ${HOSTNAME}")));
+	m_model.m_tools.append(makeTool(TXT("Remote PowerShell Core Session"), TXT("pwsh -NoExit -C Enter-PSSession ${HOSTNAME}")));
 
 	ConstQueryPtr queries[] =
 	{
