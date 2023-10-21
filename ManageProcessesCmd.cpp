@@ -7,6 +7,8 @@
 #include "ManageProcessesCmd.hpp"
 #include "AppWnd.hpp"
 #include "ProcessesDialog.hpp"
+#include <WCL/BusyCursor.hpp>
+#include <WMI/Exception.hpp>
 
 ////////////////////////////////////////////////////////////////////////////////
 //! Constructor.
@@ -27,9 +29,20 @@ void ManageProcessesCmd::execute()
 
 	const tstring hostname = m_appDlg.getSelectedHost()->m_name;
 
-	ProcessesDialog dialog(hostname);
+	try
+	{
+		CBusyCursor waitCursor;
+		WMI::Connection connection(hostname);
 
-	dialog.RunModal(m_appWnd);
+		ProcessesDialog dialog(hostname);
+
+		dialog.RunModal(m_appWnd);
+	}
+	catch (const WMI::Exception& e)
+	{
+		m_appWnd.FatalMsg(TXT("Failed to connext to '%s':\n\n%s"),
+							hostname.c_str(), e.twhat());
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////

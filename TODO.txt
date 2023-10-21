@@ -12,7 +12,7 @@ For Later
 
 - Customisable values to monitor.
 
-- Configurable monitoring interval.
+- Configurable monitoring interval (manual refresh for non-monitored hosts?).
 
 - Investigate large values in processes view.
 
@@ -39,5 +39,3 @@ For Later
 - Document what the #VAL error means.
 
 - Add test option when defining a new query.
-
-- Services / Processes dialog still shown even when access denied error reported.
