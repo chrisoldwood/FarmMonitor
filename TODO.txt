@@ -36,6 +36,4 @@ For Later
 
 - Provide balloon alerts / icon changes when minimised to the notification tray.
 
-- Document what the #VAL error means.
-
 - Add test option when defining a new query.

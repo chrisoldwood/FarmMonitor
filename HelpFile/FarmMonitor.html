@@ -36,7 +36,7 @@ release. I'll try and maintain the existing file format but can't guarantee it.<
 <h5>Background</h5>
 
 <p>
-The genesis of this tool was almost 10 years ago when I started working in the
+The genesis of this tool was around the mid 2000's when I started working in the
 HPC (High Performance Computing) arena. We had a number of environments that
 consisted of application servers for orchestration and blades for raw computation
 duties. Although the Sysinternals tools like <code>PsExec</code>,
@@ -68,7 +68,8 @@ grouped according to environment, role, or whatever. Each host has both a
 specific "environment" attribute and a more general purpose "description"
 attribute to aid with grouping and identification. Right-clicking on a host
 shows the context menu with these options, along with copying the host's name to
-the clipboard, and showing installed services and running processes.
+the clipboard, and showing installed services and running processes, which you
+can then remotely start, stop, etc.
 </p><p>
 When entering the details for a host, these are the fields:
 </p>
@@ -114,9 +115,10 @@ as a command-line where the selected host name will be substituted for the
 </p><pre>
 mstsc /f /v ${HOSTNAME}
 </pre><p>
-Out-of-the-box there are a couple of default tools configured: one to open a
-full-screen remote desktop via the <code>MSTSC</code> tool, and another to
-continuously <code>PING</code> the host, which is useful when restarting it.
+Out-of-the-box there are a few default tools configured: one to open a
+full-screen remote desktop via the <code>MSTSC</code> tool, another to
+continuously <code>PING</code> the host (which is useful when restarting it),
+and couple to establish PowerShell remote sessions (Classic / Core).
 </p>
 
 <a name="WMIQueries"></a>
@@ -141,11 +143,14 @@ disk space for drive C:, and the date/time when the machine was last rebooted.
 The final column, "Last Error", will show any major error that occurred trying
 to connect to the host, such as if authentication failed. Errors that only
 occur for some queries, e.g. no E: drive exists, will be reported in the specific
-column as <code>#N/A</code> or <code>#ERR</code>.
+column as <code>#N/A</code>, if the query returned no results, <code>#ERR</code>, if
+the query was malformed, or <code>#VAL</code> if the resulting value couldn't be
+coerced into the desired format. (Some properties are arrays of values which are
+currently unsupported.)
 </p><p>
 If a host requires different credentials to attach to it, then they can be
 configured in the host details dialog. Alternate credentials will only be
-prompted for once and then cached indefinitely.
+prompted for once and then cached while the tool remains running.
 </p>
 
 <a name="QueryAttributes"></a>
@@ -267,6 +272,10 @@ detectable.
 <tr>
   <td>KB as GB</td>
   <td>Display the value (specified in kilobytes) as a whole number of gigabytes.</td>
+</tr>
+<tr>
+  <td>MB as GB</td>
+  <td>Display the value (specified in megabytes) as a whole number of gigabytes.</td>
 </tr>
 </table>
 
