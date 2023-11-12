@@ -14,8 +14,11 @@ this:-
 | +-XML
 +-Scripts
 
-The following commands will create that structure by cloning the various
-application and library repositories:-
+The easiest way to clone the entire solution is to use the CloneProject script:-
+
+> curl -fsSL https://raw.githubusercontent.com/chrisoldwood/FarmMonitor/master/CloneProject.bat -o CloneProject.bat && CloneProject.bat
+
+Alternatively you can clone the various repos manually:-
 
 C:\> mkdir Win32
 C:\> git clone https://github.com/chrisoldwood/FarmMonitor.git Win32\FarmMonitor
