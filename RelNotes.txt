@@ -1,6 +1,8 @@
-??/??/??: v1.0
+12/11/23: v0.9
 ==============
 
+- Added query template / value scaling for monitoring the pagefile.
+- Added default tools for PowerShell remote sessions.
 - Fixed a bug on some Windows editions when displaying the services on a host.
 - Added native support for 64-bit Windows.
 
@@ -21,4 +23,4 @@
 - Simple WMI query support with basic filtering and formatting.
 
 Chris Oldwood
-29th March 2016
+12th November 2023

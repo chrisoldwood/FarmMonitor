@@ -41,9 +41,22 @@ There is also one for upgrading to a later version of Visual C++:-
 C:\> Win32\Scripts\SetVars vc140
 C:\> Win32\Scripts\Upgrade Win32\FarmMonitor\FarmMonitor.sln
 
-Once built you can then run the unit test suite:
+Tests
+-----
 
-C:\> Win32\FarmMonitor\Test\Debug\Test.exe -q
+A separate project exists in the solution with unit tests:-
+
+> Win32\FarmMonitor\Test\Debug\%VC_PLATFORM%\Test.exe -q
+
+Release Checklist
+-----------------
+
+- Update version number (App.rcv, FarmMonitor.wxs).
+- Update documentation (ReadMe.txt, RelNotes.txt, FarmMonitor.html).
+- Build and run tests.
+- Build packages (MSI, zip).
+- Tag repository.
+- Upload packages.
 
 Chris Oldwood 
-11th February 2015
+12th November 2023

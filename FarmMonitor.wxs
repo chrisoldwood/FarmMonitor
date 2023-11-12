@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
     <Product Id="*"
-             Name="Farm Monitor v0.2"
+             Name="Farm Monitor v0.9"
              Language="1033"
-             Version="0.2.0"
+             Version="0.9.0"
              Manufacturer="Chris Oldwood"
              UpgradeCode="A4751532-0F28-4fe6-B39E-6195062E15B3">
 
@@ -18,7 +18,7 @@
                 <Directory Name="Farm Monitor" Id="PRODUCT_DIR">
                     <Component Id="_1" Guid="38FC1B73-CBB8-4d40-ADDA-29C33F19E91E">
 
-                        <File Source="$(env.build)\FarmMonitor.exe"/>
+                        <File Source="$(env.build)\$(env.platform)\FarmMonitor.exe"/>
                         <File Source="HelpFile\FarmMonitor.html"/>
                         <File Source="RelNotes.txt"/>
                         <File Source="ReadMe.txt"/>

@@ -1,4 +1,4 @@
-Farm Monitor v0.2
+Farm Monitor v0.9
 =================
 
 Introduction
@@ -35,4 +35,4 @@ Email: gort@cix.co.uk
 Web:   http://www.chrisoldwood.com
 
 Chris Oldwood
-29th March 2016
+12th November 2023
