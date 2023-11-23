@@ -16,7 +16,7 @@ this:-
 
 The easiest way to clone the entire solution is to use the CloneProject script:-
 
-> curl -fsSL https://raw.githubusercontent.com/chrisoldwood/FarmMonitor/master/CloneProject.bat -o CloneProject.bat && CloneProject.bat
+> curl -fsSL https://raw.githubusercontent.com/chrisoldwood/FarmMonitor/master/CloneProject.bat -o CloneProject.bat && .\CloneProject.bat
 
 Alternatively you can clone the various repos manually:-
 
@@ -50,6 +50,16 @@ Tests
 A separate project exists in the solution with unit tests:-
 
 > Win32\FarmMonitor\Test\Debug\%VC_PLATFORM%\Test.exe -q
+
+Source package
+--------------
+
+PS> pushd $env:TEMP
+PS> rm -r -fo CloneProject.bat,Win32
+PS> curl -fsSL https://raw.githubusercontent.com/chrisoldwood/FarmMonitor/master/CloneProject.bat -o CloneProject.bat && .\CloneProject.bat
+PS> pushd Win32
+PS> ls -r -attr Hidden .git | rm -r -fo
+PS> 7z a -tzip farm-monitor.zip FarmMonitor Lib
 
 Release Checklist
 -----------------
